@@ -22,7 +22,7 @@
         <li class="nav-item me-auto">
           <a class="nav-link" href="/master-pegawai" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
             class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            <b>Semua Pegawai</b>
+            Semua Pegawai
           </a>
         </li>
         <li class="nav-item me-auto">
@@ -34,7 +34,7 @@
         <li class="nav-item me-auto">
           <a class="nav-link" href="/nonpns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
             class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            <b>Non-PNS</b>
+            Non-PNS
           </a>
         </li>
         <div style="display: flex; justify-content: flex-end">
