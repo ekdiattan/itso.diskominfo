@@ -1,0 +1,67 @@
+#gambarkantor {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-size: cover;
+    opacity: 70%;
+    background-position: center;
+    position: fixed;
+
+}
+
+#jawabaratlogo2 {
+    height: 300px;
+    width: 300px;
+    position: relative;
+    bottom: 30px;
+}
+
+.overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+#situsdiblokir {
+    text-align: center;
+    color: #FFFFFF;
+    font-family: "Hermeneus One", sans-serif;
+
+}
+
+#mohonmaaf {
+    text-align: center;
+    color: #c42929;
+    font-family: "Hermeneus One", sans-serif;
+    font-size: 19px;
+}
+
+#undang {
+    text-align: center;
+    font-size: 10px;
+    color: white;
+}
+
+#informasi {
+    text-align: center;
+    font-size: 23px;
+    color: white;
+}
+
+#jawabaratlogo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.persegi {
+    height: 450px;
+    width: 800px;
+    background-color: #FF0000;
+    opacity: 70%;
+    position: relative;
+    bottom: 110px;
+
+}

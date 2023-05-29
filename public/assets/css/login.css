@@ -1,0 +1,13 @@
+video{
+    width: 100%;
+    height: auto;
+    position: fixed;
+}
+#logins{
+    /* background-color: #FFFFFF; */
+    opacity: 0.9;
+}
+#main{
+    opacity: 1;
+}
+

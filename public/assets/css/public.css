@@ -1,0 +1,10 @@
+video {
+    width: 100%;
+    height: auto;
+    position: absolute;
+}
+
+#box1 {
+    /* background-color: #FFFFFF; */
+    opacity: 0.9;
+}
