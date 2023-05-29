@@ -229,6 +229,7 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Kepegawaian']], function(){
     Route::get('/update-data-pegawai', [PegawaiController::class, 'update']);
     Route::get('/delete{id}', [PegawaiController::class, 'delete']);
     Route::get('/pns', [PegawaiController::class, 'pnsindex']);
+    Route::get('/nonpns', [PegawaiController::class, 'nonpnsindex']);
     
     // exception pegawai
     Route::get('/pengecualian', [PengecualianPegawaiController::class, 'index']);

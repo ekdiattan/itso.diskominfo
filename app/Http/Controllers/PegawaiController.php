@@ -168,15 +168,27 @@ class PegawaiController extends Controller
         return back()->with('successDelete', 'Data has been deleted!');
     }
 
-
+// PNS
       public function pnsindex(Request $request)
     {
         
         if($request->search == null){
-            $pns = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
+            $data = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
         }else{
-            $pns = DB::table('pegawais')->where('nama', 'ilike', '%'.$request->search.'%')->orwhere('unitKerja', 'ilike', '%'.$request->search.'%')->get();
+            $data = DB::table('pegawais')->where('nama', 'ilike', '%'.$request->search.'%')->orwhere('unitKerja', 'ilike', '%'.$request->search.'%')->get();
         }
-        return view('home.kepegawaian.data.master_pegawai.pns', compact('pns'), [ 'pns' => $pns, 'title' => 'Pegawai', 'search' => $request->search]);
+        return view('home.kepegawaian.data.master_pegawai.pns', compact('data'), [ 'data' => $data, 'title' => 'Pegawai', 'search' => $request->search]);
     }
+
+// NONPNS
+public function nonpnsindex(Request $request)
+{
+    
+    if($request->search == null){
+        $data = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
+    }else{
+        $data = DB::table('pegawais')->where('nama', 'ilike', '%'.$request->search.'%')->orwhere('unitKerja', 'ilike', '%'.$request->search.'%')->get();
+    }
+    return view('home.kepegawaian.data.master_pegawai.pns', compact('data'), [ 'data' => $data, 'title' => 'Pegawai', 'search' => $request->search]);
+}
 }
