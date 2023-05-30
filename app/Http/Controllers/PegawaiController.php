@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use App\Models\DtPegawai;
 use App\Models\Bidang;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -53,10 +54,16 @@ class PegawaiController extends Controller
         // }
         if($request->search == null){
             $data = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
+            $nonpns = DB::table('dt_pegawais')->get();
         }else{
             $data = DB::table('pegawais')->where('nama', 'ilike', '%'.$request->search.'%')->orwhere('unitKerja', 'ilike', '%'.$request->search.'%')->get();
+            $nonpns = DB::table('dt_pegawais')->where('fullname', 'ilike', '%'.$request->search.'%')->get();
         }
-        return view('home.kepegawaian.data.master_pegawai.index', compact('data'), [ 'data' => $data, 'title' => 'Pegawai', 'search' => $request->search]);
+        return view('home.kepegawaian.data.master_pegawai.index', compact('data','nonpns'), [ 'data' => $data, 'nonpns' => $nonpns,'title' => 'Pegawai', 'search' => $request->search]);
+    // 
+    //     $pns = DB::table('pegawais')->get();
+    //     $nonpns = DtPegawai::all();
+    //     return view('home.kepegawaian.data.master_pegawai.index', [ 'pns' => $pns, 'nonpns' => $nonpns,'title' => 'Pegawai']);
     }
 
     /**
@@ -169,7 +176,7 @@ class PegawaiController extends Controller
     }
 
 // PNS
-      public function pnsindex(Request $request)
+    public function pnsindex(Request $request)
     {
         
         if($request->search == null){
@@ -181,14 +188,29 @@ class PegawaiController extends Controller
     }
 
 // NONPNS
-public function nonpnsindex(Request $request)
-{
-    
-    if($request->search == null){
-        $data = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
-    }else{
-        $data = DB::table('pegawais')->where('nama', 'ilike', '%'.$request->search.'%')->orwhere('unitKerja', 'ilike', '%'.$request->search.'%')->get();
+    public function nonpns(Request $request)
+    {
+        $data = DtPegawai::whereNot('jabatan', 'PNS')->where('isActive', 'true')->get();
+        foreach($data as $result){
+            $result->birth_date = Carbon::parse($result->birth_date)->translatedFormat('d F Y');
+        }
+        return view('home.kepegawaian.data.master_pegawai.nonpns', [ 'data' => $data, 'title' => 'Pegawai']);
     }
-    return view('home.kepegawaian.data.master_pegawai.pns', compact('data'), [ 'data' => $data, 'title' => 'Pegawai', 'search' => $request->search]);
-}
+
+// Tidak Aktif
+    public function nonaktifindex(Request $request)
+    {
+        $data = DtPegawai::where('isActive', 'false')->get();
+        foreach($data as $result){
+            $result->birth_date = Carbon::parse($result->birth_date)->translatedFormat('d F Y');
+        }
+        return view('home.kepegawaian.data.master_pegawai.tidakaktif', [ 'data' => $data, 'title' => 'Pegawai Tidak Aktif', 'search' => $request->search]);
+    }
+
+    //show
+    public function show($id){
+        $pegawai= Pegawai::find($id);
+        return view('home.kepegawaian.data.master_pegawai.show',['pegawai'=> $pegawai, 'title' => 'Detail Pegawai']);
+    }
+
 }

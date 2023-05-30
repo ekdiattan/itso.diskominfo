@@ -38,6 +38,8 @@ class UserController extends Controller
     }
 
     public function store_register(Request $request){
+
+
         $validatedDate = $request->validate([
             'nip' => 'required|max:18',
             'username' => 'required',
@@ -47,15 +49,9 @@ class UserController extends Controller
             'hak_akses' => 'required',
             'no_hp' => 'required',
             'email' => '',
-            'image' => 'image|file|max:1024',
+            'image' => '',
             'password' => 'required|min:6'
         ]);
-        if ($request->hasFile('image')) {
-            $imageName = $request->file('image')->getClientOriginalName();
-            $request->file('image')->move('images/profile/', $imageName);
-            $data->image = $imageName;
-        }
-        $data->save();
         
         $password = bcrypt($request->password);
         $validatedDate['password'] = bcrypt($validatedDate['password']);

@@ -45,11 +45,11 @@
         <div class="card-body">
             <div class="form-group">
                 <label for="exampleInputUsername1">Mulai</label>
-                <input type="text" class="form-control" id="mulai" name="mulai" value="{{$edit->mulai}}" readonly>
+                <input type="datetime-local" class="form-control" id="mulai" name="mulai" value="{{$edit->mulai}}" readonly>
             </div>
             <div class="form-group">
                 <label for="exampleInputUsername1">Selesai</label>
-                <input type="text" class="form-control" id="selesai" name="selesai" value="{{$edit->selesai}}" readonly>
+                <input type="datetime-local" class="form-control" id="selesai" name="selesai" value="{{$edit->selesai}}" readonly>
             </div>
             <div class="form-group">
                 <label for="exampleInputUsername1">Perihal</label>

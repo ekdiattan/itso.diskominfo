@@ -43,8 +43,8 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3 id="count3">{{$pegawai}}</h3>
-                <p>Data Pegawai Diskominfo</p>
+              <h3 style="color:#ffffff" id="count3">{{$pegawai}} {{$nonpns}}</h3>
+                <p style="color:#ffffff"> Data Pegawai PNS {{$pegawai}} & Non PNS {{$nonpns}}</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
@@ -107,7 +107,7 @@
 
   var endCount1 = {{$laporan}}; // Ganti dengan variabel atau ekspresi yang sesuai dengan nilai $
   var endCount2 = {{$booking}}; 
-  var endCount3 = {{$pegawai}}; 
+  var endCount3 = {{$pegawai}} + {{$nonpns}}; 
   
   var duration = 2000;
   

@@ -66,7 +66,7 @@
             @endif
 
           @if(auth()->user()->hak_akses=="Admin" || auth()->user()->hak_akses=="Kepegawaian")
-            <li class="nav-item {{ ($title === 'Kehadiran' || $title === 'Cuti' || $title === 'Jumlah Cuti' || $title === 'Belum Absen Masuk' || $title === 'Belum Absen Pulang' || $title === 'Data Terlambat Harian' || $title === 'Rekapitulasi Masuk Pegawai' || $title === 'Pegawai' || $title === 'Rekapitulasi Terlambat Masuk Unit' || $title === 'Rekapitulasi Tidak Absen Pulang Pegawai' || $title === 'Pegawaii Tidak Aktif') ? 'menu-open menu-is-opening' : '' }}">
+            <li class="nav-item {{ ($title === 'Kehadiran' || $title === 'Cuti' || $title === 'Jumlah Cuti' || $title === 'Belum Absen Masuk' || $title === 'Belum Absen Pulang' || $title === 'Data Terlambat Harian' || $title === 'Rekapitulasi Masuk Pegawai' || $title === 'Pegawai' || $title === 'Rekapitulasi Terlambat Masuk Unit' || $title === 'Rekapitulasi Tidak Absen Pulang Pegawai' || $title === 'Pegawai Tidak Aktif') ? 'menu-open menu-is-opening' : '' }}">
               <a class="nav-link">
                 <i class="nav-icon fas fa-users"></i>
                 <p>Tim Kepegawaian
@@ -133,7 +133,7 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="#" class="nav-link {{ ($title === 'Pegawai Tidak Aktif') ? 'active disabled' : '' }}">
+                  <a href="/nonaktif" class="nav-link {{ ($title === 'Pegawai Tidak Aktif') ? 'active disabled' : '' }}">
                     <i class="nav-icon fas fa-user-slash  ml-3"></i>
                     <p>Pegawai Tidak Aktif</p>
                   </a>

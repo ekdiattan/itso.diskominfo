@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Digiteam extends Model
+class DtPegawai extends Model
 {
     use HasFactory;
 
@@ -20,5 +20,6 @@ class Digiteam extends Model
         "id_jabatan",
         "jabatan",
         "is_admin",
+        'isActive',
     ];
 }

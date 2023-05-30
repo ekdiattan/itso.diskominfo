@@ -5,55 +5,14 @@
 @endpush
 @section('container')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h2>Master Pegawai</h2>
+    <h2>Pegawai Tidak Aktif</h2>
 </div>
 
-<div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
-    <!-- Container wrapper -->
-    <div class="container justify-content-center justify-content-md-between">
-      <!-- Left links -->
-      <ul class="navbar-nav flex-row">
-        <li class="nav-item me-auto">
-          <a class="nav-link" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Tampilkan Data Berdasarkan
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/master-pegawai" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Semua Pegawai
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/pns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            PNS
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/nonpns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            <b>Non-PNS</b>
-          </a>
-        </li>
-        <div style="display: flex; justify-content: flex-end">
-            <li class="nav-item me-auto">
-                <a class="nav-link text-success" href="/tambah-data-pegawai" style="font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-                    <b>+ Data Pegawai</b>
-                </a>
-            </li>
-        </div>
-      </ul>
-    </div>
-</div>
-<br>
 <section class="content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-          <div id="example1_wrapper" class="dataTables_wrapper dt_bootstrap4">
+          <div id="example1_wrapper" class="dataTables_wrapper">
           <div class="card">
             <div class="card-body">
             <!-- <a href="/update-data-pegawai" class="btn btn-info bg-maroon" title="Sync Data"><i class="fa fa-file-pdf-o"></i> Sync Data</a>      -->
@@ -63,23 +22,24 @@
                  </nav>
                     <table id="dataTable" class="table table-hover table-bordered table-striped">
                         <thead class="bg-gray disabled color-palette">                          
-                            <tr>
-                                <th width="5%" class="text-center">No</th>
-                                <th width="25%" class="text-center">Nama</th>
-                                <th class="text-center">Email</th>
-                                <th class="text-center">Tanggal Lahir</th>
-                                <th class="text-center">Divisi</th>
-                                <th class="text-center">Jabatan</th>
+                            <tr class="text-center">
+                                <th width="5%" style="text-align: center">No</th>
+                                <th width="25%" style="text-align: center">Nama</th>
+                                <th style="text-align: center">Email</th>
+                                <th style="text-align: center">Tanggal Lahir</th>
+                                <th style="text-align: center">Divisi</th>
+                                <th style="text-align: center">Jabatan</th>
                             </tr>
                         </thead>
                         <tbody>
+                             <!-- @php $i=1 @endphp -->
                         @foreach ($data as $item)
-                            <tr>
-                                <td class="text-center">{{ $loop->iteration}}</td>
+                            <tr onClick="window.location='/show-tidakaktif/{{ $item->id }}'">
+                                <td class="text-left">{{ $loop->iteration}}</td>
                                 <td class="text-left">{{ $item->fullname }}</td>
                                 <td class="text-left">{{ $item->email }}</td>
                                 <td class="text-left">{{ $item->birth_date }}</td>
-                                <td class="text-left">{{ $item->divisi }}</td>
+                                <td>{{ $item->divisi }}</td>
                                 <td class="text-left">{{ $item->jabatan }}</td>
                                 <!-- <td>
                                     <div class="btn-group">

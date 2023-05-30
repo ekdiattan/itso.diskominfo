@@ -51,10 +51,10 @@
                       <label>Nomor HP</label>
                       <input type="text" class="form-control p_input" id="no_hp" name="no_hp">
                     </div>
-                    <div class="col-sm-6">
+                    <!-- <div class="col-sm-6">
                       <label>Foto Profile</label>
                       <input type="file" class="form-control p_input" id="image" name="image">
-                    </div>
+                    </div> -->
                     <div class="col-sm-6" id="emaill" style="display:none;">
                       <label>Email</label>
                       <input type="email" class="form-control p_input" id="email" name="email" placeholder="Email">

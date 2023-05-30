@@ -32,8 +32,9 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
-            'throw' => false,
+            'root' => storage_path('images/tmp'),
+            'url' => env('APP_URL').'/images/tmp',
+            'visibility' => 'public',
         ],
 
         'public' => [

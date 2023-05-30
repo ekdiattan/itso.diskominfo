@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use GuzzleHttp\Client;
-use App\Models\Digiteam;
+use App\Models\DtPegawai;
 
 class UpdateDigi extends Command
 {
@@ -22,7 +22,7 @@ class UpdateDigi extends Command
      *
      * @var string
      */
-    protected $description = 'Penjadwalan update data pegawai dari Digiteam ke tabel di lokal';
+    protected $description = 'Penjadwalan update data pegawai dari DtPegawai ke tabel di lokal';
 
     /**
      * Execute the console command.
@@ -84,21 +84,23 @@ class UpdateDigi extends Command
         );
         $result = json_decode($login->getBody()->getContents());
         $token = $result->auth_token;
+
+        // pegawai aktif
         $page = 1;
         $maxPage = 2;
         while($page <= $maxPage){
-            $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page='.$page, [
+            $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page='.$page.'&is_active=true&struktural=&search=', [
                 'headers' => [
                     'Authorization' => 'Bearer '. $token,
-                ]
-            ]);
+                    ]
+                ]);
             $body = $response->getBody();
             $body_array = json_decode($body);
             $maxPage = $body_array->_meta->totalPage;
             foreach($body_array->results as $results){
-                Digiteam::updateOrCreate([
+                DtPegawai::upsert([
+                    "user_id" => $results->id,
                     "username" => $results->username,
-                ], [
                     "email" => $results->email,
                     "fullname" => $results->fullname,
                     "birth_date" => $results->birth_date,
@@ -107,6 +109,61 @@ class UpdateDigi extends Command
                     "id_jabatan" => $results->id_jabatan,
                     "jabatan" => $results->jabatan,
                     "is_admin" => $results->is_admin,
+                    "isActive" => 't',
+                ], [
+                    "user_id",
+                ], [
+                    "email",
+                    "fullname",
+                    "birth_date",
+                    "id_divisi",
+                    "divisi",
+                    "id_jabatan",
+                    "jabatan",
+                    "is_admin",
+                    "isActive"
+                ]);
+            }
+            $page++;
+        }
+
+        // pegawai tidak aktif
+        $page = 1;
+        $maxPage = 2;
+        while($page <= $maxPage){
+            $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page='.$page.'&is_active=false&struktural=&search=', [
+                'headers' => [
+                    'Authorization' => 'Bearer '. $token,
+                ]
+            ]);
+            $body = $response->getBody();
+            $body_array = json_decode($body);
+            $maxPage = $body_array->_meta->totalPage;
+            foreach($body_array->results as $results){
+                DtPegawai::upsert([
+                    "user_id" => $results->id,
+                    "username" => $results->username,
+                    "email" => $results->email,
+                    "fullname" => $results->fullname,
+                    "birth_date" => $results->birth_date,
+                    "id_divisi" => $results->id_divisi,
+                    "divisi" => $results->divisi,
+                    "id_jabatan" => $results->id_jabatan,
+                    "jabatan" => $results->jabatan,
+                    "is_admin" => $results->is_admin,
+                    "isActive" => 'f',
+                ], [
+                    "user_id",
+                ], [
+                    "email",
+                    "fullname",
+                    "birth_date",
+                    "id_divisi",
+                    "divisi",
+                    "id_jabatan",
+                    "jabatan",
+                    "is_admin",
+                    "isActive"
                 ]);
             }
             $page++;

@@ -116,22 +116,22 @@ class KehadiranController extends Controller
     
     public function show(Request $request)
     {
-        // $client = new Client();
-        // $login = $client->request(
-        //     'POST', 'https://groupware-api.digitalservice.id/auth/admin/login/', [
-        //         'form_params' => [
-        //             'username' => 'yudiwardoyozz',
-        //             'password' => 'yudiwardoyozz', 
-        //         ], [
-        //             'debug' => true
-        //         ]
-        //     ]
-        // );
-        // $result = json_decode($login->getBody()->getContents());
-        // $token = $result->auth_token;
-        // $page = 1;
-        // $maxPage = 2;
-        // while($page <= $maxPage){
+        $client = new Client();
+        $login = $client->request(
+            'POST', 'https://groupware-api.digitalservice.id/auth/admin/login/', [
+                'form_params' => [
+                    'username' => 'yudiwardoyozz',
+                    'password' => 'yudiwardoyozz', 
+                ], [
+                    'debug' => true
+                ]
+            ]
+        );
+        $result = json_decode($login->getBody()->getContents());
+        $token = $result->auth_token;
+        $page = 1;
+        $maxPage = 2;
+        while($page <= $maxPage){
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/info', [ // Data User Login
 
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/menu/user/list/', [ // Menu List
@@ -150,7 +150,7 @@ class KehadiranController extends Controller
 
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page_size=10&page=1&is_active=true&struktural=true&search=', [ // Ini untuk pegawai Aktif
             
-            // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page_size=10&page=1&is_active=false&struktural=&search=', [ // Pegawai nonaktif / alumni
+            $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page_size=10&page=1&is_active=false&struktural=&search=', [ // Pegawai nonaktif / alumni
 
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page_size=10&page=1&is_active=true&struktural=&search=', [ // Pegawai Non Asn
                 
@@ -174,15 +174,15 @@ class KehadiranController extends Controller
 
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/project/?limit=10&block=-&page=1', [ // Daftar proyek dalam API
                 
+            'headers' => [
             // 'headers' => [
-            // // 'headers' => [
-            //     'Authorization' => 'Bearer '. $token,
-            // ]
-            // ]);
-            // $body = $response->getBody();
-            // $body_array = json_decode($body);
-            // dd($body_array);
-        // }
+                'Authorization' => 'Bearer '. $token,
+            ]
+            ]);
+            $body = $response->getBody();
+            $body_array = json_decode($body);
+            dd($body_array);
+        }
         $now = Carbon::now()->format('Y-m-d');
         if($request->search == null){
             $data_post = DB::table('rekapitulasis')->where('tanggal', '=', $now)->get();

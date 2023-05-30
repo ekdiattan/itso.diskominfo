@@ -1,8 +1,5 @@
 @extends('home.partials.main')
 <link rel="icon" href="{{ asset('assets/images/jabar.png') }}">
-@push('css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.12.1/datatables.min.css" />
-@endpush
 @section('container')
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h2>Master Pegawai</h2>
@@ -64,78 +61,78 @@
                     <table id="dataTable" class="table table-hover table-bordered table-striped">
                         <thead class="bg-gray disabled color-palette">                          
                             <tr>
-                                <th width="5%" style="text-align: center">No</th>
-                                <th width="25%" style="text-align: center">Nama</th>
-                                <th style="text-align: center">Tempat Lahir</th>
-                                <th style="text-align: center">Tanggal Lahir</th>
-                                <th style="text-align: center">NIP</th>
-                                <th style="text-align: center">Unit Kerja</th>
-                                <th style="text-align: center">Golongan Pangkat</th>
-                                <th style="text-align: center">TMT Golongan</th>
-                                <th style="text-align: center">Eselon</th>
-                                <th style="text-align: center">Nama Jabatan</th>
-                                <th style="text-align: center">TMT Jabatan</th>
-                                <th style="text-align: center">Status Pegawai</th>
-                                <th style="text-align: center">TMT Pegawai</th>
-                                <th style="text-align: center">Masa Kerja Tahun</th>
-                                <th style="text-align: center">Masa Kerja Bulan</th>
-                                <th style="text-align: center">Jenis Kelamin</th>
-                                <th style="text-align: center">Agama</th>
-                                <th style="text-align: center">Perkawinan</th>
-                                <th style="text-align: center">Pendidikan Awal</th>
-                                <th style="text-align: center">Jurusan Pendidikan Awal</th>
-                                <th style="text-align: center">Pendidikan Akhir</th>
-                                <th style="text-align: center">Jurusan Pendidikan Akhir</th>
-                                <th style="text-align: center">No Askes</th>
-                                <th style="text-align: center">No NPWP</th>
-                                <th style="text-align: center">NIK</th>
-                                <th style="text-align: center">Alamat Rumah</th>
-                                <th style="text-align: center">Telpon</th>
-                                <th style="text-align: center">No Handphone</th>
-                                <th style="text-align: center">E-mail</th>
-                                <th style="text-align: center">Kedudukan Pegawai</th>
-                                <th width="5%" style="text-align: center">Action</th>
+                                <th width="5%">No</th>
+                                <th width="25%">Nama</th>
+                                <th>Tempat Lahir</th>
+                                <th>Tanggal Lahir</th>
+                                <th>NIP</th>
+                                <th>Unit Kerja</th>
+                                <!--<th>Golongan Pangkat</th>
+                                <th>TMT Golongan</th>
+                                <th>Eselon</th>
+                                <th>Nama Jabatan</th>
+                                <th>TMT Jabatan</th>
+                                <th>Status Pegawai</th>
+                                <th>TMT Pegawai</th>
+                                <th>Masa Kerja Tahun</th>
+                                <th>Masa Kerja Bulan</th>
+                                <th>Jenis Kelamin</th>
+                                <th>Agama</th>
+                                <th>Perkawinan</th>
+                                <th>Pendidikan Awal</th>
+                                <th>Jurusan Pendidikan Awal</th>
+                                <th>Pendidikan Akhir</th>
+                                <th>Jurusan Pendidikan Akhir</th>
+                                <th>No Askes</th>
+                                <th>No NPWP</th>
+                                <th>NIK</th>
+                                <th>Alamat Rumah</th>
+                                <th>Telpon</th>
+                                <th>No Handphone</th>
+                                <th>E-mail</th>
+                                <th>Kedudukan Pegawai</th>-->
+                                <!-- <th width="5%">Action</th> -->
                             </tr>
                         </thead>
                         <tbody>
                              <!-- @php $i=1 @endphp -->
                         @foreach ($data as $item)
-                            <tr>
+                            <tr onClick="window.location='/detail-pegawai/{{ $item->id }}'">
                                 @if($search == null)
                                 <td>{{ $loop->iteration}}</td>
                                 @else
                                 <td>{{ $loop->iteration }}</td>
                                 @endif
-                                <td>{{ $item->nama }}</td>
-                                <td>{{ $item->tempatLahir }}</td>
-                                <td>{{ $item->tanggalLahir }}</td>
-                                <td>{{ $item->noPegawai }}</td>
-                                <td>{{ $item->unitKerja }}</td>
-                                <td>{{ $item->golonganPangkat }}</td>
-                                <td>{{ $item->tmtGolongan }}</td>
-                                <td>{{ $item->eselon }}</td>
-                                <td>{{ $item->namaJabatan }}</td>
-                                <td>{{ $item->tmtJabatan }}</td>
-                                <td>{{ $item->statusPegawai }}</td>
-                                <td>{{ $item->tmtPegawai }}</td>
-                                <td>{{ $item->masaKerjaTahun }}</td>
-                                <td>{{ $item->masaKerjaBulan }}</td>
-                                <td>{{ $item->jenisKelamin }}</td>
-                                <td>{{ $item->agama }}</td>
-                                <td>{{ $item->perkawinan }}</td>
-                                <td>{{ $item->pendidikanAwal }}</td>
-                                <td>{{ $item->jurusanPendidikanAwal }}</td>
-                                <td>{{ $item->pendidikanAkhir }}</td>
-                                <td>{{ $item->jurusanPendidikanAkhir }}</td>
-                                <td>{{ $item->noAkses }}</td>
-                                <td>{{ $item->noNpwp }}</td>
-                                <td>{{ $item->nik }}</td>
-                                <td>{{ $item->alamatRumah }}</td>
-                                <td>{{ $item->telp }}</td>
-                                <td>{{ $item->hp }}</td>
-                                <td>{{ $item->email }}</td>
-                                <td>{{ $item->kedudukanPegawai }}</td>
-                                <td>
+                                <td class="text-left">{{ $item->nama }}</td>
+                                <td class="text-left">{{ $item->tempatLahir }}</td>
+                                <td class="text-left">{{ $item->tanggalLahir }}</td>
+                                <td class="text-left">{{ $item->noPegawai }}</td>
+                                <td class="text-left">{{ $item->unitKerja }}</td>
+                                <!--<td class="text-left">{{ $item->golonganPangkat }}</td>
+                                <td class="text-left">{{ $item->tmtGolongan }}</td>
+                                <td class="text-left">{{ $item->eselon }}</td>
+                                <td class="text-left">{{ $item->namaJabatan }}</td>
+                                <td class="text-left">{{ $item->tmtJabatan }}</td>
+                                <td class="text-left">{{ $item->statusPegawai }}</td>
+                                <td class="text-left">{{ $item->tmtPegawai }}</td>
+                                <td class="text-left">{{ $item->masaKerjaTahun }}</td>
+                                <td class="text-left">{{ $item->masaKerjaBulan }}</td>
+                                <td class="text-left">{{ $item->jenisKelamin }}</td>
+                                <td class="text-left">{{ $item->agama }}</td>
+                                <td class="text-left">{{ $item->perkawinan }}</td>
+                                <td class="text-left">{{ $item->pendidikanAwal }}</td>
+                                <td class="text-left">{{ $item->jurusanPendidikanAwal }}</td>
+                                <td class="text-left">{{ $item->pendidikanAkhir }}</td>
+                                <td class="text-left">{{ $item->jurusanPendidikanAkhir }}</td>
+                                <td class="text-left">{{ $item->noAkses }}</td>
+                                <td class="text-left">{{ $item->noNpwp }}</td>
+                                <td class="text-left">{{ $item->nik }}</td>
+                                <td class="text-left">{{ $item->alamatRumah }}</td>
+                                <td class="text-left">{{ $item->telp }}</td>
+                                <td class="text-left">{{ $item->hp }}</td>
+                                <td class="text-left">{{ $item->email }}</td>
+                                <td class="text-left">{{ $item->kedudukanPegawai }}</td>-->
+                                <!-- <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-social btn-flat btn-info btn-xs" data-toggle="dropdown" aria-expanded="false"><i
                                                 class="fa fa-arrow-circle-down"></i> Pilih Aksi
@@ -155,7 +152,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </td>
+                                </td> -->
                             </tr>
                             @endforeach
                             </tbody>

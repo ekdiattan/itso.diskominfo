@@ -63,7 +63,7 @@
         @csrf
             <div class="form-group">
             <label for="password"> Ganti Foto Profile</label>
-              <input  type="file" class="form-control" id="image" name="image">
+              <input  type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/bmp, .pdf">
             </div>
             <div class="input-group-append">
               <button type="submit" class="btn btn-primary mr-2 btn-flat float-right" id="submit">Change</button>
