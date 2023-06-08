@@ -66,21 +66,27 @@
                             <tr>
                                 <th width="5%" class="text-center">No</th>
                                 <th width="25%" class="text-center">Nama</th>
-                                <th class="text-center">Email</th>
+                                <th class="text-center">Tempat Lahir</th>
                                 <th class="text-center">Tanggal Lahir</th>
                                 <th class="text-center">Divisi</th>
                                 <th class="text-center">Jabatan</th>
+                                <th class="text-center">Pendidikan</th>
+                                <th class="text-center">Jurusan</th>
+                                <th class="text-center">TMT Masuk Kerja</th>
                             </tr>
                         </thead>
                         <tbody>
                         @foreach ($data as $item)
-                            <tr>
+                            <tr onClick="window.location='/detail-nonpns/{{ $item->id }}'">
                                 <td class="text-center">{{ $loop->iteration}}</td>
                                 <td class="text-left">{{ $item->fullname }}</td>
-                                <td class="text-left">{{ $item->email }}</td>
+                                <td class="text-left">{{ $item->birth_place }}</td>
                                 <td class="text-left">{{ $item->birth_date }}</td>
                                 <td class="text-left">{{ $item->divisi }}</td>
                                 <td class="text-left">{{ $item->jabatan }}</td>
+                                <td class="text-left">@if($item->pendidikan != null){{ $item->pendidikan->educational_level }}@endif</td>
+                                <td class="text-left">@if($item->pendidikan != null){{ $item->pendidikan->majors }}@endif</td>
+                                <td class="text-left">{{ $item->join_date }}</td>
                                 <!-- <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-social btn-flat btn-info btn-xs" data-toggle="dropdown" aria-expanded="false"><i

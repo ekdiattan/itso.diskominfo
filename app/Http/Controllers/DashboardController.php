@@ -15,7 +15,7 @@ class DashboardController extends Controller
         $laporan = Laporan::all();
         $booking = Booking::all();
         $pegawai = Pegawai::all();
-        $nonpns = DtPegawai::whereNot('jabatan', 'PNS')->where('isActive','true')->get();
+        $nonpns = DtPegawai::whereNot('jabatan', 'PNS')->where('is_active','true')->get();
 
         return view('home.dashboard', ["title" => "Dashboard", 'laporan' => sizeof($laporan),'booking' => sizeof($booking),'pegawai' => sizeof($pegawai),'nonpns' => sizeof($nonpns)]);
     }

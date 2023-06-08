@@ -130,6 +130,16 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group row">
+              <div class="col-sm-9">
+                <input type="checkbox" name="isHide" id="isHide" value="true" @if($data->isHide == 'true') checked @endif>
+                <label class="form-label">Sembunyikan dari daftar permohonan?</label>
+              </div>
+            </div>
+          </div>
+        </div>
           <div class="box">
             <div class="box-header with-border">
               <button type="submit" class="btn btn-primary mr-2 btn-flat">Submit</button>

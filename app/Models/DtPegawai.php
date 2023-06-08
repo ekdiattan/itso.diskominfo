@@ -13,13 +13,32 @@ class DtPegawai extends Model
         "user_id",
         "email",
         "fullname",
-        "username",
+        "birth_place",
         "birth_date",
+        "marital_status",
+        "religion",
+        "blood_type",
+        "gender",
+        "age",
+        "telephone",
         "id_divisi",
         "divisi",
         "id_jabatan",
         "jabatan",
-        "is_admin",
-        'isActive',
+        "is_staff",
+        "join_date",
+        'is_active',
+        "resign_date",
+        "reason_resignation",
+        "id_card_address",
+        "current_address",
+        "bank_account_number",
+        "bank_account_name",
+        "bank_branch",
+        "npwp",
     ];
+
+    public function pendidikan(){
+        return $this->hasOne(DtPendidikan::class, 'account', 'user_id');
+    }
 }

@@ -14,7 +14,7 @@
         IP:{{ $_SERVER['REMOTE_ADDR'] }}<br>
         Hostname:{{ gethostbyaddr($_SERVER['REMOTE_ADDR']) }}<br>
         Perangkat: {{ request()->server('HTTP_USER_AGENT') }} <br>
-        Detail: <a href="http://itso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}">http://itso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}</a>
+        Detail: <a href="http://devitso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}">http://devitso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}</a>
     </p>
 </body>
 </html>

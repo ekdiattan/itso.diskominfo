@@ -169,6 +169,7 @@ class UserController extends Controller
         $user->update([
             'password' => $password,
             'email' => $email,
+            'profile_image' => $profile_image,
         ]);
         
         $request->session()->flash('success', 'Berhasil mengupdate Data!');

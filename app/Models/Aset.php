@@ -23,6 +23,7 @@ class Aset extends Model
         'kebersihan',
         'bahanBakar',
         'keterangan',
+        'isHide'
     ];
 
     public function booked(){

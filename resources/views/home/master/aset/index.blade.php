@@ -119,7 +119,7 @@
                       <tbody>
                         @foreach ($asets as $key => $post )  
                         <tr>
-                          <td>{{ $asets->firstItem() + $key }}</td>
+                          <td>{{ $loop->iteration }}</td>
                           <td>{{ $post->nama }}</td>
                           <td>{{ $post->merk }}</td>
                           <td>{{ $post->jenis }}</td>

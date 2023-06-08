@@ -8,12 +8,7 @@ use Illuminate\Http\Request;
 class AsetController extends Controller
 {
     public function index(Request $request){
-
-        if($request){
-            $aset = DB::table('asets')->where('nama', 'ilike', '%'.$request->search2.'%')->paginate(10);
-        }else{
-            $aset = DB::table('asets')->where('nama', true)->paginate(10);
-        }
+        $aset = Aset::all();
 
         return view('home.master.aset.index', ['title' => 'Aset', 'asets'=> $aset,]);
     }
@@ -41,7 +36,6 @@ class AsetController extends Controller
     {
         $aset = Aset::find($id);
         $edit = Aset::find($id);
-
         return view('home.master.aset.edit',['asets'=> $aset, 'data'=> $aset, 'title' => 'Aset']);
     }
 
@@ -49,6 +43,12 @@ class AsetController extends Controller
     {
         $aset = Aset::find($id);
         $aset->update($request->all());
+        // kalo di unhide
+        if($request->isHide == ''){
+            $aset->update([
+                'isHide' => 'false'
+            ]);
+        }
         $request->accepts('session');
         session()->flash('success', 'Berhasil menambahkan data!');
 

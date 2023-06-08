@@ -11,7 +11,7 @@
         Pemohon: {{ $booking->namaPemohon }} <br>
         Nama Aset: {{ $booking->aset->merk }} {{ $booking->aset->nama }} ({{ $booking->aset->kodeUnit }}) <br>
         Periode Pinjam: {{ $mulai->format('G:i, d M Y') }} WIB s.d. {{ $selesai->format('H:i, d M Y') }} WIB <br><br>
-        Detail: <a href="http://itso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}">http://itso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}</a>
+        Detail: <a href="http://devitso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}">http://devitso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}</a>
     </p>
 </body>
 </html>

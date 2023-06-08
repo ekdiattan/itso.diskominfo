@@ -12,11 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class PegawaiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
         // INI UNTUK MELAKUKAN KOMPARASI DATA
@@ -52,37 +47,19 @@ class PegawaiController extends Controller
         //         }
         //     }
         // }
-        if($request->search == null){
-            $data = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
-            $nonpns = DB::table('dt_pegawais')->get();
-        }else{
-            $data = DB::table('pegawais')->where('nama', 'ilike', '%'.$request->search.'%')->orwhere('unitKerja', 'ilike', '%'.$request->search.'%')->get();
-            $nonpns = DB::table('dt_pegawais')->where('fullname', 'ilike', '%'.$request->search.'%')->get();
-        }
-        return view('home.kepegawaian.data.master_pegawai.index', compact('data','nonpns'), [ 'data' => $data, 'nonpns' => $nonpns,'title' => 'Pegawai', 'search' => $request->search]);
-    // 
-    //     $pns = DB::table('pegawais')->get();
-    //     $nonpns = DtPegawai::all();
-    //     return view('home.kepegawaian.data.master_pegawai.index', [ 'pns' => $pns, 'nonpns' => $nonpns,'title' => 'Pegawai']);
+        // $data = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
+        // $nonpns = DB::table('dt_pegawais')->get();
+        $data = Pegawai::all();
+        $nonpns = DtPegawai::where('is_active', 'true')->whereNot('jabatan', 'PNS')->get();
+        return view('home.kepegawaian.data.master_pegawai.index', [ 'data' => $data, 'nonpns' => $nonpns,'title' => 'Pegawai', 'search' => $request->search]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         $bidang = Bidang::all();
         return view('home.kepegawaian.data.master_pegawai.create', ['bidangs' => $bidang, 'title' => 'Pegawai']);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         Pegawai::create($request->all());
@@ -94,12 +71,6 @@ class PegawaiController extends Controller
         return view('home.kepegawaian.data.master_pegawai.create', ['title' => 'Pegawai']);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Pegawai  $pegawai
-     * @return \Illuminate\Http\Response
-     */
     public function update()
     {
         $todayDate = Carbon::now()->format('Y-m-d');
@@ -150,23 +121,22 @@ class PegawaiController extends Controller
         return redirect()->action([PegawaiController::class, 'index']);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Pegawai  $pegawai
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Pegawai $pegawai)
+    public function edit($id)
     {
-        //
+        $edit = Pegawai::find($id);
+        return view('home.kepegawaian.data.master_pegawai.editpns', [ 'edit' => $edit, 'title' => 'Pegawai']);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Pegawai  $pegawai
-     * @return \Illuminate\Http\Response
-     */
+    public function upd(Request $request, $id)
+    {
+        $edit = Pegawai::find($id);
+        $edit->update($request->all());
+        $request->accepts('session');
+        session()->flash('success', 'Berhasil menambahkan data!');
+
+        return redirect('/detail-pegawai/'.$id)->with('success', 'Berhasil Mengupdate Data');
+    }
+
     public function delete($id)
     {
         $user = Pegawai::find($id);
@@ -186,31 +156,61 @@ class PegawaiController extends Controller
         }
         return view('home.kepegawaian.data.master_pegawai.pns', compact('data'), [ 'data' => $data, 'title' => 'Pegawai', 'search' => $request->search]);
     }
+//  Detail PNS
+     public function show($id){
+        $pegawai= Pegawai::find($id);
+        return view('home.kepegawaian.data.master_pegawai.show',['pegawai'=> $pegawai, 'title' => 'Detail Pegawai']);
+    }
 
 // NONPNS
     public function nonpns(Request $request)
     {
-        $data = DtPegawai::whereNot('jabatan', 'PNS')->where('isActive', 'true')->get();
+        $data = DtPegawai::whereNot('jabatan', 'PNS')->where('is_active', 'true')->get();
         foreach($data as $result){
             $result->birth_date = Carbon::parse($result->birth_date)->translatedFormat('d F Y');
+            $result->join_date = Carbon::parse($result->join_date)->translatedFormat('d F Y');
         }
         return view('home.kepegawaian.data.master_pegawai.nonpns', [ 'data' => $data, 'title' => 'Pegawai']);
     }
 
+//  Detail NON-PNS
+    public function detail($id){
+        $nonpns= DtPegawai::find($id);
+        // $nonpns->join_date = Carbon::parse($nonpns->join_date)->format('Y-m-d\TH:i:s');
+        $nonpns->join_date = Carbon::parse($nonpns->join_date)->translatedFormat('d F Y');
+        $nonpns->birth_date = Carbon::parse($nonpns->birth_date)->translatedFormat('d F Y');
+        return view('home.kepegawaian.data.master_pegawai.detail',['nonpns'=> $nonpns, 'title' => 'Detail Pegawai']);
+    }
+
+
+    public function editnon($id)
+    {
+        $edit = DtPegawai::find($id);
+        return view('home.kepegawaian.data.master_pegawai.editnonpns', [ 'edit' => $edit, 'title' => 'Pegawai']);
+    }
+
+    public function updnon(Request $request, $id)
+    {
+        $edit = DtPegawai::find($id);
+        $edit->update($request->all());
+        $request->accepts('session');
+        session()->flash('success', 'Berhasil menambahkan data!');
+
+        return redirect('/detail-nonpns/'.$id)->with('success', 'Berhasil Mengupdate Data');
+    }
+
+
 // Tidak Aktif
     public function nonaktifindex(Request $request)
     {
-        $data = DtPegawai::where('isActive', 'false')->get();
+        $data = DtPegawai::where('is_active', 'false')->get();
+        // dd($data);
         foreach($data as $result){
             $result->birth_date = Carbon::parse($result->birth_date)->translatedFormat('d F Y');
         }
         return view('home.kepegawaian.data.master_pegawai.tidakaktif', [ 'data' => $data, 'title' => 'Pegawai Tidak Aktif', 'search' => $request->search]);
     }
 
-    //show
-    public function show($id){
-        $pegawai= Pegawai::find($id);
-        return view('home.kepegawaian.data.master_pegawai.show',['pegawai'=> $pegawai, 'title' => 'Detail Pegawai']);
-    }
+   
 
 }

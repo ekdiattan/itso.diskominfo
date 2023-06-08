@@ -122,7 +122,7 @@ class BookingController extends Controller
         $periodNew = CarbonPeriod::create($request->mulai, $request->selesai);
         $bidang = Bidang::all();
         $pegawai = Pegawai::all();
-        $asets =  Aset::select('*')->where('status', 'tersedia')->where('jenis', $request->jenisAset)->get();
+        $asets =  Aset::select('*')->where('status', 'tersedia')->whereNot('isHide', 'true')->where('jenis', $request->jenisAset)->get();
         $asetFiltered = array();
         
         foreach($asets as $result){ // looping aset
@@ -225,20 +225,21 @@ class BookingController extends Controller
             // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
             // 'Hostname: ' . gethostname().PHP_EOL.
             // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-            'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+            'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         ]);
-        Telegram::sendMessage([
-            'chat_id' => '-1001613610994',
-            'text' => 'Ada permohonan booking sebagai berikut'.PHP_EOL.PHP_EOL.
-            'Nomor Tiket : '.$booking->tiket.PHP_EOL.
-            'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
-            'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
-            'Periode Permohonan : '.PHP_EOL.$mulai->format('G:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
-            // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
+        // Telegram::sendMessage([
+        //     'chat_id' => '-1001613610994',
+        //     'text' => 'Ada permohonan booking sebagai berikut'.PHP_EOL.PHP_EOL.
+        //     'Nomor Tiket : '.$booking->tiket.PHP_EOL.
+        //     'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
+        //     'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
+        //     'Periode Permohonan : '.PHP_EOL.$mulai->format('G:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
+           
+        //     'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+        // ]);
+         // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
             // 'Hostname: ' . gethostname().PHP_EOL.
             // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-            'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
-        ]);
         Mail::to($booking->nama_email)->send(new BookingNotification($booking, $mulai, $selesai));
         
         // Mengirim email ke semua alamat email di UserController
@@ -278,7 +279,7 @@ class BookingController extends Controller
     public function bookingCheck(Request $request){
         $pegawai = Pegawai::all();
         $bidang = Bidang::all();
-        $aset =  Aset::select('*')->where('status', 'tersedia')->where('jenis', $request->jenisAset)->get();
+        $aset =  Aset::select('*')->where('status', 'tersedia')->whereNot('isHide', 'true')->where('jenis', $request->jenisAset)->get();
         return view('home.aset.booking.create', [
             'title' => 'Peminjaman',
             'aset' => $aset,
@@ -345,7 +346,7 @@ class BookingController extends Controller
             'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
             'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
             'Periode Permohonan : '.PHP_EOL.$mulai->format('H:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
-            'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+            'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         ]);
         Telegram::sendMessage([
             'chat_id' => '-1001613610994',
@@ -354,7 +355,7 @@ class BookingController extends Controller
             'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
             'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
             'Periode Permohonan : '.PHP_EOL.$mulai->format('H:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
-            'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+            'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         ]);
 
         Mail::to('recipient@example.com')->send(new BookingNotification($booking, $mulai, $selesai));
@@ -425,7 +426,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
             Telegram::sendMessage([
                 'chat_id' => '-1001613610994',
@@ -437,7 +438,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
             Mail::to($booking->nama_email)->send(new BookingNotificationSetuju($booking, $booking->mulai, $booking->selesai));
 
@@ -457,7 +458,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
             Telegram::sendMessage([
                 'chat_id' => '-1001613610994',
@@ -470,7 +471,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
         Mail::to($booking->nama_email)->send(new BookingNotificationTolak($booking, $booking->mulai, $booking->selesai));
         session()->flash('success', 'Berhasil mengupdate data!');
@@ -487,7 +488,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
             Telegram::sendMessage([
                 'chat_id' => '-1001613610994',
@@ -499,7 +500,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
         Mail::to($booking->nama_email)->send(new BookingNotification($booking, $booking->mulai, $booking->selesai));
         session()->flash('success', 'Berhasil mengupdate data!');
@@ -521,8 +522,12 @@ class BookingController extends Controller
         $todayTime = Carbon::now()->translatedFormat('l, d-m-Y');
         $data = Booking::find($id);
         $aset = $data->aset;
-        $pdf = PDF::loadView('home.aset.booking.peminjaman_pdf',['datas'=>$data,'aset'=>$aset])->setPaper('a4','landscape');
-
+        $mjam = Carbon::parse($data->mulai)->translatedFormat('H:i');
+        $mdate = Carbon::parse($data->mulai)->translatedFormat('d F Y');
+        $sjam = Carbon::parse($data->selesai)->translatedFormat('H:i');
+        $sdate = Carbon::parse($data->selesai)->translatedFormat('d F Y');
+        $data->tanggalPermohonan = Carbon::parse($data->tanggalPermohonan)->translatedFormat('d F Y');
+        $pdf = PDF::loadView('home.aset.booking.peminjaman_pdf',['datas'=>$data,'aset'=>$aset, 'mjam' => $mjam, 'mdate' => $mdate, 'sjam' => $sjam, 'sdate' => $sdate])->setPaper('legal','landscape');
         return $pdf->download('Permohonan-'.$todayTime.'.pdf');
     }
 
@@ -610,7 +615,7 @@ class BookingController extends Controller
                 'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
                 'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
                 'Periode Peminjaman: '.PHP_EOL.date('H:i, d M Y', strtotime($booking->mulai)).' s.d.'.PHP_EOL.date('H:i, d M Y', strtotime($booking->selesai)).PHP_EOL.PHP_EOL.
-                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
         session()->flash('success', 'Berhasil mengupdate data!');
         return redirect('/keamanan');

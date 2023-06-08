@@ -54,7 +54,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://itso.diskominfo.jabarprov.go.id/'),
+    'url' => env('APP_URL', 'http://devitso.diskominfo.jabarprov.go.id/'),
 
     'asset_url' => env('ASSET_URL'),
 

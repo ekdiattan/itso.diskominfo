@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('keterangan')->nullable();
             // end untuk kendaraan
             $table->string('status')->default('tersedia');
+            $table->boolean('isHide')->default(true);
             $table->timestamps();
         });
     }

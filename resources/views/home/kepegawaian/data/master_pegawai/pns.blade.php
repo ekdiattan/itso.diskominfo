@@ -90,13 +90,12 @@
                                 <th class="text-left">No Handphone</th>
                                 <th class="text-left">E-mail</th>
                                 <th class="text-left">Kedudukan Pegawai</th>-->
-                                <th width="5%" class="text-left">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                              <!-- @php $i=1 @endphp -->
                         @foreach ($data as $item)
-                            <tr>
+                            <tr onClick="window.location='/detail-pegawai/{{ $item->id }}'">
                                 @if($search == null)
                                 <td>{{ $loop->iteration}}</td>
                                 @else
@@ -131,7 +130,7 @@
                                 <td class="text-left">{{ $item->hp }}</td>
                                 <td class="text-left">{{ $item->email }}</td>
                                 <td class="text-left">{{ $item->kedudukanPegawai }}</td>-->
-                                <td>
+                                <!-- <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-social btn-flat btn-info btn-xs" data-toggle="dropdown" aria-expanded="false"><i
                                                 class="fa fa-arrow-circle-down"></i> Pilih Aksi
@@ -151,7 +150,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </td>
+                                </td> -->
                             </tr>
                             @endforeach
                             </tbody>

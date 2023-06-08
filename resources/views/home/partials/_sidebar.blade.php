@@ -8,7 +8,7 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="m-auto">
             <a href="/dashboard" class="navbar-brand">
-              <img src="{{ asset('assets/images/logo_diskom.svg') }}" alt="Diskominfo" class="brand-image" style="height: 35  px; width: 143px;">
+              <img src="{{ asset('assets/images/logo_diskom.svg') }}" alt="Diskominfo" class="brand-image" style="height: 35px; width: 143px;">
             </a>
           </div>
         </div>  
@@ -117,7 +117,7 @@
                 <li class="nav-item">
                   <a href="/terlambat-harian" class="nav-link {{ ($title === 'Data Terlambat Harian') ? 'active disabled' : '' }}">
                     <i class="nav-icon fas fa-exclamation ml-3"></i>
-                    <p>Data Terlambat Harian</p>
+                    <p style="font-size:15px;">Data Terlambat Harian</p>
                   </a>
                 </li>
                 <li class="nav-item">
@@ -153,7 +153,7 @@
                   <li class="nav-item">
                     <a href="/keamanan" class="nav-link {{ ($title === 'Kendaraan') ? 'active disabled' : '' }}">
                       <i class="nav-icon fas fa-car ml-3"></i>
-                      <p class="text-sm">Peminjaman Transportasi</p>
+                      <p style="font-size:13px;">Peminjaman Transportasi</p>
                     </a>
                   </li>
                 </ul>

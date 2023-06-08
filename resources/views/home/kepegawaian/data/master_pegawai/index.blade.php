@@ -67,6 +67,7 @@
                                 <th>Tanggal Lahir</th>
                                 <th>NIP</th>
                                 <th>Unit Kerja</th>
+                                <th>Kedudukan Pegawai</th>
                                 <!--<th>Golongan Pangkat</th>
                                 <th>TMT Golongan</th>
                                 <th>Eselon</th>
@@ -90,7 +91,7 @@
                                 <th>Telpon</th>
                                 <th>No Handphone</th>
                                 <th>E-mail</th>
-                                <th>Kedudukan Pegawai</th>-->
+                                -->
                                 <!-- <th width="5%">Action</th> -->
                             </tr>
                         </thead>
@@ -108,6 +109,7 @@
                                 <td class="text-left">{{ $item->tanggalLahir }}</td>
                                 <td class="text-left">{{ $item->noPegawai }}</td>
                                 <td class="text-left">{{ $item->unitKerja }}</td>
+                                <td class="text-left">{{ $item->kedudukanPegawai }}</td>
                                 <!--<td class="text-left">{{ $item->golonganPangkat }}</td>
                                 <td class="text-left">{{ $item->tmtGolongan }}</td>
                                 <td class="text-left">{{ $item->eselon }}</td>
@@ -131,7 +133,7 @@
                                 <td class="text-left">{{ $item->telp }}</td>
                                 <td class="text-left">{{ $item->hp }}</td>
                                 <td class="text-left">{{ $item->email }}</td>
-                                <td class="text-left">{{ $item->kedudukanPegawai }}</td>-->
+                                -->
                                 <!-- <td>
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-social btn-flat btn-info btn-xs" data-toggle="dropdown" aria-expanded="false"><i
@@ -153,6 +155,17 @@
                                         </ul>
                                     </div>
                                 </td> -->
+                            </tr>
+                            @endforeach
+                            @foreach($nonpns as $result)
+                            <tr onClick="window.location='/detail-nonpns/{{ $result->id }}'">
+                                <td class="text-left">{{ $loop->iteration + sizeof($data) }}</td>
+                                <td class="text-left">{{ $result->fullname }}</td>
+                                <td class="text-left"></td>
+                                <td class="text-left">{{ $result->birth_date }}</td>
+                                <td class="text-left"></td>
+                                <td class="text-left">{{ $result->divisi }}</td>
+                                <td class="text-left">{{ $result->jabatan }}</td>
                             </tr>
                             @endforeach
                             </tbody>

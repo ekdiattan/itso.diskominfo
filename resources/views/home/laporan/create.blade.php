@@ -99,9 +99,9 @@ textArea.addEventListener("input", countCharacters);
       const name = document.getElementById('namapelapor').value;
       let pegawais = @json($pegawais);
       for(let i = 0; i < pegawais.length; i++){
-        console.log(pegawais[i]);
         if(pegawais[i].nama == name){
           $("#namabidang").val(pegawais[i].unitKerja); // masih harus disesuaikan
+          $("#nomorhp").val(pegawais[i].hp); // masih harus disesuaikan
         }
       }
     }

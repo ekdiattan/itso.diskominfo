@@ -13,7 +13,7 @@
         Periode Pinjam: {{ $mulai}} WIB s.d. {{ $selesai}} WIB <br>
         Dengan Alasan: {{ $booking->alasan }} <br>
         <!-- s -->
-        Detail: <a href="http://itso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}">http://itso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}</a>
+        Detail: <a href="http://devitso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}">http://devitso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}</a>
     </p>
 </body>
 

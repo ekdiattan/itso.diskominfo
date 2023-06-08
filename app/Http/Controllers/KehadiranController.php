@@ -116,22 +116,22 @@ class KehadiranController extends Controller
     
     public function show(Request $request)
     {
-        $client = new Client();
-        $login = $client->request(
-            'POST', 'https://groupware-api.digitalservice.id/auth/admin/login/', [
-                'form_params' => [
-                    'username' => 'yudiwardoyozz',
-                    'password' => 'yudiwardoyozz', 
-                ], [
-                    'debug' => true
-                ]
-            ]
-        );
-        $result = json_decode($login->getBody()->getContents());
-        $token = $result->auth_token;
-        $page = 1;
-        $maxPage = 2;
-        while($page <= $maxPage){
+        // $client = new Client();
+        // $login = $client->request(
+        //     'POST', 'https://groupware-api.digitalservice.id/auth/admin/login/', [
+        //         'form_params' => [
+        //             'username' => 'yudiwardoyozz',
+        //             'password' => 'yudiwardoyozz', 
+        //         ], [
+        //             'debug' => true
+        //         ]
+        //     ]
+        // );
+        // $result = json_decode($login->getBody()->getContents());
+        // $token = $result->auth_token;
+        // $page = 1;
+        // $maxPage = 2;
+        // while($page <= $maxPage){
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/info', [ // Data User Login
 
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/menu/user/list/', [ // Menu List
@@ -150,7 +150,7 @@ class KehadiranController extends Controller
 
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page_size=10&page=1&is_active=true&struktural=true&search=', [ // Ini untuk pegawai Aktif
             
-            $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page_size=10&page=1&is_active=false&struktural=&search=', [ // Pegawai nonaktif / alumni
+            // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page_size=10&page=1&is_active=false&struktural=&search=', [ // Pegawai nonaktif / alumni
 
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page_size=10&page=1&is_active=true&struktural=&search=', [ // Pegawai Non Asn
                 
@@ -173,16 +173,22 @@ class KehadiranController extends Controller
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/jabatan/?limit=10&page=1', [ // Daftar jabatan dengan detailnya
 
             // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/project/?limit=10&block=-&page=1', [ // Daftar proyek dalam API
+
+            // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/edb41e68-4a5c-4f56-9cb2-0b5fd82d0c59/', [ // Detail untuk pegawai berdasarkan user_id non asn
                 
-            'headers' => [
-            // 'headers' => [
-                'Authorization' => 'Bearer '. $token,
-            ]
-            ]);
-            $body = $response->getBody();
-            $body_array = json_decode($body);
-            dd($body_array);
-        }
+            // $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/231b26c1-0419-48b0-b2d3-bf875312cb07/', [ // Detail untuk pegawai berdasarkan user_id asn
+            
+        //     $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/data/educations/eccf97f8-3cef-423d-9064-676721768a8a/lists/', [ // Detail untuk pegawai berdasarkan user_id asn
+            
+        //     'headers' => [
+        //     // 'headers' => [
+        //         'Authorization' => 'Bearer '. $token,
+        //     ]
+        //     ]);
+        //     $body = $response->getBody();
+        //     $body_array = json_decode($body);
+        //     dd($body_array->results);
+        // }
         $now = Carbon::now()->format('Y-m-d');
         if($request->search == null){
             $data_post = DB::table('rekapitulasis')->where('tanggal', '=', $now)->get();

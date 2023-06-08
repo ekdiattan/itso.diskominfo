@@ -228,10 +228,21 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Kepegawaian']], function(){
     Route::post('/store-data-pegawai', [PegawaiController::class, 'store']);
     Route::get('/update-data-pegawai', [PegawaiController::class, 'update']);
     Route::get('/delete{id}', [PegawaiController::class, 'delete']);
-    Route::get('/pns', [PegawaiController::class, 'pnsindex']);
-    Route::get('/nonpns', [PegawaiController::class, 'nonpns']);
-    Route::get('/nonaktif', [PegawaiController::class, 'nonaktifindex']);
+    
+    // PNS
     Route::get('/detail-pegawai/{id}', [PegawaiController::class, 'show']);
+    Route::get('/pns', [PegawaiController::class, 'pnsindex']);
+    Route::get('/pegawai/{id}',[PegawaiController::class, 'edit']);
+    Route::post('/update-pns/{id}', [PegawaiController::class, 'upd']);
+    
+    // NON-PNS
+    Route::get('/nonpns', [PegawaiController::class, 'nonpns']);
+    Route::get('/detail-nonpns/{id}', [PegawaiController::class, 'detail']);
+    Route::get('/nonpns/{id}',[PegawaiController::class, 'editnon']);
+    Route::post('/update-nonpns/{id}', [PegawaiController::class, 'updnon']);
+
+    // NON-AKTIF
+    Route::get('/nonaktif', [PegawaiController::class, 'nonaktifindex']);
 
     
     // exception pegawai
@@ -285,7 +296,6 @@ Route::get('/pinjam',[TrackingController::class, 'pinjam']);
 Route::post('/upload-surat/{id}',[TrackingController::class, 'unggah']);
 
 Route::get('/block',[BlockController::class, 'block']);
-Route::get('/tes',[TrackingController::class, 'tes']);
 Route::get('/booking-export/{id}', [BookingController::class, 'export']);
 
 

@@ -11,7 +11,7 @@
         Nama Pemohon: {{ $booking->namaPemohon }} <br>
         Nama Aset: {{ $booking->aset->merk }} {{ $booking->aset->nama }} ({{ $booking->aset->kodeUnit }}) <br>
         Periode Permohonan: {{ $mulai}} WIB s.d. {{ $selesai}} WIB <br><br>
-        Detail: <a href="http://itso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}">http://itso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}</a>
+        Detail: <a href="http://devitso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}">http://devitso.diskominfo.jabarprov.go.id/tracking/{{ $booking->tiket }}</a>
     </p>
 </body>
 </html>

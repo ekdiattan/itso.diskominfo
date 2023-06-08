@@ -46,15 +46,15 @@
                       <label>Username *</label>
                       <input type="text" class="form-control p_input" id="username" name="username" autofocus required>
                     </div>
-                    <div class="form-group">
-                      <label>Password *</label>
+                    <label>Password</label>
+                    <div class="input-group-append">
                       <input type="password" class="form-control p_input" id="password" name="password" required>
                     </div>
-                    <div class="form-group d-flex align-items-center justify-content-between">
+                    <!-- <div class="form-group d-flex align-items-center justify-content-between">
                       <div class="form-check">
                         <label class="form-check-label">
                           <input type="checkbox" class="form-check-input"> Remember me </label>
-                      </div>
+                      </div> -->
                       <!-- <a href="#" class="forgot-pass">Forgot password</a> -->
                     </div>
                     <div class="text-center">
@@ -84,6 +84,7 @@
     <script src="../../assets/js/misc.js"></script>
     <script src="../../assets/js/settings.js"></script>
     <script src="../../assets/js/todolist.js"></script>
+
     <!-- endinject -->
   </body>
   <script>

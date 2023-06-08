@@ -1,7 +1,6 @@
 @extends('home.partials.main')
 @section('container')
 <!-- Profile -->
-
       <div class="profile-desc mt-2">
         <div class="profile-pic">
           <div class="count-indicator">
@@ -78,7 +77,6 @@
                         <i class="far fa-eye" id="show-password" type="button" ></i>
             </div>
             <div class="form-group">
-            
       </form> 
 
 <!-- End Profile -->

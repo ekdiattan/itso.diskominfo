@@ -220,7 +220,6 @@ window.onload = function() {
       if(pegawais[i].nama == name){
         $("#bidang").val(pegawais[i].unitKerja); // masih harus disesuaikan
         $("#nip").val(pegawais[i].noPegawai); // masih harus disesuaikan
-        $("#noTelp").val(pegawais[i].noTelp); // masih harus disesuaikan
       }
     }
   }

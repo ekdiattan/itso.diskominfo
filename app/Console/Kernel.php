@@ -22,9 +22,9 @@ class Kernel extends ConsoleKernel
         //     ->withoutOverlapping();
             
         //$schedule->command('UpdateBelumPulang:cron')
-             //->dailyAt('16:10')
-             //->runInBackground()
-             //->withoutOverlapping();
+            //->dailyAt('16:10')
+            //->runInBackground()
+            //->withoutOverlapping();
         
         // $schedule->command('UpdateRekapMasuk:cron')
         //     ->everyTenMinutes()
@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel
             ->runInBackground();
 
         $schedule->command('UpdateDigi:cron')
-            ->everyTenMinutes()
+            ->hourly()
             ->runInBackground();
             
         $schedule->command('UpdateRekap:cron')

@@ -34,7 +34,7 @@
                         <tbody>
                              <!-- @php $i=1 @endphp -->
                         @foreach ($data as $item)
-                            <tr onClick="window.location='/show-tidakaktif/{{ $item->id }}'">
+                            <tr onClick="window.location='/detail-nonpns/{{ $item->id }}'">
                                 <td class="text-left">{{ $loop->iteration}}</td>
                                 <td class="text-left">{{ $item->fullname }}</td>
                                 <td class="text-left">{{ $item->email }}</td>
