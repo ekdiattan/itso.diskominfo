@@ -26,14 +26,17 @@ return new class extends Migration
             $table->enum('keperluan', ['Dinas', 'Pribadi'])->nullable();
             $table->string('perihal');
             $table->string('suratPermohonan')->nullable();
+            $table->string('TTE')->nullable();
             $table->string('tanggalPermohonan');
             $table->string('kebersihan')->nullable();
             $table->string('bahanBakar')->nullable();
             $table->string('penanggungJawab')->nullable();
             $table->string('pengambilKunci')->nullable();
+            $table->string('pengembaliKunci')->nullable();
             $table->string('nama_email')->nullable();
             $table->string('keterangan')->nullable();
             $table->enum('status', ['Dalam Pengajuan', 'Disetujui', 'Ditolak','Dipinjam','Selesai'])->default('Dalam Pengajuan');
+            $table->string('nipPenyetuju')->nullable();
             $table->string('penyetuju')->nullable();
             $table->string('waktu')->nullable();
             $table->string('alasan')->nullable();

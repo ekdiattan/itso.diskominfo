@@ -7,7 +7,8 @@ use Carbon\CarbonPeriod;
 use App\Models\Aset;
 use App\Models\Booking;
 use App\Models\Pegawai;
-use App\Models\Bidang;
+use App\Models\DtPegawai;
+use App\Models\UnitKerja;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -24,11 +25,7 @@ use PDF;
 class BookingController extends Controller
 {
     public function index (Request $request){
-        if($request->search == null){
-            $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
-        } else {
-            $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
-        }
+        $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
         // change date format
         foreach($dalamPengajuan as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
@@ -39,13 +36,8 @@ class BookingController extends Controller
     }
 
     public function reject (Request $request){
-        if($request->search == null){
-            $ditolak = DB::table('bookings')->where('status', 'Ditolak')->orderBy('tiket', 'desc')->get();
-            $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
-        } else {
-            $ditolak = DB::table('bookings')->where('status', 'Ditolak')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->get();
-            $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
-        }
+        $ditolak = DB::table('bookings')->where('status', 'Ditolak')->orderBy('tiket', 'desc')->get();
+        $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
         // change date format
         foreach($ditolak as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
@@ -61,13 +53,8 @@ class BookingController extends Controller
     }
 
     public function acc (Request $request){
-        if($request->search == null){
-            $disetujui = DB::table('bookings')->where('status', 'Disetujui')->orderBy('tiket', 'desc')->get();
-            $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
-        } else {
-            $disetujui = DB::table('bookings')->where('status', 'Disetujui')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%');
-            $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
-        }
+        $disetujui = DB::table('bookings')->where('status', 'Disetujui')->orderBy('tiket', 'desc')->get();
+        $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
         foreach($disetujui as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
             $result->mulai = Carbon::parse($result->mulai)->translatedFormat('H:i:s, d F Y');
@@ -82,13 +69,8 @@ class BookingController extends Controller
     }
 
     public function selesai (Request $request){
-        if($request->search == null){
-            $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
-            $selesai = DB::table('bookings')->where('status', 'Selesai')->orderBy('tiket', 'desc')->get();
-        } else {
-            $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
-            $selesai = DB::table('bookings')->where('status', 'Selesai')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
-        }
+        $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
+        $selesai = DB::table('bookings')->where('status', 'Selesai')->orderBy('tiket', 'desc')->get();
         foreach($dalamPengajuan as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
             $result->mulai = Carbon::parse($result->mulai)->translatedFormat('H:i:s, d F Y');
@@ -104,14 +86,14 @@ class BookingController extends Controller
     
     //public
     public function permohonan(){
-        $bidang = Bidang::all();
+        $unitkerja = UnitKerja::all();
         $pegawai = Pegawai::all();
         $aset =  Aset::all();
         $booked = Booking::select('aset_id', 'mulai', 'selesai')->where('status', '=', 'Disetujui')->get();
         return view('home.aset.booking.permohonan', [
             'title' => 'Permohonan Peminjaman',
             'aset' => $aset,
-            'bidang' => $bidang,
+            'unitkerja' => $unitkerja,
             'pegawais' => $pegawai,
             'booked' => $booked,
             'before' => null
@@ -120,7 +102,7 @@ class BookingController extends Controller
     
     public function permohonanCheck (Request $request){
         $periodNew = CarbonPeriod::create($request->mulai, $request->selesai);
-        $bidang = Bidang::all();
+        $unitkerja = UnitKerja::all();
         $pegawai = Pegawai::all();
         $asets =  Aset::select('*')->where('status', 'tersedia')->whereNot('isHide', 'true')->where('jenis', $request->jenisAset)->get();
         $asetFiltered = array();
@@ -142,7 +124,7 @@ class BookingController extends Controller
         return view('home.aset.booking.permohonan', [
             'title' => 'Permohonan Peminjaman',
             'aset' => $asetFiltered,
-            'bidang' => $bidang,
+            'unitkerja' => $unitkerja,
             'pegawais' => $pegawai,
             'booked' => $booked,
             'before' => $request->all()
@@ -194,7 +176,7 @@ class BookingController extends Controller
             'namaPemohon' => $request->namaPemohon,
             'nip' => $request->nip,
             'noTelp' => $request->noTelp,
-            'bidang' => $request->bidang,
+            'bidang' => $request->unitkerja,
             'mulai' => $request->mulai,
             'selesai' => $request->selesai,
             'keperluan' => $request->keperluan,
@@ -225,7 +207,7 @@ class BookingController extends Controller
             // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
             // 'Hostname: ' . gethostname().PHP_EOL.
             // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-            'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+            'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         ]);
         // Telegram::sendMessage([
         //     'chat_id' => '-1001613610994',
@@ -235,11 +217,12 @@ class BookingController extends Controller
         //     'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
         //     'Periode Permohonan : '.PHP_EOL.$mulai->format('G:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
            
-        //     'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+        //     'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         // ]);
          // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
             // 'Hostname: ' . gethostname().PHP_EOL.
             // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
+        
         Mail::to($booking->nama_email)->send(new BookingNotification($booking, $mulai, $selesai));
         
         // Mengirim email ke semua alamat email di UserController
@@ -265,25 +248,23 @@ class BookingController extends Controller
         $booking->selesai = Carbon::parse($booking->selesai)->translatedFormat('H:i:s, d F Y');
         return view('home.aset.booking.result', ['title' => 'Permohonan', 'data' => $booking]); // bakalan bisa di pisahin
     }
-    
-    
+        
     //admin
     public function create (){
-        
         $pegawai = Pegawai::all();
-        $bidang = Bidang::all();
+        $unitkerja = UnitKerja::all();
         $aset =  Aset::all();
-        return view('home.aset.booking.create', ['title' => 'Peminjaman','aset' => $aset,'bidang' => $bidang, 'pegawais' => $pegawai, 'before' => null]);
+        return view('home.aset.booking.create', ['title' => 'Peminjaman','aset' => $aset,'unitkerja' => $unitkerja, 'pegawais' => $pegawai, 'before' => null]);
     }
     
     public function bookingCheck(Request $request){
         $pegawai = Pegawai::all();
-        $bidang = Bidang::all();
-        $aset =  Aset::select('*')->where('status', 'tersedia')->whereNot('isHide', 'true')->where('jenis', $request->jenisAset)->get();
+        $unitkerja = UnitKerja::all();
+        $aset =  Aset::select('*')->where('status', 'tersedia')->where('jenis', $request->jenisAset)->get();
         return view('home.aset.booking.create', [
             'title' => 'Peminjaman',
             'aset' => $aset,
-            'bidang' => $bidang, 
+            'unitkerja' => $unitkerja, 
             'pegawais' => $pegawai,
             'before' => $request->all()
         ]);
@@ -324,7 +305,7 @@ class BookingController extends Controller
             'namaPemohon' => $request->namaPemohon,
             'nip' => $request->nip,
             'noTelp' => $request->noTelp,
-            'bidang' => $request->bidang,
+            'bidang' => $request->unitkerja,
             'mulai' => $request->mulai,
             'selesai' => $request->selesai,
             'keperluan' => $request->keperluan,
@@ -346,7 +327,7 @@ class BookingController extends Controller
             'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
             'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
             'Periode Permohonan : '.PHP_EOL.$mulai->format('H:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
-            'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+            'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         ]);
         Telegram::sendMessage([
             'chat_id' => '-1001613610994',
@@ -355,7 +336,7 @@ class BookingController extends Controller
             'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
             'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
             'Periode Permohonan : '.PHP_EOL.$mulai->format('H:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
-            'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+            'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         ]);
 
         Mail::to('recipient@example.com')->send(new BookingNotification($booking, $mulai, $selesai));
@@ -400,6 +381,7 @@ class BookingController extends Controller
                  'alasan' => $request->alasan,
                  'suratPermohonan' => $surat,
                  'penyetuju' => auth()->user()->nama,
+                 'nipPenyetuju' => auth()->user()->nip,
                  'waktu' => now(),
                  'hostname' => $booking -> hostname. ',' .gethostname(),
                  'ip' => $booking -> ip. ',' .$_SERVER['REMOTE_ADDR']
@@ -409,6 +391,7 @@ class BookingController extends Controller
                 'status' => $request->status,
                 'alasan' => $request->alasan,
                 'penyetuju' => auth()->user()->nama,
+                'nipPenyetuju' => auth()->user()->nip,
                 'waktu' => now(),
                 'hostname' => $booking -> hostname. ',' .gethostname(),
                 'ip' => $booking -> ip. ',' .$_SERVER['REMOTE_ADDR']
@@ -426,7 +409,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
             Telegram::sendMessage([
                 'chat_id' => '-1001613610994',
@@ -438,7 +421,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
             Mail::to($booking->nama_email)->send(new BookingNotificationSetuju($booking, $booking->mulai, $booking->selesai));
 
@@ -458,7 +441,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
             Telegram::sendMessage([
                 'chat_id' => '-1001613610994',
@@ -471,7 +454,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
         Mail::to($booking->nama_email)->send(new BookingNotificationTolak($booking, $booking->mulai, $booking->selesai));
         session()->flash('success', 'Berhasil mengupdate data!');
@@ -488,7 +471,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
             Telegram::sendMessage([
                 'chat_id' => '-1001613610994',
@@ -500,7 +483,7 @@ class BookingController extends Controller
                 // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
                 // 'Hostname: ' . gethostname().PHP_EOL.
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
-                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
         Mail::to($booking->nama_email)->send(new BookingNotification($booking, $booking->mulai, $booking->selesai));
         session()->flash('success', 'Berhasil mengupdate data!');
@@ -527,7 +510,7 @@ class BookingController extends Controller
         $sjam = Carbon::parse($data->selesai)->translatedFormat('H:i');
         $sdate = Carbon::parse($data->selesai)->translatedFormat('d F Y');
         $data->tanggalPermohonan = Carbon::parse($data->tanggalPermohonan)->translatedFormat('d F Y');
-        $pdf = PDF::loadView('home.aset.booking.peminjaman_pdf',['datas'=>$data,'aset'=>$aset, 'mjam' => $mjam, 'mdate' => $mdate, 'sjam' => $sjam, 'sdate' => $sdate])->setPaper('legal','landscape');
+        $pdf = PDF::loadView('home.aset.booking.peminjaman_pdf',['datas'=>$data,'aset'=>$aset, 'mjam' => $mjam, 'mdate' => $mdate, 'sjam' => $sjam, 'sdate' => $sdate])->setPaper([0, 0, 595.27559055, 935.43307087], 'landscape');
         return $pdf->download('Permohonan-'.$todayTime.'.pdf');
     }
 
@@ -580,14 +563,26 @@ class BookingController extends Controller
     public function proses($id){
         $edit= Booking::find($id);
         $aset = $edit->aset;
-        return view('home.keamanan.proses',['edit'=> $edit, 'title' => 'Kendaraan', 'aset' => $aset]);
+        $pegawai = Pegawai::all();
+        $dtpegawais = DtPegawai::all();
+        // dd($edit);
+        return view('home.keamanan.proses',['dtpegawais' => $dtpegawais, 'pegawais' => $pegawai, 'edit'=> $edit, 'title' => 'Kendaraan', 'aset' => $aset]);
+    }
+
+    public function dipinjam($id){
+        $edit= Booking::find($id);
+        $aset = $edit->aset;
+        $pegawai = Pegawai::all();
+        $dtpegawais = DtPegawai::all();
+        // dd($edit);
+        return view('home.keamanan.dipinjam',['dtpegawais' => $dtpegawais, 'pegawais' => $pegawai, 'edit'=> $edit, 'title' => 'Kendaraan', 'aset' => $aset]);
     }
 
     public function upd(Request $request, $id){ 
         $booking= Booking::find($id);
         $booking->update([
             'kebersihan' => $request->kebersihan,
-            'bahanBakar' => $request->bahanBakar,
+            'bahanBakar' => $request->bahanBakar,  
             'keterangan' => $request->keterangan
         ]);
         
@@ -605,17 +600,21 @@ class BookingController extends Controller
         $booking->update([
             'status' => $request->status,
             'pengambilKunci' => $request->pengambilKunci,
+            'pengembaliKunci' => $request->pengembaliKunci,
             'penanggungJawab' => auth()->user()->nama
         ]);
+        // dd($booking);
         if ($request->status ==='Dipinjam') {
             Telegram::sendMessage([
                 'chat_id' => '-1001613610994',
-                'text' => 'Permohonan sedang dipinjam oleh :'.PHP_EOL.PHP_EOL.
+                'text' => 'Kunci Kendaraan sudah dipinjam: '.PHP_EOL.PHP_EOL.
                 'Nomor Tiket : '.$booking->tiket.PHP_EOL.
                 'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
                 'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
                 'Periode Peminjaman: '.PHP_EOL.date('H:i, d M Y', strtotime($booking->mulai)).' s.d.'.PHP_EOL.date('H:i, d M Y', strtotime($booking->selesai)).PHP_EOL.PHP_EOL.
-                'Detail: http://devitso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+                'Pengambil Kunci : '.$booking->pengambilKunci.PHP_EOL.
+                'Pemberi Kunci : '.$booking->penanggungJawab.PHP_EOL.
+                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
         session()->flash('success', 'Berhasil mengupdate data!');
         return redirect('/keamanan');
@@ -629,6 +628,33 @@ class BookingController extends Controller
             //     'Periode Peminjaman: '.PHP_EOL.date('H:i, d M Y', strtotime($booking->mulai)).' s.d.'.PHP_EOL.date('H:i, d M Y', strtotime($booking->selesai)).PHP_EOL.PHP_EOL.
             //     'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             // ]);
+        session()->flash('success', 'Berhasil mengupdate data!');
+        return redirect('/booking');
+        }
+    }
+
+    public function updpinjam(Request $request, $id){ 
+        $booking= Booking::find($id);
+        $booking->update([
+            'status' => $request->status,
+            'pengembaliKunci' => $request->pengembaliKunci,
+            'kebersihan' => $request->kebersihan,
+            'bahanBakar' => $request->bahanBakar,
+            'keterangan' => $request->keterangan
+        ]);
+        // dd($booking)
+        session()->flash('success', 'Berhasil mengupdate data!');
+        return redirect('/keamanan');
+        if ($request->status ==='Selesai') {
+            Telegram::sendMessage([
+                'chat_id' => '-902481775',
+                'text' => 'Permohoan anda telah selesai'.PHP_EOL.PHP_EOL.
+                'Nomor Tiket : '.$booking->tiket.PHP_EOL.
+                'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
+                'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
+                'Periode Peminjaman: '.PHP_EOL.date('H:i, d M Y', strtotime($booking->mulai)).' s.d.'.PHP_EOL.date('H:i, d M Y', strtotime($booking->selesai)).PHP_EOL.PHP_EOL.
+                'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
+            ]);
         session()->flash('success', 'Berhasil mengupdate data!');
         return redirect('/booking');
         }

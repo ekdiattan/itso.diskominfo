@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
 use App\Models\DtPegawai;
-use App\Models\Bidang;
+use App\Models\UnitKerja;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;

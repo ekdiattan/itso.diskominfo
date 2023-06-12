@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\InventarisController;
-use App\Http\Controllers\BidangController;
+use App\Http\Controllers\UnitKerjaController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KehadiranController;
 use App\Http\Controllers\MasukController;
@@ -45,7 +45,7 @@ Route::get('/', function () {
 Route::get('/login',[UserController::class, 'login']);
 Route::post('/login',[UserController::class, 'authenticate']);
 
-Route::group(['middleware' =>['auth','hakAkses:Admin']], function(){
+Route::group(['middleware' =>['auth']], function(){
     Route::get('/index',[UserController::class, 'index']);
     Route::get('/register',[UserController::class, 'register']);
     Route::post('/register',[UserController::class, 'store_register']);
@@ -53,7 +53,7 @@ Route::group(['middleware' =>['auth','hakAkses:Admin']], function(){
     Route::get('/register/edit/{id}', [UserController::class,'edit']);
     Route::post('/register/update/{id}', [UserController::class,'updateByUser']);
     Route::get('/register/delete/{id}',[UserController::class, 'delete']);
-});
+}); 
 
 Route::group(['middleware' =>['auth']], function(){
     Route::get('/dashboard',[DashboardController::class, 'index']);
@@ -124,11 +124,12 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Aset']], function(){
 
 //bidang
 Route::group(['middleware' =>['auth','hakAkses:Admin']], function(){
-    Route::resource('/bidang', BidangController::class);
-    Route::post('/bidang/create',[BidangController::class, 'store']);
-    Route::get('/bidang/{id}', [BidangController::class,'edit']);
-    Route::post('/bidang/{id}', [BidangController::class,'update']);
-    Route::get('/bidang/delete/{id}',[BidangController::class, 'delete']);
+    // Route::resource('/unitkerja', UnitKerjaController::class);
+    Route::get('/unitkerja',[UnitKerjaController::class, 'index']);
+    Route::post('/unitkerja/create',[UnitKerjaController::class, 'store']);
+    Route::get('/unitkerja/{id}', [UnitKerjaController::class,'edit']);
+    Route::post('/unitkerja/{id}', [UnitKerjaController::class,'update']);
+    Route::get('/unitkerja/delete/{id}',[UnitKerjaController::class, 'delete']);
 });
 
 
@@ -178,9 +179,11 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Keamanan']], function(){
     Route::get('/keamanan-riwayatdetail/{id}',[BookingController::class, 'riwayatdetail']);
     Route::get('/keamanan/{id}',[BookingController::class, 'detail']);
     Route::get('/keamanan-edit/{id}',[BookingController::class, 'edt']);
+    Route::get('/keamanan-dipinjam/{id}',[BookingController::class, 'dipinjam']);
     Route::get('/keamanan-proses/{id}',[BookingController::class, 'proses']);
     Route::post('/keamanan-upd/{id}',[BookingController::class, 'upd']);
     Route::post('/keamanan-prs/{id}',[BookingController::class, 'updproses']);
+    Route::post('/keamanan-dipinjam/{id}',[BookingController::class, 'updpinjam']);
    
     
 });
@@ -277,8 +280,8 @@ Route::get('/light', function () {
 })->middleware('auth');
 
 // Account Setting 
-Route::get('/account/{id}', [UserController::class, 'editByUser'])->middleware('auth');
-Route::post('/account/{id}', [UserController::class, 'updateByUser'])->middleware('auth');
+Route::get('/account/{id}', [UserController::class, 'editByUser']);
+Route::post('/account/{id}', [UserController::class, 'updateByUser']);
 Route::post('/change-password', [UserController::class, 'changePassword']);
 Route::get('/maintenance', [UserController::class, 'maintenance']);
 Route::get('/fiturmaintenance', [UserController::class, 'fiturmaintenance']);

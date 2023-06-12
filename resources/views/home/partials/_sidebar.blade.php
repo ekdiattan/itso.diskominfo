@@ -168,7 +168,7 @@
             </li>
           @endif
           @if(auth()->user()->hak_akses=="Admin" ||  auth()->user()->hak_akses=="Aset")
-            <li class="nav-item {{ ($title === 'Aset' || $title === 'Kode Aset' || $title === 'Bidang' || $title === 'Pengecualian Pegawai'|| $title === 'Kategori' || $title === 'Role' || $title === 'Merk' || $title === 'Satuan' || $title === 'Libur Nasional') ? 'menu-open menu-is-opening' : '' }}">
+            <li class="nav-item {{ ($title === 'Aset' || $title === 'Kode Aset' || $title === 'Unit Kerja' || $title === 'Pengecualian Pegawai'|| $title === 'Kategori' || $title === 'Role' || $title === 'Merk' || $title === 'Satuan' || $title === 'Libur Nasional') ? 'menu-open menu-is-opening' : '' }}">
               <a class="nav-link">
                 <i class="nav-icon fas fa-cog "></i>
                 <p>
@@ -194,9 +194,9 @@
             @endif
             @if(auth()->user()->hak_akses=="Admin")
                 <li class="nav-item">
-                  <a href="/bidang" class="nav-link {{ ($title === 'Bidang') ? 'active disabled' : '' }}">
+                  <a href="/unitkerja" class="nav-link {{ ($title === 'Unit Kerja') ? 'active disabled' : '' }}">
                     <i class="nav-icon fas fa-building ml-3"></i>
-                    <p>Bidang</p>
+                    <p>Unit Kerja</p>
                   </a>
                 </li>
                 <li class="nav-item">

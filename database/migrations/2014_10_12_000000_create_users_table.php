@@ -23,8 +23,9 @@ return new class extends Migration
             $table->string('no_hp');
             $table->string('hak_akses');
             $table->string('password');
+            $table->string('image')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
-            $table->string('profile_image')->nullable();
         });
     }
 

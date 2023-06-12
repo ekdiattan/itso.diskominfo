@@ -7,7 +7,7 @@
   </div>
 </nav>
 <video autoplay muted loop id="myVideo" >
-  <source src="/assets/videos/sdikominfo.mp4" type="video/mp4">
+  <source src="/assets/videos/diskominfobaru.mp4" type="video/mp4">
   </video>
   @section('container')
 

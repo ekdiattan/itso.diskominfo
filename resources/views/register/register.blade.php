@@ -30,10 +30,10 @@
                   </div>
                   <div class="form-group row">
                     <div class="col-sm-6">
-                      <label for="exampleFormControlSelect2">Nama Bidang</label>
-                        <select class="form-control" id="nama_bidang" name="nama_bidang">
-                          @foreach ($bidang as $bidang)
-                          <option value="{{ $bidang->namabidang }}">{{ $bidang->namabidang }}</option>
+                      <label for="exampleFormControlSelect2">Unit Kerja</label>
+                        <select class="form-control" id="unitkerja" name="unitkerja">
+                          @foreach ($unitkerja as $unitkerja)
+                          <option value="{{ $unitkerja->namaUnit }}">{{ $unitkerja->namaUnit }}</option>
                           @endforeach  
                         </select>
                     </div>
@@ -51,10 +51,10 @@
                       <label>Nomor HP</label>
                       <input type="text" class="form-control p_input" id="no_hp" name="no_hp">
                     </div>
-                    <!-- <div class="col-sm-6">
+                    <div class="col-sm-6">
                       <label>Foto Profile</label>
                       <input type="file" class="form-control p_input" id="image" name="image">
-                    </div> -->
+                    </div>
                     <div class="col-sm-6" id="emaill" style="display:none;">
                       <label>Email</label>
                       <input type="email" class="form-control p_input" id="email" name="email" placeholder="Email">

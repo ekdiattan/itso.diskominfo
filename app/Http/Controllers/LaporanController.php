@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Laporan;
-use App\Models\Bidang;
+use App\Models\UnitKerja;
 use App\Models\Kategori;
 use App\Models\Solusi;
 use App\Models\Pegawai;
+use App\Models\DtPegawai;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -47,9 +48,10 @@ class LaporanController extends Controller
     public function create()
     {
         $tglLaporan = Carbon::now()->format('d-m-Y'); // date with 13/12/2023 format
-        $bidang = Bidang::all();
+        $unitkerja = UnitKerja::all();
         $pegawai = Pegawai::all();
-        return view('home.laporan.create', ['tglLaporan'=>$tglLaporan, 'bidang'=>$bidang, 'title' => 'Catatan IT', 'pegawais' => $pegawai]);
+        $dtpegawais = DtPegawai::all();
+        return view('home.laporan.create', ['dtpegawais' => $dtpegawais, 'tglLaporan'=>$tglLaporan, 'unitkerja'=>$unitkerja, 'title' => 'Catatan IT', 'pegawais' => $pegawai]);
     }
 
     public function store(Request $request)
@@ -83,7 +85,7 @@ class LaporanController extends Controller
             'namapencatat' => auth()->user()->nama,
             'tanggalmencatat' => Carbon::parse($request->tanggalmencatat)->format('Y-m-d'),
             'namapelapor' => $request->namapelapor,
-            'namabidang' => $request->namabidang,
+            'namabidang' => $request->unitkerja,
             'nomorhp' => $request->nomorhp,
             'permasalahan' => $request->permasalahan,
           
@@ -100,7 +102,7 @@ class LaporanController extends Controller
         $laporan->tanggalmencatat = Carbon::parse($laporan->tanggalmencatat)->translatedFormat('d F Y');
         $images = DB::table('solusis')->select('image')->where('tiket', '=', $laporan->tiket)->orderBy('created_at', 'desc')->get();
         $lastImage = DB::table('solusis')->select('image')->where('tiket', '=', $laporan->tiket)->orderBy('created_at', 'desc')->first();
-        $bidang = Bidang::all();
+        $unitkerja = UnitKerja::all();
         $kategori = Kategori::all();
 
         $solusis = DB::table('solusis')->where('tiket', '=', $laporan->tiket)->orderBy('created_at', 'desc')->get();
@@ -113,13 +115,13 @@ class LaporanController extends Controller
                 ->get()
             );
         }
-        return view ('home.laporan.show',['bidang'=>$bidang,'kategori'=>$kategori, 'laporan'=> $laporan, 'solusis' => $solusis, 'users' => $users->collapse(), 'size' => sizeof($solusis), 'title' => 'Catatan IT', 'images' => $images, 'lastImage' => $lastImage]);
+        return view ('home.laporan.show',['unitkerja'=>$unitkerja,'kategori'=>$kategori, 'laporan'=> $laporan, 'solusis' => $solusis, 'users' => $users->collapse(), 'size' => sizeof($solusis), 'title' => 'Catatan IT', 'images' => $images, 'lastImage' => $lastImage]);
     }
 
     public function edit($id){
         return view('home.laporan.edit', [
             'laporan' => Laporan::find($id),
-            'bidangs' => Bidang::all(),
+            'unitkerjas' => UnitKerja::all(),
             'pegawais' => Pegawai::all(),
             'title' => 'Catatan IT'
         ]);
@@ -129,7 +131,7 @@ class LaporanController extends Controller
         $report = Laporan::find($id);
         $report->update([
             'namapelapor' => $request->namapelapor,
-            'namabidang' => $request->namabidang,
+            'namabidang' => $request->unitkerja,
             'nomorhp' => $request->nomorhp,
             'permasalahan' => $request->permasalahan
         ]);
@@ -143,9 +145,9 @@ class LaporanController extends Controller
     public function execute($id)
     {
         $laporan = Laporan::find($id);
-        $bidang = Bidang::all();
+        $unitkerja = UnitKerja::all();
         $kategori = Kategori::all();
-        return view ('home.laporan.execute',['bidang'=>$bidang,'kategori'=>$kategori, 'laporan'=> $laporan, 'title' => 'Catatan IT']);
+        return view ('home.laporan.execute',['unitkerja'=>$unitkerja,'kategori'=>$kategori, 'laporan'=> $laporan, 'title' => 'Catatan IT']);
     }
  
     // solution made

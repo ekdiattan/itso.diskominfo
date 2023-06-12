@@ -4,7 +4,7 @@
       <div class="profile-desc mt-2">
         <div class="profile-pic">
           <div class="count-indicator">
-            <img class="rounded-circle mx-auto d-block " src="{{ $user->image ?? asset('assets/images/faces/face15.jpg') }}" alt="image">
+            <img class="rounded-circle mx-auto d-block " src="@if(auth()->user()->image != null){{ asset(auth()->user()->image) }} @elseif(auth()->user()->image == null) {{ asset('assets/images/faces/face15.jpg') }} @endif" alt="image" style="height : 80px; width : 80px;">
             <span class="count bg-success"></span>
           </div>
          <div class="profile-name text-center">

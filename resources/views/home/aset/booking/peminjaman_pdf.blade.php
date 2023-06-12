@@ -47,7 +47,7 @@
 	</table>
 
     <br><br>
-    <table class='table table-borderles' cellspacing="2" cellpadding="2">
+    <table class='table table-sm table-borderles' cellspacing="2" cellpadding="2">
             <tr>
                 <td class="text-center" style="border-width: 0px">Mengetahui</td>
                 <td class="text-center" style="border-width: 0px">Menyetujui</td>
@@ -59,19 +59,24 @@
             </tr>
             <br><br>
             <tr>
-                <td class="text-center" style="border-width: 0px;"><h1><hr></h1></td>
                 <td class="text-center" style="border-width: 0px;"></td>
-                <td class="text-center" style="border-width: 0px;"><h1><hr></h1></td>
+                <td class="text-center" style="border-width: 0px;"></td>
+                <td class="text-center" style="border-width: 0px;"></td>
             </tr>
             <tr>
-                <td class="text-center pt-0" style="border-width: 0px;">{{auth()->user()->nama}}</td>
+                <td class="text-center" style="border-width: 0px;"><h1><hr style="border-color: #000000;"></h1></td>
+                <td class="text-center" style="border-width: 0px;"></td>
+                <td class="text-center" style="border-width: 0px;"><h1><hr style="border-color: #000000;"></h1></td>
+            </tr>
+            <tr>
+                <td class="text-center pt-0" style="border-width: 0px;">{{ $datas->penyetuju }}</td>
                 <td class="text-center pt-0" style="border-width: 0px;"><b>Hj. ASTRIA PRIANTIE, SE., MM</b></td>
-                <td class="text-center pt-0" style="border-width: 0px;">{{$datas->namaPemohon}}</td>
+                <td class="text-center pt-0" style="border-width: 0px;">{{ $datas->namaPemohon }}</td>
             </tr>
             <tr>
-                <td class="text-center pt-0" style="border-width: 0px;">NIP : {{auth()->user()->nip}}</td>
+                <td class="text-center pt-0" style="border-width: 0px;">NIP : {{ $datas->nipPenyetuju }}</td>
                 <td class="text-center pt-0" style="border-width: 0px;">Penata</td>
-                <td class="text-center pt-0" style="border-width: 0px;">NIP : {{$datas->nip}}</td>
+                <td class="text-center pt-0" style="border-width: 0px;">NIP : {{ $datas->nip }}</td>
             </tr>
             <tr>
                 <td class="text-center" style="border-width: 0px;"></td>

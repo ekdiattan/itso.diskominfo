@@ -50,9 +50,9 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Nama Bidang</label>
                 <div class="col-sm-9">
-                  <select class="form-control" id="bidang" name="bidang" onfocus="setBidang()">
-                    @foreach ($bidang as $bidang)
-                      <option value="{{ $bidang->namabidang }}">{{ $bidang->namabidang }}</option>
+                  <select class="form-control" id="unitkerja" name="unitkerja" onfocus="setBidang()">
+                    @foreach ($unitkerja as $unitkerja)
+                      <option value="{{ $unitkerja->namaUnit }}">{{ $unitkerja->namaUnit }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -218,8 +218,9 @@ window.onload = function() {
     let pegawais = @json($pegawais);
     for(let i = 0; i < pegawais.length; i++){
       if(pegawais[i].nama == name){
-        $("#bidang").val(pegawais[i].unitKerja); // masih harus disesuaikan
+        $("#unitkerja").val(pegawais[i].unitKerja); // masih harus disesuaikan
         $("#nip").val(pegawais[i].noPegawai); // masih harus disesuaikan
+        // $("#noTelp").val(pegawais[i].noTelp); // masih harus disesuaikan 
       }
     }
   }
@@ -290,11 +291,11 @@ window.onload = function() {
 
   function showOtherForm(){
     let namaPemohon = document.getElementById('namaPemohon').value;
-    let bidang = document.getElementById('bidang').value;
+    let unitkerja = document.getElementById('unitkerja').value;
     let noTelp = document.getElementById('noTelp').value;
     if(document.getElementById('ruangan').checked || document.getElementById('kendaraan').checked || document.getElementById('barang').checked){
       document.getElementById('otherForm').removeAttribute('hidden');
-    } else if(!(document.getElementById('ruangan').checked || document.getElementById('kendaraan').checked || document.getElementById('baramg').checked)){
+    } else if(!(document.getElementById('ruangan').checked || document.getElementById('kendaraan').checked || document.getElementById('barang').checked)){
       document.getElementById('otherForm').setAttribute('hidden', '');
     }
   }
@@ -307,7 +308,7 @@ window.onload = function() {
     console.log(document.getElementById('namaPemohon').value);
     if(
       document.getElementById('namaPemohon').value != '' &&
-      document.getElementById('bidang').value != '' &&
+      document.getElementById('unitkerja').value != '' &&
       document.getElementById('noTelp').value != '' &&
       document.getElementById('nip').value != '' &&
       document.getElementById('nama_email').value != '' &&

@@ -17,7 +17,7 @@
   <ul class="navbar-nav ml-auto">
     <div class="container">
       <a href="#" class="navbar-brand" id="profileDropdown" data-toggle="dropdown">
-      <img src="{{ $user->profile_picture ?? asset('assets/images/faces/face15.jpg') }}" alt="Avatar" class="brand-image img-circle" style="height: 50px;width:50px;">
+      <img src="@if(auth()->user()->image != null){{ asset(auth()->user()->image) }} @elseif(auth()->user()->image == null) {{ asset('assets/images/faces/face15.jpg') }} @endif" alt="Avatar" class="brand-image img-circle" style="height: 50px;width:50px;">
         <span class="brand-text font-weight-light">{{ auth()->user()->nama }}</span>
         <i class="fas fa-caret-down"></i>
       </a>

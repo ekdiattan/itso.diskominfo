@@ -56,7 +56,7 @@
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Nama Bidang</label>
+                <label class="col-sm-3 col-form-label">Unit Kerja</label>
                 <div class="col-sm-9">
                 <input type="text" class="form-control" id="namabidang" name="namabidang" value="{{ $laporan->namabidang }}" readonly/>
                 </div>

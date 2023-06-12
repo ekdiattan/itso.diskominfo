@@ -79,7 +79,7 @@ class TelegramAbsenPulang extends Command
 
         Telegram::sendMessage([
             'chat_id' => '-1001781912074',
-            'message_thread_id' => '3',
+            'message_thread_id' => '432',
             'text' => 'Assalamualaikum Warohmatullahi Wabarokatuh Bapak/Ibu..'. PHP_EOL. 'Selamat sore Bapak/Ibu'.PHP_EOL.'Disampaikan daftar pegawai yang belum melakukan presensi untuk skema pulang kerja sampai pukul '.$update.' WIB berikut :'.PHP_EOL.$strPegawai.PHP_EOL.'Terima kasih 🙏😊'.PHP_EOL.'Salam,'.PHP_EOL.'Tim Sekretariat Diskominfo'.PHP_EOL.'#ExcellentService'.PHP_EOL.'#DiskominfoJuara'.PHP_EOL.'#JabarJuaraLahirBatin'
         ]);
     }

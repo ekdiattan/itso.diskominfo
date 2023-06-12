@@ -28,18 +28,21 @@
                     @foreach($pegawais as $pegawai)
                     <option value="{{ $pegawai->nama }}">
                     @endforeach
+                    @foreach($dtpegawais as $dtpegawai)
+                    <option value="{{ $dtpegawai->fullname }}">
+                    @endforeach
                   </datalist>
                 </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Nama Bidang</label>
+                <label class="col-sm-3 col-form-label">Nama Unit Kerja</label>
                 <div class="col-sm-9">
-                  <select class="form-control" id="namabidang" name="namabidang" required>
-                    <option value="">Pilih Bidang</option>
-                    @foreach ($bidang as $bidang)
-                    <option value="{{ $bidang->namabidang }}">{{ $bidang->namabidang }}</option>
+                  <select class="form-control" id="unitkerja" name="unitkerja" required>
+                    <option value="">Pilih Unit Kerja</option>
+                    @foreach ($unitkerja as $unitkerja)
+                    <option value="{{ $unitkerja->namaUnit }}">{{ $unitkerja->namaUnit }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -100,7 +103,7 @@ textArea.addEventListener("input", countCharacters);
       let pegawais = @json($pegawais);
       for(let i = 0; i < pegawais.length; i++){
         if(pegawais[i].nama == name){
-          $("#namabidang").val(pegawais[i].unitKerja); // masih harus disesuaikan
+          $("#unitkerja").val(pegawais[i].unitKerja); // masih harus disesuaikan
           $("#nomorhp").val(pegawais[i].hp); // masih harus disesuaikan
         }
       }

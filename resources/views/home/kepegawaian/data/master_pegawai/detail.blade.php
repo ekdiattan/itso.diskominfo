@@ -84,15 +84,6 @@
           <div class="row">
             <div class="col-md-4">
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" style="font-size:13px;">Jabatan</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" name="jabatan"
-                  value="{{$nonpns->jabatan}}" readonly>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Tanggal Bergabung</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" name="tanggalBergabung"

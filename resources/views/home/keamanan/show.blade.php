@@ -6,37 +6,48 @@
   {{ session('success') }}
 </div>
 @endif
-<ol class="breadcrumb">
-    <li class="breadcrumb-item active" style="color:black;"><h2>Detail Data Peminjaman<h2></li>
-</ol>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h3>Detail Data Peminjaman</h3>
+</div>
+<a href="/keamanan" class="btn btn-danger">Kembali</a><br>
 
-<div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
-  <!-- Container wrapper -->
-  <div class="container justify-content-center justify-content-md-between">
-    <!-- Left links -->
-    <ul class="navbar-nav flex-row">
-      <li class="nav-item me-auto">
-        <a href="/keamanan" class="nav-link" style="font-size:20px;color:red;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-          class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-          Kembali
+<div class="col-lg-12 grid-margin stretch-card"><br>
+
+<div class="card">
+    <div class="card-title">
+        <a class="nav-link" class="btn shadow-0 p-0 me-auto" style="color:black;">
+            <b>{{$booking->tiket}} | {{$booking->namaPemohon}}</b>
         </a>
-      </li>
-      <li class="nav-item me-auto">
-        <a href="/keamanan-edit/{{ $booking->id }}" class="nav-link" style="font-size:20px;color:green;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-          class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-          Cek Kendaraan
-        </a>
-      </li>
-      <li class="nav-item me-auto">
-        <a href="/keamanan-proses/{{ $booking->id }}" class="nav-link" style="font-size:20px;color:blue;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-          class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-          Proses
-        </a>
-      </li>
-    </ul>
+    </div>
+    <div class="nav navbar navbar-expand navbar-light bg-light border-bottom p-0">
+      <div class="container justify-content-center justify-content-md-between">
+        <ul class="navbar-nav flex-row">
+            @if($booking->status == "Disetujui")
+            <li class="nav-item me-auto">
+                <a href="/keamanan-edit/{{ $booking->id }}" class="nav-link" style="font-size:20px;color:green;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                Cek Kendaraan
+                </a>
+            </li>
+            <li class="nav-item me-auto">
+                <a href="/keamanan-proses/{{ $booking->id }}" class="nav-link" style="font-size:20px;color:blue;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                Proses
+                </a>
+            </li>
+            @endif
+            @if($booking->status == "Dipinjam")
+            <li class="nav-item me-auto">
+                <a href="/keamanan-dipinjam/{{ $booking->id }}" class="nav-link" style="font-size:20px;color:green;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                Cek Kendaraan
+                </a>
+            </li>
+            @endif
+        </ul> 
+    </div>
   </div>
-</div> <br>
-
+</div>
 <div class="row">
     <div class="col-md-3">
       <div class="card">
@@ -114,12 +125,16 @@
                 <input type="text" class="form-control" id="bahanBakar" name="bahanBakar" value="{{$booking->bahanBakar}}" readonly>
             </div>
             <div class="form-group">
-                <label for="exampleInputUsername1">Penanggung Jawab</label>
+                <label for="exampleInputUsername1">Pemberi Kunci</label>
                 <input type="text" class="form-control" id="penanggungJawab" name="penanggungJawab" value="{{$booking->penanggungJawab}}" readonly>
             </div>
             <div class="form-group">
                 <label for="exampleInputUsername1">Pengambil Kunci</label>
                 <input type="text" class="form-control" id="pengambilKunci" name="pengambilKunci" value="{{$booking->pengambilKunci}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputUsername1">Pengembali Kunci</label>
+                <input type="text" class="form-control" id="pengembaliKunci" name="pengembaliKunci" value="{{$booking->pengembaliKunci}}" readonly>
             </div>
             <div class="form-group">
                 <label for="exampleInputUsername1">Kondisi Kendaraan</label>

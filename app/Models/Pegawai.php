@@ -14,6 +14,7 @@ class Pegawai extends Model
         'tempatLahir',
         'tanggalLahir',
         'noPegawai',
+        'unitKerja_id',
         'unitKerja',
         'golonganPangkat',
         'tmtGolongan',
@@ -40,4 +41,8 @@ class Pegawai extends Model
         'email',   
         'kedudukanPegawai',  
     ];
+
+    public function unitkerja(){
+        return $this->hasOne(UnitKerja::Class, 'id', 'unitKerja_id');
+    }
 }

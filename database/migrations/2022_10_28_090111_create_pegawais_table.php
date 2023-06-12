@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('tempatLahir')->nullable();
             $table->date('tanggalLahir')->nullable();
             $table->string('noPegawai')->unique();
+            $table->string('unitKerja_id')->nullable();
             $table->string('unitKerja')->nullable();
             $table->string('golonganPangkat')->nullable();
             $table->date('tmtGolongan')->nullable();

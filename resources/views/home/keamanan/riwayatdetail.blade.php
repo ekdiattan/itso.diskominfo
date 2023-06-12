@@ -95,6 +95,10 @@
                 <input type="text" class="form-control" id="pengambilKunci" name="pengambilKunci" value="{{$booking->pengambilKunci}}" readonly>
             </div>
             <div class="form-group">
+                <label for="exampleInputUsername1">Pengembali Kunci</label>
+                <input type="text" class="form-control" id="pengembaliKunci" name="pengembaliKunci" value="{{$booking->pengembaliKunci}}" readonly>
+            </div>
+            <div class="form-group">
                 <label for="exampleInputUsername1">Kondisi Kendaraan</label>
                 <input type="text" class="form-control" id="keterangan" name="keterangan" value="{{$booking->keterangan}}" readonly>
             </div>

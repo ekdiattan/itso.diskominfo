@@ -116,190 +116,192 @@ class UpdateDigi extends Command
                             ]);
                         $detailBody = json_decode($detailResponse->getBody());
                         // because account_bank variable is array, but if null it known as string variable
-                        if($detailBody->account_bank != ''){
-                            DtPegawai::upsert([
-                                "user_id" => $detailBody->id,
-                                "email" => $detailBody->email,
-                                "fullname" => $detailBody->fullname,
-                                "birth_place" => $detailBody->birth_place,
-                                "birth_date" => $detailBody->birth_date,
-                                "marital_status" => $detailBody->marital_status,
-                                "religion" => $detailBody->religion,
-                                "blood_type" => $detailBody->blood_type,
-                                "gender" => $detailBody->gender,
-                                "age" => $detailBody->age,
-                                "telephone" => $detailBody->telephone,
-                                "id_divisi" => $detailBody->id_divisi,
-                                "divisi" => $detailBody->divisi,
-                                "id_jabatan" => $detailBody->id_jabatan,
-                                "jabatan" => $detailBody->jabatan,
-                                "is_staff" => $detailBody->is_staff,
-                                "join_date" => $detailBody->join_date,
-                                'is_active' => $detailBody->is_active,
-                                "resign_date" => $detailBody->resign_date,
-                                "reason_resignation" => $detailBody->reason_resignation,
-                                "id_card_address" => $detailBody->id_card_address,
-                                "current_address" => $detailBody->current_address,
-                                "bank_account_number" => $detailBody->account_bank->bank_account_number,
-                                "bank_account_name" => $detailBody->account_bank->bank_account_name,
-                                "bank_branch" => $detailBody->account_bank->bank_branch,
-                                "npwp" => $detailBody->npwp,
-                            ], [
-                                "user_id",
-                            ], [
-                                "email",
-                                "fullname",
-                                "birth_place",
-                                "birth_date",
-                                "marital_status",
-                                "religion",
-                                "blood_type",
-                                "gender",
-                                "age",
-                                "telephone",
-                                "id_divisi",
-                                "divisi",
-                                "id_jabatan",
-                                "jabatan",
-                                "is_staff",
-                                "join_date",
-                                'is_active',
-                                "resign_date",
-                                "reason_resignation",
-                                "id_card_address",
-                                "current_address",
-                                "bank_account_number",
-                                "bank_account_name",
-                                "bank_branch",
-                                "npwp",
-                            ]);
-                        } else {
-                            DtPegawai::upsert([
-                                "user_id" => $detailBody->id,
-                                "email" => $detailBody->email,
-                                "fullname" => $detailBody->fullname,
-                                "birth_place" => $detailBody->birth_place,
-                                "birth_date" => $detailBody->birth_date,
-                                "marital_status" => $detailBody->marital_status,
-                                "religion" => $detailBody->religion,
-                                "blood_type" => $detailBody->blood_type,
-                                "gender" => $detailBody->gender,
-                                "age" => $detailBody->age,
-                                "telephone" => $detailBody->telephone,
-                                "id_divisi" => $detailBody->id_divisi,
-                                "divisi" => $detailBody->divisi,
-                                "id_jabatan" => $detailBody->id_jabatan,
-                                "jabatan" => $detailBody->jabatan,
-                                "is_staff" => $detailBody->is_staff,
-                                "join_date" => $detailBody->join_date,
-                                'is_active' => $detailBody->is_active,
-                                "resign_date" => $detailBody->resign_date,
-                                "reason_resignation" => $detailBody->reason_resignation,
-                                "id_card_address" => $detailBody->id_card_address,
-                                "current_address" => $detailBody->current_address,
-                                "npwp" => $detailBody->npwp,
-                            ], [
-                                "user_id",
-                            ], [
-                                "email",
-                                "fullname",
-                                "birth_place",
-                                "birth_date",
-                                "marital_status",
-                                "religion",
-                                "blood_type",
-                                "gender",
-                                "age",
-                                "telephone",
-                                "id_divisi",
-                                "divisi",
-                                "id_jabatan",
-                                "jabatan",
-                                "is_staff",
-                                "join_date",
-                                'is_active',
-                                "resign_date",
-                                "reason_resignation",
-                                "id_card_address",
-                                "current_address",
-                                "bank_account_number",
-                                "bank_account_name",
-                                "bank_branch",
-                                "npwp",
-                            ]);
-                        }
-                        
-                        // get pendidikan by user_id
-                        $pendidikanResponse = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/data/educations/'.$results->id.'/lists/', [
-                            'headers' => [
-                                'Authorization' => 'Bearer '. $token,
-                                ]
-                            ]);
-                            $pendidikanBody = json_decode($pendidikanResponse->getBody());
-                            foreach($pendidikanBody->results as $pendidikan){
-                                if($pendidikan->file_diploma != '' && $pendidikan->file_grade_transcript != ''){ // jika ada file diploma dan transkrip
-                                    DtPendidikan::updateOrCreate(
-                                        [
-                                            'pendidikan_id' => $pendidikan->id,
-                                            'account' => $pendidikan->account,
-                                        ], [
-                                            'name_educational_institution' => $pendidikan->name_educational_institution,
-                                            'education_degree' => $pendidikan->education_degree,
-                                            'educational_level' => $pendidikan->educational_level,
-                                            'graduation_year' => $pendidikan->graduation_year,
-                                            'majors' => $pendidikan->majors,
-                                            'file_diploma' => $pendidikan->file_diploma->file,
-                                            'file_grade_transcript' => $pendidikan->file_grade_transcript->file,
-                                        ]
-                                    );
-                                } else if($pendidikan->file_diploma != ''){ // jika hanya terdapat file diploma
-                                    DtPendidikan::updateOrCreate(
-                                        [
-                                            'pendidikan_id' => $pendidikan->id,
-                                            'account' => $pendidikan->account,
-                                        ], [
-                                            'name_educational_institution' => $pendidikan->name_educational_institution,
-                                            'education_degree' => $pendidikan->education_degree,
-                                            'educational_level' => $pendidikan->educational_level,
-                                            'graduation_year' => $pendidikan->graduation_year,
-                                            'majors' => $pendidikan->majors,
-                                            'file_diploma' => $pendidikan->file_diploma->file,
-                                            'file_grade_transcript' => $pendidikan->file_grade_transcript,
-                                        ]
-                                    );
-                                } else if($pendidikan->file_grade_transcript != ''){ // jika hanya terdapat file transkrip
-                                    DtPendidikan::updateOrCreate(
-                                        [
-                                            'pendidikan_id' => $pendidikan->id,
-                                            'account' => $pendidikan->account,
-                                        ], [
-                                            'name_educational_institution' => $pendidikan->name_educational_institution,
-                                            'education_degree' => $pendidikan->education_degree,
-                                            'educational_level' => $pendidikan->educational_level,
-                                            'graduation_year' => $pendidikan->graduation_year,
-                                            'majors' => $pendidikan->majors,
-                                            'file_diploma' => $pendidikan->file_diploma,
-                                            'file_grade_transcript' => $pendidikan->file_grade_transcript->file,
-                                        ]
-                                    );
-                                } else if ($pendidikan->file_diploma == '' && $pendidikan->file_grade_transcript == ''){ // jika file diploma dan transkrip tidak ada
-                                    DtPendidikan::updateOrCreate(
-                                        [
-                                            'pendidikan_id' => $pendidikan->id,
-                                            'account' => $pendidikan->account,
-                                        ], [
-                                            'name_educational_institution' => $pendidikan->name_educational_institution,
-                                            'education_degree' => $pendidikan->education_degree,
-                                            'educational_level' => $pendidikan->educational_level,
-                                            'graduation_year' => $pendidikan->graduation_year,
-                                            'majors' => $pendidikan->majors,
-                                            'file_diploma' => $pendidikan->file_diploma,
-                                            'file_grade_transcript' => $pendidikan->file_grade_transcript,
-                                        ]
-                                    );
-                                }
-                                
+                        if($detailBody->jabatan != 'PNS'){
+                            if($detailBody->account_bank != ''){
+                                DtPegawai::upsert([
+                                    "user_id" => $detailBody->id,
+                                    "email" => $detailBody->email,
+                                    "fullname" => $detailBody->fullname,
+                                    "birth_place" => $detailBody->birth_place,
+                                    "birth_date" => $detailBody->birth_date,
+                                    "marital_status" => $detailBody->marital_status,
+                                    "religion" => $detailBody->religion,
+                                    "blood_type" => $detailBody->blood_type,
+                                    "gender" => $detailBody->gender,
+                                    "age" => $detailBody->age,
+                                    "telephone" => $detailBody->telephone,
+                                    "id_divisi" => $detailBody->id_divisi,
+                                    "divisi" => $detailBody->divisi,
+                                    "id_jabatan" => $detailBody->id_jabatan,
+                                    "jabatan" => $detailBody->jabatan,
+                                    "is_staff" => $detailBody->is_staff,
+                                    "join_date" => $detailBody->join_date,
+                                    'is_active' => $detailBody->is_active,
+                                    "resign_date" => $detailBody->resign_date,
+                                    "reason_resignation" => $detailBody->reason_resignation,
+                                    "id_card_address" => $detailBody->id_card_address,
+                                    "current_address" => $detailBody->current_address,
+                                    "bank_account_number" => $detailBody->account_bank->bank_account_number,
+                                    "bank_account_name" => $detailBody->account_bank->bank_account_name,
+                                    "bank_branch" => $detailBody->account_bank->bank_branch,
+                                    "npwp" => $detailBody->npwp,
+                                ], [
+                                    "user_id",
+                                ], [
+                                    "email",
+                                    "fullname",
+                                    "birth_place",
+                                    "birth_date",
+                                    "marital_status",
+                                    "religion",
+                                    "blood_type",
+                                    "gender",
+                                    "age",
+                                    "telephone",
+                                    "id_divisi",
+                                    "divisi",
+                                    "id_jabatan",
+                                    "jabatan",
+                                    "is_staff",
+                                    "join_date",
+                                    'is_active',
+                                    "resign_date",
+                                    "reason_resignation",
+                                    "id_card_address",
+                                    "current_address",
+                                    "bank_account_number",
+                                    "bank_account_name",
+                                    "bank_branch",
+                                    "npwp",
+                                ]);
+                            } else {
+                                DtPegawai::upsert([
+                                    "user_id" => $detailBody->id,
+                                    "email" => $detailBody->email,
+                                    "fullname" => $detailBody->fullname,
+                                    "birth_place" => $detailBody->birth_place,
+                                    "birth_date" => $detailBody->birth_date,
+                                    "marital_status" => $detailBody->marital_status,
+                                    "religion" => $detailBody->religion,
+                                    "blood_type" => $detailBody->blood_type,
+                                    "gender" => $detailBody->gender,
+                                    "age" => $detailBody->age,
+                                    "telephone" => $detailBody->telephone,
+                                    "id_divisi" => $detailBody->id_divisi,
+                                    "divisi" => $detailBody->divisi,
+                                    "id_jabatan" => $detailBody->id_jabatan,
+                                    "jabatan" => $detailBody->jabatan,
+                                    "is_staff" => $detailBody->is_staff,
+                                    "join_date" => $detailBody->join_date,
+                                    'is_active' => $detailBody->is_active,
+                                    "resign_date" => $detailBody->resign_date,
+                                    "reason_resignation" => $detailBody->reason_resignation,
+                                    "id_card_address" => $detailBody->id_card_address,
+                                    "current_address" => $detailBody->current_address,
+                                    "npwp" => $detailBody->npwp,
+                                ], [
+                                    "user_id",
+                                ], [
+                                    "email",
+                                    "fullname",
+                                    "birth_place",
+                                    "birth_date",
+                                    "marital_status",
+                                    "religion",
+                                    "blood_type",
+                                    "gender",
+                                    "age",
+                                    "telephone",
+                                    "id_divisi",
+                                    "divisi",
+                                    "id_jabatan",
+                                    "jabatan",
+                                    "is_staff",
+                                    "join_date",
+                                    'is_active',
+                                    "resign_date",
+                                    "reason_resignation",
+                                    "id_card_address",
+                                    "current_address",
+                                    "bank_account_number",
+                                    "bank_account_name",
+                                    "bank_branch",
+                                    "npwp",
+                                ]);
                             }
+                            
+                            // get pendidikan by user_id
+                            $pendidikanResponse = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/data/educations/'.$results->id.'/lists/', [
+                                'headers' => [
+                                    'Authorization' => 'Bearer '. $token,
+                                    ]
+                                ]);
+                                $pendidikanBody = json_decode($pendidikanResponse->getBody());
+                                foreach($pendidikanBody->results as $pendidikan){
+                                    if($pendidikan->file_diploma != '' && $pendidikan->file_grade_transcript != ''){ // jika ada file diploma dan transkrip
+                                        DtPendidikan::updateOrCreate(
+                                            [
+                                                'pendidikan_id' => $pendidikan->id,
+                                                'account' => $pendidikan->account,
+                                            ], [
+                                                'name_educational_institution' => $pendidikan->name_educational_institution,
+                                                'education_degree' => $pendidikan->education_degree,
+                                                'educational_level' => $pendidikan->educational_level,
+                                                'graduation_year' => $pendidikan->graduation_year,
+                                                'majors' => $pendidikan->majors,
+                                                'file_diploma' => $pendidikan->file_diploma->file,
+                                                'file_grade_transcript' => $pendidikan->file_grade_transcript->file,
+                                            ]
+                                        );
+                                    } else if($pendidikan->file_diploma != ''){ // jika hanya terdapat file diploma
+                                        DtPendidikan::updateOrCreate(
+                                            [
+                                                'pendidikan_id' => $pendidikan->id,
+                                                'account' => $pendidikan->account,
+                                            ], [
+                                                'name_educational_institution' => $pendidikan->name_educational_institution,
+                                                'education_degree' => $pendidikan->education_degree,
+                                                'educational_level' => $pendidikan->educational_level,
+                                                'graduation_year' => $pendidikan->graduation_year,
+                                                'majors' => $pendidikan->majors,
+                                                'file_diploma' => $pendidikan->file_diploma->file,
+                                                'file_grade_transcript' => $pendidikan->file_grade_transcript,
+                                            ]
+                                        );
+                                    } else if($pendidikan->file_grade_transcript != ''){ // jika hanya terdapat file transkrip
+                                        DtPendidikan::updateOrCreate(
+                                            [
+                                                'pendidikan_id' => $pendidikan->id,
+                                                'account' => $pendidikan->account,
+                                            ], [
+                                                'name_educational_institution' => $pendidikan->name_educational_institution,
+                                                'education_degree' => $pendidikan->education_degree,
+                                                'educational_level' => $pendidikan->educational_level,
+                                                'graduation_year' => $pendidikan->graduation_year,
+                                                'majors' => $pendidikan->majors,
+                                                'file_diploma' => $pendidikan->file_diploma,
+                                                'file_grade_transcript' => $pendidikan->file_grade_transcript->file,
+                                            ]
+                                        );
+                                    } else if ($pendidikan->file_diploma == '' && $pendidikan->file_grade_transcript == ''){ // jika file diploma dan transkrip tidak ada
+                                        DtPendidikan::updateOrCreate(
+                                            [
+                                                'pendidikan_id' => $pendidikan->id,
+                                                'account' => $pendidikan->account,
+                                            ], [
+                                                'name_educational_institution' => $pendidikan->name_educational_institution,
+                                                'education_degree' => $pendidikan->education_degree,
+                                                'educational_level' => $pendidikan->educational_level,
+                                                'graduation_year' => $pendidikan->graduation_year,
+                                                'majors' => $pendidikan->majors,
+                                                'file_diploma' => $pendidikan->file_diploma,
+                                                'file_grade_transcript' => $pendidikan->file_grade_transcript,
+                                            ]
+                                        );
+                                    }
+                                    
+                                }
+                        }
                     }
                 $page++;
             }

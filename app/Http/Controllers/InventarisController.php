@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Inventaris;
 use App\Models\KodeAset;
-use App\Models\Bidang;
+use App\Models\UnitKerja;
 use App\Models\Kategori;
 use App\Models\Merk;
 use App\Models\Satuan;
@@ -44,7 +44,7 @@ class InventarisController extends Controller
         // $kodeBarang = 'KDBRG -'. $thnBulan . sprintf('%03d', $urut+1);
 
         //bidang dan kategori
-        $bidang = Bidang::all();
+        $unitkerja = UnitKerja::all();
         $kategori= Kategori::all();
         $merk = Merk::all();
         $satuan = Satuan::all();

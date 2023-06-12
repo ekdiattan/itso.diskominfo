@@ -61,11 +61,11 @@
             </div>
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Nama Bidang</label>
+                <label class="col-sm-3 col-form-label">Unit Kerja</label>
                 <div class="col-sm-9">
-                  <select class="form-control" id="namabidang" name="namabidang" maxlength="255">
-                    @foreach ($bidangs as $bidang)
-                    <option value="{{ $bidang->namabidang }}" @if($laporan->namabidang == $bidang->namabidang) selected @endif>{{ $bidang->namabidang }}</option>
+                  <select class="form-control" id="unitkerja" name="unitkerja" maxlength="255">
+                    @foreach ($unitkerjas as $unitkerja)
+                    <option value="{{ $unitkerja->namaUnit }}" @if($laporan->namabidang == $unitkerja->namaUnit) selected @endif>{{ $unitkerja->namaUnit }}</option>
                     @endforeach
                   </select>
                 </div>
