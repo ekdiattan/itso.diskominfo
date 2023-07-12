@@ -36,7 +36,7 @@
           </div>
           <div class="col-md-6">
             <div class="form-group row">
-              <label class="col-sm-3 col-form-label">No Telepon</label>
+              <label class="col-sm-3 col-form-label">Nome Wa</label>
               <div class="col-sm-9">
                 <input type="text" class="form-control" id="noTelp" name="noTelp" value="{{ $booking->noTelp }}" readonly/>
               </div>

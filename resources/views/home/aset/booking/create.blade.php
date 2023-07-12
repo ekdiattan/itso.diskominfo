@@ -23,7 +23,7 @@
         <input type="text" class="form-control" name="nip" id="nip" maxlength="255" autocomplete="off" value="@if($before != null){{ $before['nip'] }}@endif" size="30" readonly>
         <label class="col-sm-3 col-form-label">Email</label>
         <input type="email" class="form-control" name="email" id="email" maxlength="255" autocomplete="off" value="@if($before != null){{ $before['email'] }}@endif" size="30">
-        <label class="col-sm-3 col-form-label">Nomor Telepon</label>
+        <label class="col-sm-3 col-form-label">Nomor Wa</label>
         <input type="text" class="form-control" name="noTelp" id="noTelp" maxlength="255" autocomplete="off" value="@if($before != null){{ $before['noTelp'] }}@endif" size="30">
         <label class="col-sm-3 col-form-label">Nama Bidang</label>
         <select class="form-control" id="unitkerja" name="unitkerja">
@@ -71,8 +71,9 @@
             @endforeach
         </select>
         <label class="col-sm-3 col-form-label">Perihal</label>
-        <textarea id="textbox" class="form-control" maxlength="255" name="perihal" rows="5"></textarea>
+          <textarea id="textbox" class="form-control" maxlength="255" name="perihal" rows="5"></textarea>
         <span id="char_count"></span>
+        <input type="hidden" class="form-control" name="status" id="status"  autocomplete="off" value="Disetujui" size="30" readonly>
         <div class="card-body">
           <a class="btn btn-danger" href="/booking" role="button">Kembali</a>
           <button type="submit" class="btn btn-primary mr-2" style="margin-left:10px;" id="submitkejs">Submit</button>

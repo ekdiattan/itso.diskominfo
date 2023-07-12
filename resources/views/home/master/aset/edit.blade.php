@@ -142,8 +142,8 @@
         </div>
           <div class="box">
             <div class="box-header with-border">
+              <a href="/aset" class="btn btn-danger mr-2 btn-flat"><i class="fa fa-file-excel-o"></i> Kembali</a>
               <button type="submit" class="btn btn-primary mr-2 btn-flat">Submit</button>
-                <a href="/aset" class="btn btn-danger mr-2 btn-flat"><i class="fa fa-file-excel-o"></i> Kembali</a>
             </div>
         </div>
       </form>

@@ -196,6 +196,12 @@ class BookingController extends Controller
 
         // Telegram buat kirim dari public itso.diskominfo.jabarprov.go.id
 
+        $phoneNumber = $booking->noTelp;
+
+        if($phoneNumber[0] == '0' && $phoneNumber[1] == '8'){
+            $phoneNumber = ltrim($phoneNumber, '0');
+        }
+
         Telegram::sendMessage([
             'chat_id' => '-1001781912074',
             'message_thread_id' => '3',
@@ -203,6 +209,7 @@ class BookingController extends Controller
             'Nomor Tiket : '.$booking->tiket.PHP_EOL.
             'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
             'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
+            'Kontak : '. 'wa.me/'.'+62'.$phoneNumber.PHP_EOL.
             'Periode Permohonan : '.PHP_EOL.$mulai->format('H:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
             // 'IP :'.$_SERVER['REMOTE_ADDR'] .PHP_EOL.
             // 'Hostname: ' . gethostname().PHP_EOL.
@@ -316,7 +323,12 @@ class BookingController extends Controller
             'ip' =>$_SERVER['REMOTE_ADDR']
         ]);
         $request->accepts('session');
-        
+
+        $phoneNumber = $booking->noTelp;
+
+        if($phoneNumber[0] == '0' && $phoneNumber[1] == '8'){
+            $phoneNumber = ltrim($phoneNumber, '0');
+        }
         $mulai = Carbon::parse($booking->mulai);
         $selesai = Carbon::parse($booking->selesai);
         Telegram::sendMessage([
@@ -326,15 +338,18 @@ class BookingController extends Controller
             'Nomor Tiket : '.$booking->tiket.PHP_EOL.
             'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
             'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
+            'Kontak : '. 'wa.me/'.'+62'.$phoneNumber.PHP_EOL.
             'Periode Permohonan : '.PHP_EOL.$mulai->format('H:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
             'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         ]);
+        
         Telegram::sendMessage([
             'chat_id' => '-1001613610994',
             'text' => 'Ada permohonan booking sebagai berikut'.PHP_EOL.PHP_EOL.
             'Nomor Tiket : '.$booking->tiket.PHP_EOL.
             'Nama Pemohon : '.$booking->namaPemohon.PHP_EOL.
             'Nama Aset : '.$booking->aset->merk.' '.$booking->aset->nama.` ($booking->aset->kodeUnit)`.PHP_EOL.
+            'Kontak : '. 'wa.me/'.'+62'.$phoneNumber.PHP_EOL.
             'Periode Permohonan : '.PHP_EOL.$mulai->format('H:i, d M Y').' s.d.'.PHP_EOL.$selesai->format('H:i, d M Y').PHP_EOL.PHP_EOL.
             'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         ]);
@@ -367,6 +382,7 @@ class BookingController extends Controller
     public function update(Request $request, $id)
     {   
        $booking = Booking::find($id); 
+       $aset = Aset::find($id); 
         // validate file uploaded by user
         if($request->suratPermohonan != null){
             $request->validate([
@@ -394,7 +410,7 @@ class BookingController extends Controller
                 'nipPenyetuju' => auth()->user()->nip,
                 'waktu' => now(),
                 'hostname' => $booking -> hostname. ',' .gethostname(),
-                'ip' => $booking -> ip. ',' .$_SERVER['REMOTE_ADDR']
+                'ip' => $booking -> ip. ','  .$_SERVER['REMOTE_ADDR']
             ]);
         }
         if ($request->status ==='Disetujui') {
@@ -424,6 +440,11 @@ class BookingController extends Controller
                 'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
             Mail::to($booking->nama_email)->send(new BookingNotificationSetuju($booking, $booking->mulai, $booking->selesai));
+
+            // Agar status kendaraan di aset otomatis terubah menjadi tidak tersedia ketika peminjaman disetujui
+            $aset->update([
+                'status' => 'tidak tersedia'
+            ]); 
 
             session()->flash('success', 'Berhasil mengupdate data!');
             return redirect('/booking');
@@ -457,8 +478,11 @@ class BookingController extends Controller
                 'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
         Mail::to($booking->nama_email)->send(new BookingNotificationTolak($booking, $booking->mulai, $booking->selesai));
+        
         session()->flash('success', 'Berhasil mengupdate data!');
         return redirect('/booking');
+
+
         }elseif ($request->status ==='Selesai') {
             Telegram::sendMessage([
                 'chat_id' => '-1001781912074',
@@ -486,6 +510,12 @@ class BookingController extends Controller
                 'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
         Mail::to($booking->nama_email)->send(new BookingNotification($booking, $booking->mulai, $booking->selesai));
+       
+        // Agar status kendaraan di aset otomatis terubah menjadi tersedia ketika peminjaman telah selesai
+        $aset->update([
+            'status' => 'tersedia'
+        ]); 
+       
         session()->flash('success', 'Berhasil mengupdate data!');
         return redirect('/booking');
         }

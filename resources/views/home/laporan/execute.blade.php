@@ -4,11 +4,10 @@
 <div class="col-12 grid-margin">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Laporan</h4>
         <form method="post" action="/laporan-execute/{{ $laporan->id }}" enctype="multipart/form-data">
           @csrf
           @method('put')
-          <br>
+          <p class="card-description">Laporan</p>
           <div class="row">
             <div class="col-md-6">
               <div class="form-group row">
@@ -178,6 +177,28 @@
                 <div class="col-sm-9">
                     <textarea id="textbox" class="form-control" maxlength="255" name="solusi" rows="5"></textarea>
                     <span id="char_count"></span>
+                      <script>
+                        let textArea = document.getElementById("textbox");
+                        let characterCounter = document.getElementById("char_count");
+                        const maxNumOfChars = 255;
+
+                        const countCharacters = () => {
+                            let numOfEnteredChars = textArea.value.length;
+                            let counter = maxNumOfChars - numOfEnteredChars;
+                            characterCounter.textContent = counter + "/255 Karakter";
+                            if (counter <= 0) {
+                            characterCounter.textContent = "Tidak bisa lebih dari 255 karakter";
+                            characterCounter.style.color = "red";
+                            } else if (counter < 75) {
+                            characterCounter.style.color = "red";
+                            } else if (counter < 150) {
+                            characterCounter.style.color = "orange";
+                            }else {
+                            characterCounter.style.color = "black";
+                            }
+                        };
+                        textArea.addEventListener("input", countCharacters);
+                      </script>          
                 </div>
               </div>
             </div>
@@ -213,27 +234,6 @@
 @endsection
 
 <script>
-  let textArea = document.getElementById("textbox");
-  let characterCounter = document.getElementById("char_count");
-  const maxNumOfChars = 255;
-
-  const countCharacters = () => {
-      let numOfEnteredChars = textArea.value.length;
-      let counter = maxNumOfChars - numOfEnteredChars;
-      characterCounter.textContent = counter + "/255 Karakter";
-      if (counter <= 0) {
-      characterCounter.textContent = "Tidak bisa lebih dari 255 karakter";
-      characterCounter.style.color = "red";
-      } else if (counter < 75) {
-      characterCounter.style.color = "red";
-      } else if (counter < 150) {
-      characterCounter.style.color = "orange";
-      }else {
-      characterCounter.style.color = "black";
-      }
-  };
-  textArea.addEventListener("input", countCharacters);
-
   function showDoneDate(){
     const form = document.getElementById('doneForm');
     if(document.getElementById("true").checked){

@@ -71,9 +71,10 @@
             <input type="hidden" class="form-control" id="nip" name="nip" value="@if($before != null){{ $before['nip'] }}@endif" required/>
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label">Telepon</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="noTelp" name="noTelp" value="@if($before != null){{ $before['noTelp'] }}@endif" required/>
+                <label class="col-sm-3 col-form-label">Nomer Wa</label>
+                <div class="col-sm-9 input-group">
+                  <span class="input-group-text" id="basic-addon3">+62</span>
+                  <input type="number" class="form-control" id="noTelp" name="noTelp" aria-describedby="basic-addon3 basic-addon4" value="@if($before != null){{ $before['noTelp'] }}@endif" required/>
                 </div>
               </div>
             </div>

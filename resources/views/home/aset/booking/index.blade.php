@@ -1,60 +1,51 @@
 @extends('home.partials.main')
 <link rel="icon" href="{{ asset('assets/images/jabar.png') }}">
 @section('container')
-<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h2>Peminjaman Aset</h2>
-</div>
-<!-- double navbar -->
-<div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
-    <!-- Container wrapper -->
-    <div class="container justify-content-center justify-content-md-between">
-      <!-- Left links -->
-      <ul class="navbar-nav flex-row">
-        <li class="nav-item me-auto">
-          <a class="nav-link" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Filter Data Berdasarkan
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/booking-reject" style="color:red;font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Ditolak
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/booking-acc" style="color:green;font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Disetujui
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/booking-selesai" style="color:blue;font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Ditolak
-          </a>
-        </li>
-        <div style="display: flex; justify-content: flex-end">
-            <li class="nav-item me-auto">
-                <a class="nav-link text-success" href="/booking/create" style="font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-                    +Create New
-                </a>
-            </li>
-        </div>
-      </ul>
-    </div>
-</div>
-<br>
 @if(session('success'))
 <div class="alert alert-success" role="alert">
   {{ session('success') }}
 </div>
 @endif
 <div class="col-lg-12 grid-margin stretch-card">
-        <br>
-        <div class="card">
-            <div class="card-body">
+  <div class="card">
+    <div class="card-header">
+      <h2>Peminjaman Aset</h2>
+    </div>
+    <div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
+        <!-- Container wrapper -->
+        <div class="container justify-content-center justify-content-md-between">
+          <!-- Left links -->
+          <ul class="navbar-nav flex-row">
+            <li class="nav-item me-auto">
+              <a class="nav-link" href="/booking-reject" style="color:red;font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                Ditolak
+              </a>
+            </li>
+            <li class="nav-item me-auto">
+              <a class="nav-link" href="/booking-acc" style="color:green;font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                Disetujui
+              </a>
+            </li>
+            <li class="nav-item me-auto">
+              <a class="nav-link" href="/booking-selesai" style="color:blue;font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                Selesai
+              </a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item me-auto">
+                <a class="nav-link text-success" href="/booking/create" style="font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                    +Create New
+                </a>
+            </li>
+          </ul>
+        </div>
+    </div>
+    <div class="card-body">
                 <h4 class="card-title"><b>Permohonan</b></h4>
                 <div class="table-responsive">
                     <table id="dataTable" class="table table-hover table-bordered table-striped">

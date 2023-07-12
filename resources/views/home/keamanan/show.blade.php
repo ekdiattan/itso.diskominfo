@@ -95,11 +95,12 @@
                 <label for="exampleInputUsername1">Surat Permohonan</label>
                 <div class="col-sm-9">
                     @if($booking->suratPermohonan != 0)
-                    <object data="{{ asset($booking->suratPermohonan)}}" type="application/pdf" width="100%" height="250"></object>
+                    <object data="{{ asset($booking->suratPermohonan)}}" type="application/pdf" width="100%" height="300"></object>
+                    <!-- <a href="{{ asset($booking->suratPermohonan)}}" target="_blank" rel="noopener noreferrer"><embed src="{{ asset($booking->suratPermohonan)}}" style="max-height:300px; max-width:440px;"></a> -->
                     @else
                     <a href="/booking-export/{{$booking->id}}">Cetak Surat</a>
                     @endif
-                </div>
+              </div>
             </div>
             <div class="form-group">
                 <label for="exampleInputUsername1">Tanggal Permohonan</label>

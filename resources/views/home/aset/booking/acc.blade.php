@@ -12,12 +12,6 @@
       <!-- Left links -->
       <ul class="navbar-nav flex-row">
         <li class="nav-item me-auto">
-          <a class="nav-link" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Filter Data Berdasarkan
-          </a>
-        </li>
-        <li class="nav-item me-auto">
           <a class="nav-link" href="/booking-reject" style="color:red;font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
             class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
             Ditolak
@@ -35,14 +29,14 @@
             Selesai
           </a>
         </li>
-        <div style="display: flex; justify-content: flex-end">
-            <li class="nav-item me-auto">
-                <a class="nav-link text-success" href="/booking/create" style="font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-                    +Create New
-                </a>
-            </li>
-        </div>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item me-auto">
+            <a class="nav-link text-success" href="/booking/create" style="font-size:20px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                +Create New
+            </a>
+        </li>
       </ul>
     </div>
 </div>

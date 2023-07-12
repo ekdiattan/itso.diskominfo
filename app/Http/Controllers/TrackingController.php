@@ -30,7 +30,9 @@ class TrackingController extends Controller
     }
 
     public function tes (Request $request){
-        return view('home.tracking.tes', ['title' => 'Pinjam', 'laporan' => null]);
+        $booking = Booking::all();
+        
+        return view('home.tracking.tes2', ['title' => 'Pinjam','booking' => $booking]);
     }
 
     public function find(Request $request){

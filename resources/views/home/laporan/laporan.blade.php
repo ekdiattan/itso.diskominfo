@@ -51,6 +51,7 @@
                                             @method('delete')
                                             @csrf
                                             <button class="badge bg-danger border-0" onclick="return confirm('Are you sure?')"><span class="menu-icon"><i class="fas fa-trash"></i></span></button>
+                                            
                                         </form>
                                     </td>
                                 </tr>

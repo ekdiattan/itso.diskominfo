@@ -77,7 +77,6 @@
                     <option value="">---PILIH---</option>
                     <option value="Disetujui">Setujui</option>
                     <option value="Ditolak">Tolak</option>
-                    <option value="Selesai">Selesai</option>
                 </select>
             </div>
             <!-- Menggunakan javascript untuk alasan -->

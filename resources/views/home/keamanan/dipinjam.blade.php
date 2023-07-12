@@ -146,10 +146,7 @@
                 <div class="form-group row">
                     <label class="col-sm-3 col-form-label" style="font-size:13px;">Status</label>
                     <div class="col-sm-9">
-                            <select class="form-control" aria-label="Default select example" id="status" name="status" readonly>
-                            <option value="">--PILIH--</option>
-                            <option value="Selesai" selected>Selesai</option>
-                        </select>
+                        <input type="text" class="form-control"  name="status" value="Selesai" readonly/>
                     </div>
                 </div>
             </div>

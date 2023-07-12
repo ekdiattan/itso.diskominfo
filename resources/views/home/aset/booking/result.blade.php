@@ -34,7 +34,7 @@
             <td>{{ $data->nip }}</td>
           </tr> -->
           <tr>
-            <td>No. Telepon</td>
+            <td>No. Whatsapp</td>
             <td>{{ $data->noTelp }}</td>
           </tr>
           <tr>
