@@ -33,8 +33,18 @@
                             @endforeach
                             <tfoot class="table-info">
                                 <td colspan="3">Total Keterlambatan</td>
-                                <td>{{ number_format($sum_sec) }}</td>
-                                <td>{{ number_format($sum_sec / 60, 2, ',', 0) }}</td>
+                                <td>@if($sum_sec != 0)
+                                    {{ number_format($sum_sec) }}
+                                    @else
+                                    {{ 'Tidak ada keterlambatan' }}
+                                    @endif
+                                </td>
+                                <td>@if($sum_sec != 0)
+                                    {{ number_format($sum_sec / 60, 2, ',', 0) }}
+                                    @else
+                                    {{ 'Tidak ada keterlambatan' }}
+                                    @endif
+                                </td>
                             </tfoot>
                         </tbody>
                     </table>

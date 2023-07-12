@@ -4,177 +4,191 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h2>Master Pegawai</h2>
 </div>
-
-<div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
-    <!-- Container wrapper -->
-    <div class="container justify-content-center justify-content-md-between">
-      <!-- Left links -->
-      <ul class="navbar-nav flex-row">
-        <li class="nav-item me-auto">
-          <a class="nav-link" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Tampilkan Data Berdasarkan
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="#" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            <b>Semua Pegawai</b>
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/pns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            PNS
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/nonpns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Non-PNS
-          </a>
-        </li>
-        <div style="display: flex; justify-content: flex-end">
-            <li class="nav-item me-auto">
-                <a class="nav-link text-success" href="/tambah-data-pegawai" style="font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-                    <b>+ Data Pegawai</b>
-                </a>
-            </li>
-        </div>
-      </ul>
-    </div>
-</div>
-<br>
 <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-          <div id="example1_wrapper" class="dataTables_wrapper dt_bootstrap4">
-          <div class="card">
-            <div class="card-body">
-            <!-- <a href="/update-data-pegawai" class="btn btn-info bg-maroon" title="Sync Data"><i class="fa fa-file-pdf-o"></i> Sync Data</a>      -->
-                <div id="dataTable_wrapper" class="table-responsive">
-                 <nav class="navbar bg-body-tertiary">
-                   
-                 </nav>
-                    <table id="dataTable" class="table table-hover table-bordered table-striped">
-                        <thead class="bg-gray disabled color-palette">                          
-                            <tr>
-                                <th width="5%">No</th>
-                                <th width="25%">Nama</th>
-                                <th>Tempat Lahir</th>
-                                <th>Tanggal Lahir</th>
-                                <th>NIP</th>
-                                <th>Unit Kerja</th>
-                                <th>Kedudukan Pegawai</th>
-                                <!--<th>Golongan Pangkat</th>
-                                <th>TMT Golongan</th>
-                                <th>Eselon</th>
-                                <th>Nama Jabatan</th>
-                                <th>TMT Jabatan</th>
-                                <th>Status Pegawai</th>
-                                <th>TMT Pegawai</th>
-                                <th>Masa Kerja Tahun</th>
-                                <th>Masa Kerja Bulan</th>
-                                <th>Jenis Kelamin</th>
-                                <th>Agama</th>
-                                <th>Perkawinan</th>
-                                <th>Pendidikan Awal</th>
-                                <th>Jurusan Pendidikan Awal</th>
-                                <th>Pendidikan Akhir</th>
-                                <th>Jurusan Pendidikan Akhir</th>
-                                <th>No Askes</th>
-                                <th>No NPWP</th>
-                                <th>NIK</th>
-                                <th>Alamat Rumah</th>
-                                <th>Telpon</th>
-                                <th>No Handphone</th>
-                                <th>E-mail</th>
-                                -->
-                                <!-- <th width="5%">Action</th> -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                             <!-- @php $i=1 @endphp -->
-                        @foreach ($data as $item)
-                            <tr onClick="window.location='/detail-pegawai/{{ $item->id }}'">
-                                @if($search == null)
-                                <td>{{ $loop->iteration}}</td>
-                                @else
-                                <td>{{ $loop->iteration }}</td>
-                                @endif
-                                <td class="text-left">{{ $item->nama }}</td>
-                                <td class="text-left">{{ $item->tempatLahir }}</td>
-                                <td class="text-left">{{ $item->tanggalLahir }}</td>
-                                <td class="text-left">{{ $item->noPegawai }}</td>
-                                <td class="text-left">{{ $item->unitKerja }}</td>
-                                <td class="text-left">{{ $item->kedudukanPegawai }}</td>
-                                <!--<td class="text-left">{{ $item->golonganPangkat }}</td>
-                                <td class="text-left">{{ $item->tmtGolongan }}</td>
-                                <td class="text-left">{{ $item->eselon }}</td>
-                                <td class="text-left">{{ $item->namaJabatan }}</td>
-                                <td class="text-left">{{ $item->tmtJabatan }}</td>
-                                <td class="text-left">{{ $item->statusPegawai }}</td>
-                                <td class="text-left">{{ $item->tmtPegawai }}</td>
-                                <td class="text-left">{{ $item->masaKerjaTahun }}</td>
-                                <td class="text-left">{{ $item->masaKerjaBulan }}</td>
-                                <td class="text-left">{{ $item->jenisKelamin }}</td>
-                                <td class="text-left">{{ $item->agama }}</td>
-                                <td class="text-left">{{ $item->perkawinan }}</td>
-                                <td class="text-left">{{ $item->pendidikanAwal }}</td>
-                                <td class="text-left">{{ $item->jurusanPendidikanAwal }}</td>
-                                <td class="text-left">{{ $item->pendidikanAkhir }}</td>
-                                <td class="text-left">{{ $item->jurusanPendidikanAkhir }}</td>
-                                <td class="text-left">{{ $item->noAkses }}</td>
-                                <td class="text-left">{{ $item->noNpwp }}</td>
-                                <td class="text-left">{{ $item->nik }}</td>
-                                <td class="text-left">{{ $item->alamatRumah }}</td>
-                                <td class="text-left">{{ $item->telp }}</td>
-                                <td class="text-left">{{ $item->hp }}</td>
-                                <td class="text-left">{{ $item->email }}</td>
-                                -->
-                                <!-- <td>
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-social btn-flat btn-info btn-xs" data-toggle="dropdown" aria-expanded="false"><i
-                                                class="fa fa-arrow-circle-down"></i> Pilih Aksi
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu">
-                                            <li>
-                                                <a href="{{ url('data-pegawai/detail-pegawai/' . $item->id) }}" class="btn btn-social btn-flat btn-block btn-xs"><i
-                                                    class="fa fa-list-ol"></i>Lihat Detail</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{ url('edit-pegawai/'. $item->id) }}" class="btn btn-social btn-flat btn-block btn-xs"><i
-                                                    class="fa fa-edit"></i>Ubah Data</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="btn btn-social btn-flat btn-block btn-xs"data-toggle="modal" data-target="#modal-danger{{ $item->id }}"><i
-                                                    class="fa fa-trash"></i>Hapus Data</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td> -->
-                            </tr>
-                            @endforeach
-                            @foreach($nonpns as $result)
-                            <tr onClick="window.location='/detail-nonpns/{{ $result->id }}'">
-                                <td class="text-left">{{ $loop->iteration + sizeof($data) }}</td>
-                                <td class="text-left">{{ $result->fullname }}</td>
-                                <td class="text-left"></td>
-                                <td class="text-left">{{ $result->birth_date }}</td>
-                                <td class="text-left"></td>
-                                <td class="text-left">{{ $result->divisi }}</td>
-                                <td class="text-left">{{ $result->jabatan }}</td>
-                            </tr>
-                            @endforeach
-                            </tbody>
-                        </table>
+    <div class="row">
+        <div class="col-12">
+            <div id="example1_wrapper" class="dataTables_wrapper dt_bootstrap4">
+                <div class="container-fluid">
+                    @if(session('error'))
+                        <div class="alert alert-danger" role="alert">
+                        {{ session('error') }}
+                        </div>
+                    @endif
+                    @if(session('resolve'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('resolve') }}
                     </div>
-                </div>
+                    @endif
+                    @if(session('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+                    @if(session('conflict'))
+                    <div class="alert alert-warning" role="alert">
+                        {{ session('conflict') }}
+                    </div>
+                    @endif
+                    @if($conflict)
+                    <div class="alert alert-primary" role="alert">
+                        <p>Terdapat data yang harus ditinjau ulang</p>
+                        <a href="/pegawai-conflict">Klik disini untuk meninjau ulang data</a>
+                    </div>
+                    @endif
+                    <div class="card">
+                        <div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
+                            <!-- Container wrapper -->
+                            <div class="container justify-content-center justify-content-md-between">
+                            <!-- Left links -->
+                            <ul class="navbar-nav flex-row">
+                                <li class="nav-item me-auto">
+                                <a class="nav-link" href="#" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                                    <b>Semua Pegawai</b>
+                                </a>
+                                </li>
+                                <li class="nav-item me-auto">
+                                <a class="nav-link" href="/pns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                                    PNS
+                                </a>
+                                </li>
+                                <li class="nav-item me-auto">
+                                <a class="nav-link" href="/nonpns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                                    Non-PNS
+                                </a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item me-auto">
+                                    <a class="nav-link text-success" href="/tambah-data-pegawai" style="font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                                        class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                                        <b>+ Data Pegawai</b>
+                                    </a>
+                                </li>
+                            </ul>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <a href="/pegawai-sync" class="button btn btn-success">Update Data</a>
+                            <div id="dataTable_wrapper" class="table-responsive">
+                            <nav class="navbar bg-body-tertiary">
+                            
+                            </nav>
+                                <table id="dataTable" class="table table-hover table-bordered table-striped">
+                                    <thead class="bg-gray disabled color-palette">                          
+                                        <tr>
+                                            <th width="5%">No</th>
+                                            <th width="25%">Nama</th>
+                                            <th>Tempat Lahir</th>
+                                            <th>Tanggal Lahir</th>
+                                            <th>NIP</th>
+                                            <th>Unit Kerja</th>
+                                            <th>Kedudukan Pegawai</th>
+                                            <!--<th>Golongan Pangkat</th>
+                                            <th>TMT Golongan</th>
+                                            <th>Eselon</th>
+                                            <th>Nama Jabatan</th>
+                                            <th>TMT Jabatan</th>
+                                            <th>Status Pegawai</th>
+                                            <th>TMT Pegawai</th>
+                                            <th>Masa Kerja Tahun</th>
+                                            <th>Masa Kerja Bulan</th>
+                                            <th>Jenis Kelamin</th>
+                                            <th>Agama</th>
+                                            <th>Perkawinan</th>
+                                            <th>Pendidikan Awal</th>
+                                            <th>Jurusan Pendidikan Awal</th>
+                                            <th>Pendidikan Akhir</th>
+                                            <th>Jurusan Pendidikan Akhir</th>
+                                            <th>No Askes</th>
+                                            <th>No NPWP</th>
+                                            <th>NIK</th>
+                                            <th>Alamat Rumah</th>
+                                            <th>Telpon</th>
+                                            <th>No Handphone</th>
+                                            <th>E-mail</th>
+                                            -->
+                                            <!-- <th width="5%">Action</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- @php $i=1 @endphp -->
+                                    @foreach ($data as $item)
+                                        <tr onClick="window.location='/detail-pegawai/{{ $item->id }}'">
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td class="text-left">{{ $item->nama }}</td>
+                                            <td class="text-left">{{ $item->tempatLahir }}</td>
+                                            <td class="text-left">{{ $item->tanggalLahir }}</td>
+                                            <td class="text-left">{{ $item->noPegawai }}</td>
+                                            <td class="text-left">{{ $item->unitKerja }}</td>
+                                            <td class="text-left">{{ $item->kedudukanPegawai }}</td>
+                                            <!--<td class="text-left">{{ $item->golonganPangkat }}</td>
+                                            <td class="text-left">{{ $item->tmtGolongan }}</td>
+                                            <td class="text-left">{{ $item->eselon }}</td>
+                                            <td class="text-left">{{ $item->namaJabatan }}</td>
+                                            <td class="text-left">{{ $item->tmtJabatan }}</td>
+                                            <td class="text-left">{{ $item->statusPegawai }}</td>
+                                            <td class="text-left">{{ $item->tmtPegawai }}</td>
+                                            <td class="text-left">{{ $item->masaKerjaTahun }}</td>
+                                            <td class="text-left">{{ $item->masaKerjaBulan }}</td>
+                                            <td class="text-left">{{ $item->jenisKelamin }}</td>
+                                            <td class="text-left">{{ $item->agama }}</td>
+                                            <td class="text-left">{{ $item->perkawinan }}</td>
+                                            <td class="text-left">{{ $item->pendidikanAwal }}</td>
+                                            <td class="text-left">{{ $item->jurusanPendidikanAwal }}</td>
+                                            <td class="text-left">{{ $item->pendidikanAkhir }}</td>
+                                            <td class="text-left">{{ $item->jurusanPendidikanAkhir }}</td>
+                                            <td class="text-left">{{ $item->noAkses }}</td>
+                                            <td class="text-left">{{ $item->noNpwp }}</td>
+                                            <td class="text-left">{{ $item->nik }}</td>
+                                            <td class="text-left">{{ $item->alamatRumah }}</td>
+                                            <td class="text-left">{{ $item->telp }}</td>
+                                            <td class="text-left">{{ $item->hp }}</td>
+                                            <td class="text-left">{{ $item->email }}</td>
+                                            -->
+                                            <!-- <td>
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-social btn-flat btn-info btn-xs" data-toggle="dropdown" aria-expanded="false"><i
+                                                            class="fa fa-arrow-circle-down"></i> Pilih Aksi
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu">
+                                                        <li>
+                                                            <a href="{{ url('data-pegawai/detail-pegawai/' . $item->id) }}" class="btn btn-social btn-flat btn-block btn-xs"><i
+                                                                class="fa fa-list-ol"></i>Lihat Detail</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="{{ url('edit-pegawai/'. $item->id) }}" class="btn btn-social btn-flat btn-block btn-xs"><i
+                                                                class="fa fa-edit"></i>Ubah Data</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#" class="btn btn-social btn-flat btn-block btn-xs"data-toggle="modal" data-target="#modal-danger{{ $item->id }}"><i
+                                                                class="fa fa-trash"></i>Hapus Data</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td> -->
+                                        </tr>
+                                        @endforeach
+                                        @foreach($nonpns as $result)
+                                        <tr onClick="window.location='/detail-nonpns/{{ $result->id }}'">
+                                            <td class="text-left">{{ $loop->iteration + sizeof($data) }}</td>
+                                            <td class="text-left">{{ $result->fullname }}</td>
+                                            <td class="text-left"></td>
+                                            <td class="text-left">{{ $result->birth_date }}</td>
+                                            <td class="text-left"></td>
+                                            <td class="text-left">{{ $result->divisi }}</td>
+                                            <td class="text-left">{{ $result->jabatan }}</td>
+                                        </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
-        </div>
-    </div>
 
     {{-- danger modal --}}
     @foreach ($data as $item)

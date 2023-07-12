@@ -53,8 +53,8 @@ class UnitKerjaController extends Controller
 
     public function update(Request $request, $id)
     {
-        $bidang = UnitKerja::find($id);
-        $bidang->update($request->all());
+        $unitkerja = UnitKerja::find($id);
+        $unitkerja->update($request->all());
         $request->accepts('session');
         session()->flash('success', 'Berhasil menambahkan data!');
 
@@ -76,4 +76,5 @@ class UnitKerjaController extends Controller
         
         return redirect('/unitkerja')->with('success', 'Unit Kerja berhasil dihapus');
     }
+    
 }

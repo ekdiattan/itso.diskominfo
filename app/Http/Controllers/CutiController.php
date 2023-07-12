@@ -23,47 +23,36 @@ class CutiController extends Controller
         try {
             $todayYear = Carbon::now()->format('Y');
             $todayMonth = Carbon::now()->format('m');
-        
-            $now = Carbon::now();
-        
-            $startMonth = Carbon::now();
-            $pastMonth = $startMonth->subMonths(1);
-        
-            $periode = CarbonPeriod::create($pastMonth, $startMonth);
-        
-            foreach ($periode as $p) {
-                $client = new Client();
-                $response = $client->request(
-                    'GET',
-                    'https://siap.jabarprov.go.id/integrasi/api/v1/kmob/cuti-bulanan',
+            $client = new Client();
+            $response = $client->request(
+                'GET',
+                'https://siap.jabarprov.go.id/integrasi/api/v1/kmob/cuti-bulanan',
+                [
+                    'query' => ['tahun' => $todayYear, 'bulan' => $todayMonth],
+                    'auth' => ['diskominfo_presensi', 'diskominfo_presensi12345']
+                ]
+            );
+            $cuti = $response->getBody();
+            $cuti_array = json_decode($cuti);
+            foreach ($cuti_array as $post) {
+                $post = (array)$post;
+    
+                Cuti::updateOrCreate(
                     [
-                        'query' => ['tahun' => $todayYear, 'bulan' => $p->format('m')],
-                        'auth' => ['diskominfo_presensi', 'diskominfo_presensi12345']
+                        'nama' => $post['nama'],
+                        'tgl_mulai' => $post['tgl_mulai']
+                    ], [
+                        'njab' => $post['njab'],
+                        'unitkerja_nama' => $post['unitkerja_nama'],
+                        'jenis_cuti' => $post['jenis_cuti'],
+                        'tgl_selesai' => $post['tgl_selesai'],
+                        'uraian' => $post['uraian'],
+                        'tgl_pengajuan' => $post['tgl_pengajuan'],
+                        'atasan' => $post['atasan'],
+                        'ket_proses' => $post['ket_proses']
                     ]
                 );
-                $cuti = $response->getBody();
-                $cuti_array = json_decode($cuti);
-                foreach ($cuti_array as $post) {
-                    $post = (array)$post;
-        
-                    Cuti::updateOrCreate(
-                        [
-                            'nama' => $post['nama'],
-                            'tgl_mulai' => $post['tgl_mulai']
-                        ], [
-                            'njab' => $post['njab'],
-                            'unitkerja_nama' => $post['unitkerja_nama'],
-                            'jenis_cuti' => $post['jenis_cuti'],
-                            'tgl_selesai' => $post['tgl_selesai'],
-                            'uraian' => $post['uraian'],
-                            'tgl_pengajuan' => $post['tgl_pengajuan'],
-                            'atasan' => $post['atasan'],
-                            'ket_proses' => $post['ket_proses']
-                        ]
-                    );
-                }
             }
-        
             session()->flash('success', 'Berhasil mengupdate data');
             return redirect('/cuti');
         } catch (ServerException $e) {

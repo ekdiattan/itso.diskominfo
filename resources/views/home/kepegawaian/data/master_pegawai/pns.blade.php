@@ -4,55 +4,64 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h2>Master Pegawai</h2>
 </div>
-<div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
-    <!-- Container wrapper -->
-    <div class="container justify-content-center justify-content-md-between">
-      <!-- Left links -->
-      <ul class="navbar-nav flex-row">
-        <li class="nav-item me-auto">
-          <a class="nav-link" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Tampilkan Data Berdasarkan
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/master-pegawai" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Semua Pegawai
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/pns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            <b>PNS</b>
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/nonpns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Non-PNS
-          </a>
-        </li>
-        <div style="display: flex; justify-content: flex-end">
-            <li class="nav-item me-auto">
-                <a class="nav-link text-success" href="/tambah-data-pegawai" style="font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-                    <b>+ Data Pegawai</b>
-                </a>
-            </li>
-        </div>
-      </ul>
-    </div>
-</div>
-<br>
 <section class="content">
-      <div class="container-fluid">
+    <div class="container-fluid">
+          @if(session('success'))
+          <div class="alert alert-success" role="alert">
+              {{ session('success') }}
+          </div>
+          @endif
+          @if(session('conflict'))
+          <div class="alert alert-warning" role="alert">
+              {{ session('conflict') }}
+          </div>
+          @endif
+          @if($conflict)
+          <div class="alert alert-primary" role="alert">
+              <p>Terdapat data yang harus ditinjau ulang</p>
+              <a href="/pegawai-conflict">Klik disini untuk meninjau ulang data</a>
+          </div>
+          @endif
         <div class="row">
           <div class="col-12">
           <div id="example1_wrapper" class="dataTables_wrapper dt_bootstrap4">
           <div class="card">
+          <div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
+            <!-- Container wrapper -->
+            <div class="container justify-content-center justify-content-md-between">
+            <!-- Left links -->
+                <ul class="navbar-nav flex-row">
+                    <li class="nav-item me-auto">
+                    <a class="nav-link" href="/master-pegawai" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                        class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                        Semua Pegawai
+                    </a>
+                    </li>
+                    <li class="nav-item me-auto">
+                    <a class="nav-link" href="#" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                        class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                        <b>PNS</b>
+                    </a>
+                    </li>
+                    <li class="nav-item me-auto">
+                    <a class="nav-link" href="/nonpns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                        class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                        Non-PNS
+                    </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item me-auto">
+                        <a class="nav-link text-success" href="/tambah-data-pegawai" style="font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                            <b>+ Data Pegawai</b>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
             <div class="card-body">
-            <!-- <a href="/update-data-pegawai" class="btn btn-info bg-maroon" title="Sync Data"><i class="fa fa-file-pdf-o"></i> Sync Data</a>      -->
+            <a href="/pegawai-sync" class="button btn btn-success">Update Data</a>
                 <div id="dataTable_wrapper" class="table-responsive">
                  <nav class="navbar bg-body-tertiary">
                    

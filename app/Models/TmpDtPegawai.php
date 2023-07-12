@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DtPegawai extends Model
+class TmpDtPegawai extends Model
 {
     use HasFactory;
-
     protected $fillable = [
         "user_id",
         "nip",
@@ -38,16 +37,4 @@ class DtPegawai extends Model
         "bank_branch",
         "npwp",
     ];
-
-    public function pendidikan(){
-        return $this->hasOne(DtPendidikan::class, 'account', 'user_id');
-    }
-
-    public function unitKerja(){
-        return $this->hasOne(UnitKerja::class, 'idUnitKerja', 'id_divisi');
-    }
-    
-    public function deskripsiJabatan(){
-        return $this->hasOne(DtJabatan::class, 'id_jabatan', 'id_jabatan');
-    }
 }

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('unitkerja_nama')->nullable();
             $table->string('masuk')->nullable();
             $table->integer('terlambat')->nullable();
-            $table->string('tanggal')->nullable()->unique();
-            $table->string('update')->nullable()->unique();
+            $table->string('tanggal')->nullable();
+            $table->string('update')->nullable();
             $table->timestamps();
         });
     }

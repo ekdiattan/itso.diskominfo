@@ -95,9 +95,16 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Status Pernikahan</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" id="disabledTextinput" name="marital_status"
-                  value="{{$edit->marital_status}}"/>
+                  <select class="form-control selectpicker " aria-label="Default select example" id="marital_status" name="marital_status" required>
+                    <option value="{{$edit->marital_status}}">{{$edit->marital_status}}</option>
+                    <option value="">--PILIH--</option>
+                    <option value="menikah">Menikah</option>
+                    <option value="belum menikah">Belum Menikah</option>
+                    <option value="cerai">Cerai</option>
+                    <option value="cerai mati">Cerai Mati</option>
+                  </select>
                 </div>
+                
               </div>
             </div>
           </div>
@@ -153,7 +160,7 @@
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Email</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" name="email"
-                    value="{{$edit->email}}">
+                  value="{{$edit->email}}">
                 </div>
               </div>
             </div>
@@ -161,9 +168,10 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">No NPWP</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" name="noNpwp"
-                    value="{{$edit->npwp}}">
+                  <input type="text" class="form-control" id="disabledTextinput" name="noNpwp"
+                  value="{{$edit->npwp}}"/>
                 </div>
+              </div>
             </div>
           </div>
           <div class="row">

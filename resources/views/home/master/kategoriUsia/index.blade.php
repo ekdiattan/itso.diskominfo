@@ -10,22 +10,21 @@
     <div class="col-md-4 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Tambahkan Keterangan Libur</h4>
-          <form action="/libur/create" method="post" >
+          <h4 class="card-title">Tambahkan Keterangan Kategori Usia</h4>
+          <form action="/usia/create" method="post" >
             @csrf
             <br>
             <div class="form-group">
-              <label for="exampleInputUsername1">Keterangan Libur</label>
-              <input type="text" class="form-control" id="namaLibur" name="namaLibur" required>
+              <label for="exampleInputUsername1">Kategori Usia</label>
+              <input type="text" class="form-control" id="kategori" name="kategori" required>
             </div>
             <div class="form-group">
-              <label for="exampleInputUsername1">Tanggal Mulai</label>
-              <input type="date" class="form-control" id="start" name="start" required>
+              <label for="dari">Dari Usia</label>
+              <input type="number" class="form-control" id="dari" name="dari" required>
             </div>
             <div class="form-group">
-              <label for="exampleInputUsername1">Tanggal Selesai</label>
-              <input type="date" class="form-control" id="end" name="end">
-              <p>Jika diisi berarti libur akan berada pada jangka waktu tanggal mulai dengan tanggal selesai</p>
+              <label for="hindda">Hingga Usia</label>
+              <input type="number" class="form-control" id="hingga" name="hingga" required>
             </div>
             <button type="submit" class="btn btn-primary mr-2">Submit</button>
           </form>
@@ -36,7 +35,7 @@
       <div class="card">
         <div class="card-body">
           <div class="d-flex flex-row justify-content-between">
-            <h4 class="card-title mb-1">Daftar Keterangan Liburan</h4>
+            <h4 class="card-title mb-1">Daftar Keterangan Kategori Usia</h4>
           </div>
           <div class="row">
             <div class="col-12">
@@ -46,20 +45,22 @@
                       <thead  class="bg-gray disabled color-palette">
                         <tr>
                           <th>No</th>
-                          <th>Nama Liburan</th>
-                          <th>Tanggal</th>
+                          <th>Kategori</th>
+                          <th>Dari</th>
+                          <th>Hingga</th>
                           <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        @foreach ($liburs as $post )  
+                        @foreach ($usias as $usia )  
                         <tr>
                           <td>{{ $loop->iteration }}</td>
-                          <td>{{ $post->nama }}</td>
-                          <td>{{ $post->tanggal }}</td>
+                          <td>{{ $usia->kategori }}</td>
+                          <td>{{ $usia->dari }}</td>
+                          <td>{{ $usia->hingga }}</td>
                           <td>
-                            <a href="/libur/{{ $post->id }}" class="badge bg-warning"><span class="menu-icon"><i class="far fa-edit"></i></span></a>
-                            <form action="/libur/delete/{{ $post->id }}" method="get" class="d-inline">
+                            <a href="/usia/{{ $usia->id }}" class="badge bg-warning"><span class="menu-icon"><i class="far fa-edit"></i></span></a>
+                            <form action="/usia/delete/{{ $usia->id }}" method="get" class="d-inline">
                               @csrf
                               <button class="badge bg-danger border-0" onclick="return confirm('Are you sure?')"><span class="menu-icon"><i class="fas fa-trash"></i></span></button>
                             </form>

@@ -15,12 +15,13 @@ return new class extends Migration
     {
         Schema::create('unit_kerjas', function (Blueprint $table){
             $table->id();
-            $table->string('namaUnit');
-            $table->string('aliasUnit');
-            $table->string('divisi');
-            $table->string('divisiLengkap');
-            $table->string('alamat');
-            $table->string('nipPimpinan');
+            $table->string('namaUnit')->nullable();
+            $table->string('aliasUnit')->nullable();
+            $table->string('idUnitKerja')->nullable();
+            $table->string('unitKerjaApi')->nullable();
+            $table->string('unitKerjaApiLengkap')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('nipPimpinan')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('unitKerjas');
+        Schema::dropIfExists('unit_kerjas');
     }
 };

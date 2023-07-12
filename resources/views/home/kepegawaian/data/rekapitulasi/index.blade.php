@@ -21,14 +21,10 @@
             <div class="box-header with-border form-inline">
                 <div class="row">
                     <div class="col-sm-2">
-                        <select class="form-control input-sm select2 select2-hidden-accessible" id="status"
-                            name="status" data-select2-id="status" tabindex="-1" aria-hidden="true">
-                            <option value="1" selected href="/rekap/terlambat-masuk">Rekapitulasi Terlambat Masuk PNS
-                            </option>
-                            <option value="1" href="/rekap/terlambat-masuk-unit">Rekapitulasi Terlambat Masuk Unit
-                            </option>
-                            <option value="1" href="/rekap/tidak-absen-pulang">Rekapitulasi Tidak Absen Pulang PNS
-                            </option>
+                        <select class="form-control input-sm select2" id="status" name="status" onChange="location = this.value">
+                            <option selected value="/rekap/terlambat-masuk">Rekapitulasi Terlambat Masuk PNS</option>
+                            <option value="/rekap/terlambat-masuk-unit">Rekapitulasi Terlambat Masuk Unit</option>
+                            <option value="/rekap/tidak-absen-pulang">Rekapitulasi Tidak Absen Pulang PNS</option>
                         </select>
                     </div>
                 </div>
@@ -38,7 +34,6 @@
                             <div class="col-sm-9">
                                 <form action="/rekap/terlambat-masuk" method="get" id="filterDate">
                                     <input class="form-control" type="date" id="tanggal" name="tanggal" data-select2-id="tanggal" tabindex="-1" aria-hidden="true" onChange="dateFilter()" value="{{ $date != null ? $date : $tgl}}">
-                                    <a href="/rekap/terlambat-masuk" class="btn btn-danger" role="button">Reset</a>
                                 </form>
                             </div>
                         </div>
@@ -52,15 +47,15 @@
                             <th rowspan="2" style="vertical-align:middle" width="5%">No</th>
                             <th rowspan="2" style="vertical-align:middle" width="25%">Nama</th>
                             <th rowspan="2" style="vertical-align:middle">Unit Kerja</th>
-                            <td colspan="5" style="text-align:center; font-weight:bold;">Hari (dalam detik)</td>
-                            <th rowspan="2" style="vertical-align:middle">Jumlah <br>Keterlambatan<br>(Detik)</th>
+                            <td colspan="5" style="text-align:center; font-weight:bold;">Periode {{ $tgl->translatedFormat('d M Y') }} hingga {{ $tgl->addDays('4')->translatedFormat('d M Y') }} </td>
+                            <th rowspan="2" style="vertical-align:middle">Total Keterlambatan</th>
                         </tr>
                         <tr>
-                            <th style='text-align:center; font-weight:bold;'>{{ $days->format('l') }}</th>
-                            <th style='text-align:center; font-weight:bold;'>{{ $days->addDays('1')->format('l') }}</th>
-                            <th style='text-align:center; font-weight:bold;'>{{ $days->addDays('1')->format('l') }}</th>
-                            <th style='text-align:center; font-weight:bold;'>{{ $days->addDays('1')->format('l') }}</th>
-                            <th style='text-align:center; font-weight:bold;'>{{ $days->addDays('1')->format('l') }}</th>
+                            <th style='text-align:center; font-weight:bold;'>{{ $days->translatedFormat('l') }}</th>
+                            <th style='text-align:center; font-weight:bold;'>{{ $days->addDays('1')->translatedFormat('l') }}</th>
+                            <th style='text-align:center; font-weight:bold;'>{{ $days->addDays('1')->translatedFormat('l') }}</th>
+                            <th style='text-align:center; font-weight:bold;'>{{ $days->addDays('1')->translatedFormat('l') }}</th>
+                            <th style='text-align:center; font-weight:bold;'>{{ $days->addDays('1')->translatedFormat('l') }}</th>
                         </tr>
                     </thead>
 
@@ -68,32 +63,28 @@
                     <tbody>
                         @php $i=1 @endphp
                         @foreach ($data_terlambat as $result)
-                            @if($result['monday'] != 0 || $result['tuesday'] != 0 || $result['wednesday'] != 0 || $result['thursday'] != 0 || $result['friday'] != 0)
+                            @if(($result['monday'] != 0 && $result['monday'] != "Libur") || ($result['tuesday'] != 0 && $result['tuesday'] != "Libur") || ($result['wednesday'] != 0 && $result['wednesday'] != "Libur") || ($result['thursday'] != 0 && $result['thursday'] != "Libur") || ($result['friday'] != 0 && $result['friday'] != "Libur"))
                                 <tr>
                                     <td>{{ $i++ }}</td>
                                     <td>{{ $result['nama'] }}</td>
                                     <td>{{ $result['unitkerja'] }}</td>
-                                    <td>{{ $result['monday'] }}</td>
-                                    <td>{{ $result['tuesday'] }}</td>
-                                    <td>{{ $result['wednesday'] }}</td>
-                                    <td>{{ $result['thursday'] }}</td>
-                                    <td>{{ $result['friday'] }}</td>
-                                    <td>{{ $result['monday']+$result['tuesday']+$result['wednesday']+$result['thursday']+$result['friday'] }}</td>
+                                    <td class="{{ $result['monday'] != 'Libur' ? '' : 'table-danger' }}">{{ $result['monday'] == 0 ? '' : ($result['monday'] != "Libur" ?  $result['monday'].' detik' : "Libur" )}}</td>
+                                    <td class="{{ $result['tuesday'] != 'Libur' ? '' : 'table-danger' }}">{{ $result['tuesday'] == 0 ? '' : ($result['tuesday'] != "Libur" ? $result['tuesday'].' detik' : "Libur")}}</td>
+                                    <td class="{{ $result['wednesday'] != 'Libur' ? '' : 'table-danger' }}">{{ $result['wednesday'] == 0 ? '' : ($result['wednesday'] != "Libur" ? $result['wednesday'].' detik' : "Libur")}}</td>
+                                    <td class="{{ $result['thursday'] != 'Libur' ? '' : 'table-danger' }}">{{ $result['thursday'] == 0 ? '' : ($result['thursday'] != "Libur" ? $result['thursday'].' detik' : "Libur")}}</td>
+                                    <td class="{{ $result['friday'] != 'Libur' ? '' : 'table-danger' }}">{{ $result['friday'] == 0 ? '' : ($result['friday'] != "Libur" ? $result['friday'].' detik' : "Libur")}}</td>
+                                    <td>{{ ($result['monday'] == "Libur" ? 0 : $result['monday'])+($result['tuesday'] == "Libur" ? 0 : $result['tuesday'])+($result['wednesday'] == "Libur" ? 0 : $result['wednesday'])+($result['thursday'] == "Libur" ? 0 : $result['thursday'])+($result['friday'] == "Libur" ? 0 : $result['friday']).' detik' }}</td>
                                 </tr>
                             @endif
                         @endforeach
                     </tbody>
-                    </table>
+                </table>
             </div>
         </div>
     </div>
 </div>
 @endsection
 <script>
-    document.getElementById('status').onchange = function() {
-        window.location.href = this.children[this.selectedIndex].getAttribute('href');
-    }
-
     function dateFilter(){
         document.getElementById("filterDate").submit()
     }

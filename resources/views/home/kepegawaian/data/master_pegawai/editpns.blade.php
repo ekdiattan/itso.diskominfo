@@ -67,7 +67,7 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">TMT Golongan</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" id="disabledTextinput" name="tmtGolongan"
+                  <input type="date" class="form-control" id="disabledTextinput" name="tmtGolongan"
                   value="{{$edit->tmtGolongan}}"/>
                 </div>
               </div>
@@ -96,7 +96,7 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">TMT Jabatan</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" name="tmtJabatan"
+                  <input type="date" class="form-control" name="tmtJabatan"
                     value="{{$edit->tmtJabatan}}">
                 </div>
               </div>
@@ -105,8 +105,14 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Status Pegawai</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" id="disabledTextinput" name="statusPegawai"
-                  value="{{$edit->statusPegawai}}"/>
+                  <!-- <input type="text" class="form-control" id="disabledTextinput" name="statusPegawai"
+                  value="{{$edit->statusPegawai}}"/> -->
+                  <select name="statusPegawai" class="form-control"{{$edit->statusPegawai}}">
+                    <option value="{{$edit->statusPegawai}}">{{$edit->statusPegawai}}</option>
+                    <option>--PILIH--</option>
+                    <option>Aktif</option>
+                    <option>Tidak Aktif</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -116,7 +122,7 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">TMT Pegawai</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" name="tmtPegawai"
+                  <input type="date" class="form-control" name="tmtPegawai"
                     value="{{$edit->tmtPegawai}}">
                 </div>
               </div>
@@ -139,7 +145,40 @@
                 </div>
               </div>
             </div>
-          </div>
+            <div class="col-md-4">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" style="font-size:13px;">Tanggal Masuk</label>
+                <div class="col-sm-9">
+                  <input type="date" class="form-control" name="tanggalmasuk"
+                    value="{{$edit->tanggalmasuk}}">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" style="font-size:13px;">Tanggal Keluar</label>
+                <div class="col-sm-9">
+                  <input type="date" class="form-control" name="tanggalkeluar"
+                    value="{{$edit->tanggalkeluar}}">
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" style="font-size:13px;">Perihal Keluar</label>
+                <div class="col-sm-9">
+                  <!-- <input type="text" class="form-control" id="disabledTextinput" name="statusPegawai"
+                  value="{{$edit->statusPegawai}}"/> -->
+                  <select name="reasonPisah" class="form-control"{{$edit->reasonPisah}}">
+                    <option value="{{$edit->reasonPisah}}">{{$edit->reasonPisah}}</option>
+                    <option>--PILIH--</option>
+                    <option>Pindah Tugas</option>
+                    <option>Pensiun</option>
+                    <option>Wafat</option>
+                  </select>
+                </div>
+              </div>
+            </div>
 
         <!-- personal -->
           <p class="card-description">DATA PERSONAL</p>
@@ -186,8 +225,14 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Status Pernikahan</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" name="perkawinan"
-                    value="{{$edit->perkawinan}}">
+                  <select class="form-control selectpicker " aria-label="Default select example" id="perkawinan" name="perkawinan" required>
+                    <option value="{{$edit->perkawinan}}">{{$edit->perkawinan}}</option>
+                    <option value="">--PILIH--</option>
+                    <option value="Menikah">Menikah</option>
+                    <option value="Belum Menikah">Belum Menikah</option>
+                    <option value="Cerai">Cerai</option>
+                    <option value="Cerai Mati">Cerai Mati</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -209,8 +254,16 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Pendidikan Awal</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" name="pendidikanAwal"
-                    value="{{$edit->pendidikanAwal}}">
+                  <select class="form-control selectpicker " aria-label="Default select example" id="pendidikanAwal" name="pendidikanAwal" required>
+                    <option value="{{$edit->pendidikanAwal}}">{{$edit->pendidikanAwal}}</option>
+                    <option value="">--PILIH--</option>
+                    <option value="SMA/SMK/MA/Sederajat">SMA/SMK/MA/Sederajat</option>
+                    <option value="D3">Diploma 3</option>
+                    <option value="D4">Diploma 4</option>
+                    <option value="S1">Sarjana</option>
+                    <option value="Magister">Magister</option>
+                    <option value="Doktor">Doktor</option>
+                  </select>
                 </div>
               </div>
             </div>
@@ -227,8 +280,16 @@
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Pendidikan Akhir</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" name="pendidikanAkhir"
-                    value="{{$edit->pendidikanAkhir}}">
+                <select class="form-control selectpicker " aria-label="Default select example" id="pendidikanAkhir" name="pendidikanAkhir" required>
+                    <option value="{{$edit->pendidikanAkhir}}">{{$edit->pendidikanAwal}}</option>
+                    <option value="">--PILIH--</option>
+                    <option value="SMA/SMK/MA/Sederajat">SMA/SMK/MA/Sederajat</option>
+                    <option value="D3">Diploma 3</option>
+                    <option value="D4">Diploma 4</option>
+                    <option value="S1">Sarjana</option>
+                    <option value="Magister">Magister</option>
+                    <option value="Doktor">Doktor</option>
+                  </select>
                 </div>
               </div>
             </div>

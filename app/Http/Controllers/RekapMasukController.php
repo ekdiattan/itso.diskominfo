@@ -52,11 +52,11 @@ class RekapMasukController extends Controller
                     $terlambats->push([
                         'nama' => $nama->nama,
                         'unitkerja' => $nama->unitKerja,
-                        'monday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $monday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                        'tuesday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $tuesday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                        'wednesday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $wednesday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                        'thursday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $thursday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                        'friday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $friday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat')
+                        'monday' => in_array($monday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $monday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                        'tuesday' => in_array($tuesday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $tuesday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                        'wednesday' => in_array($wednesday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $wednesday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                        'thursday' => in_array($thursday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $thursday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                        'friday' => in_array($friday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $friday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat')
                     ]);
                 }
             } else {
@@ -67,11 +67,11 @@ class RekapMasukController extends Controller
                             $terlambats->push([
                                 'nama' => $nama->nama,
                                 'unitkerja' => $nama->unitKerja,
-                                'monday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $monday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                                'tuesday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $tuesday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                                'wednesday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $wednesday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                                'thursday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $thursday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                                'friday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $friday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat')
+                                'monday' => in_array($monday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $monday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                                'tuesday' => in_array($tuesday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $tuesday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                                'wednesday' => in_array($wednesday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $wednesday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                                'thursday' => in_array($thursday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $thursday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                                'friday' => in_array($friday, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $friday)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat')
                             ]); 
                         }
                     }
@@ -95,11 +95,11 @@ class RekapMasukController extends Controller
                     $terlambats->push([
                         'nama' => $nama->nama,
                         'unitkerja' => $nama->unitKerja,
-                        'monday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $first)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                        'tuesday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $second)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                        'wednesday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $third)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                        'thursday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $fourth)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                        'friday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $fifth)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat')
+                        'monday' => in_array($first, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $first)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                        'tuesday' => in_array($second, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $second)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                        'wednesday' => in_array($third, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $third)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                        'thursday' => in_array($fourth, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $fourth)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                        'friday' => in_array($fifth, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $fifth)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat')
                     ]);
                 }
             } else {
@@ -109,18 +109,18 @@ class RekapMasukController extends Controller
                             $terlambats->push([
                                 'nama' => $nama->nama,
                                 'unitkerja' => $nama->unitKerja,
-                                'monday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $first)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                                'tuesday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $second)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                                'wednesday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $third)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                                'thursday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $fourth)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
-                                'friday' => DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $fifth)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat')
+                                'monday' => in_array($first, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $first)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                                'tuesday' => in_array($second, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $second)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                                'wednesday' => in_array($third, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $third)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                                'thursday' => in_array($fourth, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $fourth)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat'),
+                                'friday' => in_array($fifth, $parsedLibur) ? "Libur" : DB::table('rekapitulasis')->where('nama', '=', $nama->nama)->where('unitkerja', '=', $nama->unitKerja)->where('tanggal', '=', $fifth)->whereNotIn('tanggal', $parsedLibur)->groupBy('terlambat', 'nama', 'tanggal')->sum('terlambat')
                             ]); 
                         }
                     }
                 }
             }
         }
-        return view('home.kepegawaian.data.rekapitulasi.index', ['data_terlambat'=>$terlambats, 'tgl'=> $tgl, 'days' => $days, 'title' => 'Rekapitulasi Masuk Pegawai', 'date' => $request->tanggal]);
+        return view('home.kepegawaian.data.rekapitulasi.index', ['data_terlambat'=>$terlambats, 'tgl'=> Carbon::create($tgl), 'days' => $days, 'title' => 'Rekapitulasi Masuk Pegawai', 'date' => $request->tanggal]);
     }
 
     /**

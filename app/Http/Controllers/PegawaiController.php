@@ -3,55 +3,504 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
+use App\Models\TmpPegawai;
 use App\Models\DtPegawai;
-use App\Models\UnitKerja;
+use App\Models\TmpDtPegawai;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\BadResponseException;
+
+use Telegram;
 
 class PegawaiController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        // INI UNTUK MELAKUKAN KOMPARASI DATA
-        // $todayDate = Carbon::now()->format('Y-m-d');
-        // $client = new Client();
-        // $response = $client->request ('GET', 'https://siap.jabarprov.go.id/integrasi/api/v1/kmob/presensi-harian',
-        // [
-        //     'query' => ['tanggal'=>$todayDate],
-        //     'auth' => ['diskominfo_presensi','diskominfo_presensi12345']
-        // ]);
-        // $body = $response->getBody();
-        // $body_array = json_decode($body);
-        
-        
-        // $dataApi = [];
-        // foreach($body_array as $result){
-        //     array_push($dataApi, (array)$result);
-        // }
-        
-        // $pegawais = Pegawai::select('nama', 'noPegawai', 'unitKerja')->orderBy('noPegawai', 'asc')->get()->toArray();
-        
-        // $diff = [];
-        // if(sizeof($pegawais) >= sizeof($dataApi)){
-        //     foreach($pegawais as $pegawai){
-        //         foreach($dataApi as $data){
-        //             if($pegawai['nama'] != $data['nama'] && $pegawai['noPegawai'] != $data)
-        //         }
-        //     }
-        // } else {
-        //     foreach($dataApi as $data){
-        //         foreach($pegawais as $pegawai){
-
-        //         }
-        //     }
-        // }
-        // $data = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
-        // $nonpns = DB::table('dt_pegawais')->get();
         $data = Pegawai::all();
+        $conflict = (TmpPegawai::all()->isNotEmpty() || TmpDtPegawai::all()->isNotEmpty());
         $nonpns = DtPegawai::where('is_active', 'true')->whereNot('jabatan', 'PNS')->get();
-        return view('home.kepegawaian.data.master_pegawai.index', [ 'data' => $data, 'nonpns' => $nonpns,'title' => 'Pegawai', 'search' => $request->search]);
+        return view('home.kepegawaian.data.master_pegawai.index', [ 'data' => $data, 'nonpns' => $nonpns,'title' => 'Pegawai', 'conflict' => $conflict]);
+    }
+
+    public function sync(){ // update data pegawai
+        try {
+            $users = [
+                [
+                    'username' => "yudiwardoyozz",
+                    'password' => "yudiwardoyozz"
+                ] , [
+                    'username' => "kenisya09",
+                    'password' => "kenisya09"
+                ]
+            ];
+            foreach($users as $user){
+                $client = new Client();
+                $login = $client->request(
+                    'POST', 'https://groupware-api.digitalservice.id/auth/admin/login/', [
+                        'form_params' => [
+                            'username' => $user['username'],
+                            'password' => $user['password'], 
+                        ]
+                    ]
+                );
+                $result = json_decode($login->getBody()->getContents());
+                $token = $result->auth_token;
+        
+                // pegawai Update pegawai and its pendidikans
+                $page = 1;
+                $maxPage = 2;
+                while($page <= $maxPage){
+                    $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/?page='.$page.'&is_active=&struktural=&search=', [
+                        'headers' => [
+                            'Authorization' => 'Bearer '. $token,
+                            ]
+                        ]);
+                        $body = $response->getBody();
+                        $user = json_decode($body);
+                        $maxPage = $user->_meta->totalPage;
+                        
+                        foreach($user->results as $results){
+                            // detail per user
+                            $detailResponse = $client->request ('GET', 'https://groupware-api.digitalservice.id/user/'.$results->id.'/', [
+                                'headers' => [
+                                    'Authorization' => 'Bearer '. $token,
+                                    ]
+                                ]);
+                            $detailBody = json_decode($detailResponse->getBody());
+                            if($detailBody->divisi != 'ASN'){
+                                $local = DtPegawai::where('user_id', $detailBody->id)->first();
+                                // data dari API belum ada di dalam database local
+                                if($local == ''){
+                                    if($detailBody->account_bank != ''){
+                                        DtPegawai::upsert([
+                                            "user_id" => $detailBody->id,
+                                            "email" => $detailBody->email,
+                                            "fullname" => $detailBody->fullname,
+                                            "birth_place" => $detailBody->birth_place,
+                                            "birth_date" => $detailBody->birth_date,
+                                            "marital_status" => $detailBody->marital_status,
+                                            "religion" => $detailBody->religion,
+                                            "blood_type" => $detailBody->blood_type,
+                                            "gender" => $detailBody->gender,
+                                            "age" => $detailBody->age,
+                                            "telephone" => $detailBody->telephone,
+                                            "id_divisi" => $detailBody->id_divisi,
+                                            "divisi" => $detailBody->divisi,
+                                            "id_jabatan" => $detailBody->id_jabatan,
+                                            "jabatan" => $detailBody->jabatan,
+                                            "is_staff" => $detailBody->is_staff,
+                                            "join_date" => $detailBody->join_date,
+                                            'is_active' => $detailBody->is_active,
+                                            "resign_date" => $detailBody->resign_date,
+                                            "reason_resignation" => $detailBody->reason_resignation,
+                                            "id_card_address" => $detailBody->id_card_address,
+                                            "current_address" => $detailBody->current_address,
+                                            "bank_account_number" => $detailBody->account_bank->bank_account_number,
+                                            "bank_account_name" => $detailBody->account_bank->bank_account_name,
+                                            "bank_branch" => $detailBody->account_bank->bank_branch,
+                                            "npwp" => $detailBody->npwp,
+                                        ], [
+                                            "user_id",
+                                        ], [
+                                            "email",
+                                            "fullname",
+                                            "birth_place",
+                                            "birth_date",
+                                            "marital_status",
+                                            "religion",
+                                            "blood_type",
+                                            "gender",
+                                            "age",
+                                            "telephone",
+                                            "id_divisi",
+                                            "divisi",
+                                            "id_jabatan",
+                                            "jabatan",
+                                            "is_staff",
+                                            "join_date",
+                                            'is_active',
+                                            "resign_date",
+                                            "reason_resignation",
+                                            "id_card_address",
+                                            "current_address",
+                                            "bank_account_number",
+                                            "bank_account_name",
+                                            "bank_branch",
+                                            "npwp",
+                                        ]);
+                                    } else {
+                                        DtPegawai::upsert([
+                                            "user_id" => $detailBody->id,
+                                            "email" => $detailBody->email,
+                                            "fullname" => $detailBody->fullname,
+                                            "birth_place" => $detailBody->birth_place,
+                                            "birth_date" => $detailBody->birth_date,
+                                            "marital_status" => $detailBody->marital_status,
+                                            "religion" => $detailBody->religion,
+                                            "blood_type" => $detailBody->blood_type,
+                                            "gender" => $detailBody->gender,
+                                            "age" => $detailBody->age,
+                                            "telephone" => $detailBody->telephone,
+                                            "id_divisi" => $detailBody->id_divisi,
+                                            "divisi" => $detailBody->divisi,
+                                            "id_jabatan" => $detailBody->id_jabatan,
+                                            "jabatan" => $detailBody->jabatan,
+                                            "is_staff" => $detailBody->is_staff,
+                                            "join_date" => $detailBody->join_date,
+                                            'is_active' => $detailBody->is_active,
+                                            "resign_date" => $detailBody->resign_date,
+                                            "reason_resignation" => $detailBody->reason_resignation,
+                                            "id_card_address" => $detailBody->id_card_address,
+                                            "current_address" => $detailBody->current_address,
+                                            "npwp" => $detailBody->npwp,
+                                        ], [
+                                            "user_id",
+                                        ], [
+                                            "email",
+                                            "fullname",
+                                            "birth_place",
+                                            "birth_date",
+                                            "marital_status",
+                                            "religion",
+                                            "blood_type",
+                                            "gender",
+                                            "age",
+                                            "telephone",
+                                            "id_divisi",
+                                            "divisi",
+                                            "id_jabatan",
+                                            "jabatan",
+                                            "is_staff",
+                                            "join_date",
+                                            'is_active',
+                                            "resign_date",
+                                            "reason_resignation",
+                                            "id_card_address",
+                                            "current_address",
+                                            "bank_account_number",
+                                            "bank_account_name",
+                                            "bank_branch",
+                                            "npwp",
+                                        ]);
+                                    }
+                                } else if ($detailBody->account_bank != ''){ // because account_bank variable is array, but if null it known as string variable
+                                    if(
+                                        ($detailBody->email != '' && $detailBody->email != $local->email) ||
+                                        ($detailBody->fullname != '' && $detailBody->fullname != $local->fullname) ||
+                                        ($detailBody->birth_place != '' && $detailBody->birth_place != $local->birth_place) ||
+                                        ($detailBody->birth_date != '' && $detailBody->birth_date != $local->birth_date) ||
+                                        ($detailBody->marital_status != '' && $detailBody->marital_status != $local->marital_status) ||
+                                        ($detailBody->religion != '' && $detailBody->religion != $local->religion) ||
+                                        ($detailBody->blood_type != '' && $detailBody->blood_type != $local->blood_type) ||
+                                        ($detailBody->gender != '' && $detailBody->gender != $local->gender) ||
+                                        ($detailBody->age != '' && $detailBody->age != $local->age) ||
+                                        ($detailBody->telephone != '' && $detailBody->telephone != $local->telephone) ||
+                                        ($detailBody->id_divisi != '' && $detailBody->id_divisi != $local->id_divisi) ||
+                                        ($detailBody->divisi != '' && $detailBody->divisi != $local->divisi) ||
+                                        ($detailBody->id_jabatan != '' && $detailBody->id_jabatan != $local->id_jabatan) ||
+                                        ($detailBody->jabatan != '' && $detailBody->jabatan != $local->jabatan) ||
+                                        ($detailBody->is_staff != '' && $detailBody->is_staff != $local->is_staff) ||
+                                        ($detailBody->join_date != '' && $detailBody->join_date != $local->join_date) ||
+                                        ($detailBody->is_active != '' && $detailBody->is_active != $local->is_active) ||
+                                        ($detailBody->resign_date != '' && $detailBody->resign_date != $local->resign_date) ||
+                                        ($detailBody->reason_resignation != '' && $detailBody->reason_resignation != $local->reason_resignation) ||
+                                        ($detailBody->id_card_address != '' && $detailBody->id_card_address != $local->id_card_address) ||
+                                        ($detailBody->current_address != '' && $detailBody->current_address != $local->current_address) ||
+                                        ($detailBody->account_bank->bank_account_number != '' && $detailBody->account_bank->bank_account_number != $local->bank_account_number) ||
+                                        ($detailBody->account_bank->bank_account_name != '' && $detailBody->account_bank->bank_account_name != $local->bank_account_name) ||
+                                        ($detailBody->account_bank->bank_branch != '' && $detailBody->account_bank->bank_branch != $local->bank_branch) ||
+                                        ($detailBody->npwp != '' && $detailBody->npwp != $local->npwp)
+                                    ){ // jika tidak ada data yang berbeda dari local dengan API
+                                        TmpDtPegawai::upsert([
+                                            "user_id" => $detailBody->id,
+                                            "email" => $detailBody->email,
+                                            "fullname" => $detailBody->fullname,
+                                            "birth_place" => $detailBody->birth_place,
+                                            "birth_date" => $detailBody->birth_date,
+                                            "marital_status" => $detailBody->marital_status,
+                                            "religion" => $detailBody->religion,
+                                            "blood_type" => $detailBody->blood_type,
+                                            "gender" => $detailBody->gender,
+                                            "age" => $detailBody->age,
+                                            "telephone" => $detailBody->telephone,
+                                            "id_divisi" => $detailBody->id_divisi,
+                                            "divisi" => $detailBody->divisi,
+                                            "id_jabatan" => $detailBody->id_jabatan,
+                                            "jabatan" => $detailBody->jabatan,
+                                            "is_staff" => $detailBody->is_staff,
+                                            "join_date" => $detailBody->join_date,
+                                            'is_active' => $detailBody->is_active,
+                                            "resign_date" => $detailBody->resign_date,
+                                            "reason_resignation" => $detailBody->reason_resignation,
+                                            "id_card_address" => $detailBody->id_card_address,
+                                            "current_address" => $detailBody->current_address,
+                                            "npwp" => $detailBody->npwp,
+                                        ], [
+                                            "user_id",
+                                        ], [
+                                            "email",
+                                            "fullname",
+                                            "birth_place",
+                                            "birth_date",
+                                            "marital_status",
+                                            "religion",
+                                            "blood_type",
+                                            "gender",
+                                            "age",
+                                            "telephone",
+                                            "id_divisi",
+                                            "divisi",
+                                            "id_jabatan",
+                                            "jabatan",
+                                            "is_staff",
+                                            "join_date",
+                                            'is_active',
+                                            "resign_date",
+                                            "reason_resignation",
+                                            "id_card_address",
+                                            "current_address",
+                                            "bank_account_number",
+                                            "bank_account_name",
+                                            "bank_branch",
+                                            "npwp",
+                                        ]);
+                                    }
+                                } else {
+                                    if(
+                                        ($detailBody->email != '' && $detailBody->email != $local->email) ||
+                                        ($detailBody->fullname != '' && $detailBody->fullname != $local->fullname) ||
+                                        ($detailBody->birth_place != '' && $detailBody->birth_place != $local->birth_place) ||
+                                        ($detailBody->birth_date != '' && $detailBody->birth_date != $local->birth_date) ||
+                                        ($detailBody->marital_status != '' && $detailBody->marital_status != $local->marital_status) ||
+                                        ($detailBody->religion != '' && $detailBody->religion != $local->religion) ||
+                                        ($detailBody->blood_type != '' && $detailBody->blood_type != $local->blood_type) ||
+                                        ($detailBody->gender != '' && $detailBody->gender != $local->gender) ||
+                                        ($detailBody->age != '' && $detailBody->age != $local->age) ||
+                                        ($detailBody->telephone != '' && $detailBody->telephone != $local->telephone) ||
+                                        ($detailBody->id_divisi != '' && $detailBody->id_divisi != $local->id_divisi) ||
+                                        ($detailBody->divisi != '' && $detailBody->divisi != $local->divisi) ||
+                                        ($detailBody->id_jabatan != '' && $detailBody->id_jabatan != $local->id_jabatan) ||
+                                        ($detailBody->jabatan != '' && $detailBody->jabatan != $local->jabatan) ||
+                                        ($detailBody->is_staff != '' && $detailBody->is_staff != $local->is_staff) ||
+                                        ($detailBody->join_date != '' && $detailBody->join_date != $local->join_date) ||
+                                        ($detailBody->is_active != '' && $detailBody->is_active != $local->is_active) ||
+                                        ($detailBody->resign_date != '' && $detailBody->resign_date != $local->resign_date) ||
+                                        ($detailBody->reason_resignation != '' && $detailBody->reason_resignation != $local->reason_resignation) ||
+                                        ($detailBody->id_card_address != '' && $detailBody->id_card_address != $local->id_card_address) ||
+                                        ($detailBody->current_address != '' && $detailBody->current_address != $local->current_address) ||
+                                        ($detailBody->npwp != '' && $detailBody->npwp != $local->npwp)
+                                    ){ // jika tidak ada data yang berbeda dari local dengan API
+                                        TmpDtPegawai::upsert([
+                                            "user_id" => $detailBody->id,
+                                            "email" => $detailBody->email,
+                                            "fullname" => $detailBody->fullname,
+                                            "birth_place" => $detailBody->birth_place,
+                                            "birth_date" => $detailBody->birth_date,
+                                            "marital_status" => $detailBody->marital_status,
+                                            "religion" => $detailBody->religion,
+                                            "blood_type" => $detailBody->blood_type,
+                                            "gender" => $detailBody->gender,
+                                            "age" => $detailBody->age,
+                                            "telephone" => $detailBody->telephone,
+                                            "id_divisi" => $detailBody->id_divisi,
+                                            "divisi" => $detailBody->divisi,
+                                            "id_jabatan" => $detailBody->id_jabatan,
+                                            "jabatan" => $detailBody->jabatan,
+                                            "is_staff" => $detailBody->is_staff,
+                                            "join_date" => $detailBody->join_date,
+                                            'is_active' => $detailBody->is_active,
+                                            "resign_date" => $detailBody->resign_date,
+                                            "reason_resignation" => $detailBody->reason_resignation,
+                                            "id_card_address" => $detailBody->id_card_address,
+                                            "current_address" => $detailBody->current_address,
+                                            "npwp" => $detailBody->npwp,
+                                        ], [
+                                            "user_id",
+                                        ], [
+                                            "email",
+                                            "fullname",
+                                            "birth_place",
+                                            "birth_date",
+                                            "marital_status",
+                                            "religion",
+                                            "blood_type",
+                                            "gender",
+                                            "age",
+                                            "telephone",
+                                            "id_divisi",
+                                            "divisi",
+                                            "id_jabatan",
+                                            "jabatan",
+                                            "is_staff",
+                                            "join_date",
+                                            'is_active',
+                                            "resign_date",
+                                            "reason_resignation",
+                                            "id_card_address",
+                                            "current_address",
+                                            "bank_account_number",
+                                            "bank_account_name",
+                                            "bank_branch",
+                                            "npwp",
+                                        ]);
+                                    }
+                                }
+                            }
+                        }
+                    $page++;
+                }
+            }
+            $message = '';
+            $status = '';
+            $todayDate = date('Y-m-d');
+            $client = new Client();
+            $response = $client->request ('GET', 'https://siap.jabarprov.go.id/integrasi/api/v1/kmob/presensi-harian',
+            [
+                'query' => ['tanggal'=>$todayDate],
+                'auth' => ['diskominfo_presensi','diskominfo_presensi12345']
+            ]);
+            $body = $response->getBody();
+            $body_array = json_decode($body);
+            foreach ($body_array as $post){
+                $find = Pegawai::where('noPegawai', $post->nip)->first();
+                if($find != null){ // kalo udah ada datanya
+                    if($find->noPegawai != $post->nip || $find->nama != $post->nama || $find->unitKerja != $post->unitkerja_nama){ // kalo terdapat perbedaan data dari DB local sama API
+                        TmpPegawai::upsert([ // simpan data dari API ke dalam database temporer
+                            'nama' => $post->nama,
+                            'tempatLahir' => null,
+                            'tanggalLahir' => null,
+                            'noPegawai' => $post->nip,
+                            'unitKerja' => $post->unitkerja_nama,
+                            'golonganPangkat' => null,
+                            'tmtGolongan' => null,
+                            'eselon' => null,
+                            'namaJabatan' => null,
+                            'tmtJabatan' => null,
+                            'statusPegawai' => null,
+                            'tmtPegawai' => null,
+                            'masaKerjaTahun' => null,
+                            'masaKerjaBulan' => null,
+                            'jenisKelamin' => null,
+                            'agama' => null,
+                            'perkawinan' => null,
+                            'pendidikanAwal' => null,
+                            'jurusanPendidikanAwal' => null,
+                            'pendidikanAkhir' => null,
+                            'jurusanPendidikanAkhir' => null,
+                            'noAkses' => null,
+                            'noNpwp' => null,
+                            'nik' => null,
+                            'alamatRumah' => null,
+                            'telp' => null,
+                            'hp' => null,
+                            'email' => null,
+                            'kedudukanPegawai' => null
+                            ], ['noPegawai'], ['nama', 'unitKerja']
+                        );
+                        $message = 'conflict';
+                        $status = 'Terdapat data yang perlu ditinjau ulang ketika diupdate';
+                    } else { // hapus data di temporer jika data dari API kembali menjadi data sebelumnya
+                        TmpPegawai::where('noPegawai', $post->nip)->delete();
+                    }
+                } else { // kalo belum ada data pegawainya
+                    Pegawai::create([ // simpan data dari API ke dalam database temporer
+                        'nama' => $post->nama,
+                        'tempatLahir' => null,
+                        'tanggalLahir' => null,
+                        'noPegawai' => $post->nip,
+                        'unitKerja' => $post->unitkerja_nama,
+                        'golonganPangkat' => null,
+                        'tmtGolongan' => null,
+                        'eselon' => null,
+                        'namaJabatan' => null,
+                        'tmtJabatan' => null,
+                        'statusPegawai' => null,
+                        'tmtPegawai' => null,
+                        'masaKerjaTahun' => null,
+                        'masaKerjaBulan' => null,
+                        'jenisKelamin' => null,
+                        'agama' => null,
+                        'perkawinan' => null,
+                        'pendidikanAwal' => null,
+                        'jurusanPendidikanAwal' => null,
+                        'pendidikanAkhir' => null,
+                        'jurusanPendidikanAkhir' => null,
+                        'noAkses' => null,
+                        'noNpwp' => null,
+                        'nik' => null,
+                        'alamatRumah' => null,
+                        'telp' => null,
+                        'hp' => null,
+                        'email' => null,
+                        'kedudukanPegawai' => null
+                    ]);
+                    $message = 'success';
+                    $status = 'Berhasil mengupdate data!';
+                }
+            }
+            session()->flash($message, $status);
+            return redirect('/master-pegawai');
+        } catch (ServerException $e) {
+            session()->flash('error', 'Terjadi masalah pada API, silakan coba kembali');
+            return redirect('/master-pegawai');
+        } catch (ClientException $e) {
+            session()->flash('error', 'Terjadi masalah pada API, silakan coba kembali');
+            return redirect('/master-pegawai');
+        } catch (BadResponseException $e) {
+            session()->flash('error', 'Terjadi masalah pada API, silakan coba kembali');
+            return redirect('/master-pegawai');
+        }
+    }
+
+    public function conflict(){
+        return view('home.kepegawaian.data.master_pegawai.conflict', [
+            'title' => 'Pegawai',
+            'conflicts' => TmpPegawai::all(),
+            'dtConflicts' => TmpDtPegawai::all()
+        ]);
+    }
+
+    public function resolving($nip){
+        if(TmpPegawai::where('noPegawai', $nip)->first() != null){ // kondisi untuk mengecek apakah NIP ditemukan dalam model Pegawai
+            $tmp = TmpPegawai::where('noPegawai', $nip)->first();
+            $local = Pegawai::where('noPegawai', $nip)->first();
+            $keys = collect($tmp->getAttributes())->keys()->all();
+            return view('home.kepegawaian.data.master_pegawai.resolvePns', [
+                'title' => 'Pegawai',
+                'api' => $tmp,
+                'local' => $local,
+                'keys' => $keys
+            ]);
+        } else if(TmpDtPegawai::where('user_id', $nip)->first() != null){ // untuk mengecek apakah NIP ditemukan dalam model DtPegawai
+            $tmp = TmpDtPegawai::select("nip","email","fullname","birth_place","birth_date","marital_status","religion","blood_type","gender","age","telephone","divisi","jabatan","join_date","resign_date","reason_resignation","id_card_address","current_address","bank_account_number","bank_account_name","bank_branch","npwp")->where('user_id', $nip)->first();
+            $local = DtPegawai::where('user_id', $nip)->first();
+            $keys = collect($tmp->getAttributes())->keys()->all();
+            return view('home.kepegawaian.data.master_pegawai.resolveNonPns', [
+                'title' => 'Pegawai',
+                'api' => $tmp,
+                'local' => $local,
+                'keys' => $keys
+            ]);
+        }
+    }
+
+    public function resolved(Request $request, $id){
+        if(TmpPegawai::where('noPegawai', $id)->first() != null){ // kondisi untuk mengecek apakah NIP ditemukan dalam model Pegawai
+            $data = Pegawai::where('noPegawai', $id)->first();
+            $data->update($request->except('_token'));
+            $deleteData = TmpPegawai::where('noPegawai', $data->noPegawai)->first();
+            $deleteData->delete();
+        } else if(TmpDtPegawai::where('user_id', $id)->first() != null){ // untuk mengecek apakah NIP ditemukan dalam model DtPegawai
+            $data = DtPegawai::where('user_id', $id)->first();
+            $data->update($request->except('_token'));
+            $deleteData = TmpDtPegawai::where('user_id', $data->user_id)->first();
+            $deleteData->delete();
+        }
+        return redirect('/master-pegawai')->with('resolve', 'Berhasil meninjau data pegawai');
     }
 
     public function create(Request $request)
@@ -145,16 +594,12 @@ class PegawaiController extends Controller
         return back()->with('successDelete', 'Data has been deleted!');
     }
 
-// PNS
+    // PNS
     public function pnsindex(Request $request)
     {
-        
-        if($request->search == null){
-            $data = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
-        }else{
-            $data = DB::table('pegawais')->where('nama', 'ilike', '%'.$request->search.'%')->orwhere('unitKerja', 'ilike', '%'.$request->search.'%')->get();
-        }
-        return view('home.kepegawaian.data.master_pegawai.pns', compact('data'), [ 'data' => $data, 'title' => 'Pegawai', 'search' => $request->search]);
+        $conflict = TmpPegawai::all()->isNotEmpty();
+        $data = DB::table('pegawais')->orderBy('noPegawai', 'asc')->get();
+        return view('home.kepegawaian.data.master_pegawai.pns', compact('data'), [ 'data' => $data, 'title' => 'Pegawai', 'search' => $request->search, 'conflict' => $conflict]);
     }
 //  Detail PNS
      public function show($id){
@@ -166,20 +611,89 @@ class PegawaiController extends Controller
     public function nonpns(Request $request)
     {
         $data = DtPegawai::whereNot('jabatan', 'PNS')->where('is_active', 'true')->get();
-        foreach($data as $result){
-            $result->birth_date = Carbon::parse($result->birth_date)->translatedFormat('d F Y');
-            $result->join_date = Carbon::parse($result->join_date)->translatedFormat('d F Y');
+        $conflict = TmpPegawai::all()->isNotEmpty();
+        $unitKerja = collect();
+        $pegawai = collect();
+        if($request->include == 'include') {
+            foreach($data as $result){
+                $result->birth_date = Carbon::parse($result->birth_date)->translatedFormat('d F Y');
+                $result->join_date = Carbon::parse($result->join_date)->translatedFormat('d F Y');
+                $unitKerja->push($result->unitKerja);
+            }
+            if($request->unitkerja != null && $request->divisi == null){ // hanya ada include atau tidak
+                foreach($data as $result){
+                    if($result->unitKerja->namaUnit == $request->unitkerja){
+                        $pegawai->push($result);
+                    }
+                }
+            } else if($request->unitkerja == null && $request->divisi != null){
+                foreach($data as $result){
+                    if($result->unitKerja->idUnitKerja == $request->divisi){
+                        $pegawai->push($result);
+                    }
+                }
+            } else if($request->unitkerja != null && $request->divisi != null){
+                foreach($data as $result){
+                    if($result->unitKerja->idUnitKerja == $request->divisi && $result->unitKerja->namaUnit == $request->unitkerja){
+                        $pegawai->push($result);
+                    }
+                }
+            }
+        } else if($request->include == 'notInclude'){
+            foreach($data as $result){
+                $result->birth_date = Carbon::parse($result->birth_date)->translatedFormat('d F Y');
+                $result->join_date = Carbon::parse($result->join_date)->translatedFormat('d F Y');
+                $unitKerja->push($result->unitKerja);
+            }
+            if($request->unitkerja != null && $request->divisi == null){ // hanya ada include atau tidak
+                foreach($data as $result){
+                    if($result->unitKerja->namaUnit == $request->unitkerja){
+                        // nothing
+                    } else {
+                        $pegawai->push($result);
+                    }
+                }
+            } else if($request->unitkerja == null && $request->divisi != null){
+                foreach($data as $result){
+                    if($result->unitKerja->idUnitKerja == $request->divisi){
+                        // nothing
+                    } else {
+                        $pegawai->push($result);
+                    }
+                }
+            } else if($request->unitkerja != null && $request->divisi != null){
+                foreach($data as $result){
+                    if($result->unitKerja->idUnitKerja == $request->divisi && $result->unitKerja->namaUnit == $request->unitkerja){
+                        // nothing
+                    } else {
+                        $pegawai->push($result);
+                    }
+                }
+            }
+        } else {
+            foreach($data as $result){
+                $result->birth_date = Carbon::parse($result->birth_date)->translatedFormat('d F Y');
+                $result->join_date = Carbon::parse($result->join_date)->translatedFormat('d F Y');
+                $unitKerja->push($result->unitKerja);
+            }
+            $pegawai = $data;
         }
-        return view('home.kepegawaian.data.master_pegawai.nonpns', [ 'data' => $data, 'title' => 'Pegawai']);
+        return view('home.kepegawaian.data.master_pegawai.nonpns', [ 'data' => $pegawai, 'title' => 'Pegawai', 'unitkerjas' => $unitKerja->unique('idUnitKerja')->unique('namaUnit'), 'divisis' => $unitKerja->unique('idUnitKerja'), 'before' => $request->all(), 'conflict' => $conflict]);
     }
 
 //  Detail NON-PNS
     public function detail($id){
         $nonpns= DtPegawai::find($id);
-        // $nonpns->join_date = Carbon::parse($nonpns->join_date)->format('Y-m-d\TH:i:s');
+        $jabatan = $nonpns->deskripsiJabatan;
+        if($jabatan != null){
+            $jabatan->description = str_replace(';', '.', $jabatan->description);
+            $jabatan->description = str_replace(PHP_EOL, '</br></br>', $jabatan->description);
+        } else {
+            $jabatan = null;
+        }
         $nonpns->join_date = Carbon::parse($nonpns->join_date)->translatedFormat('d F Y');
         $nonpns->birth_date = Carbon::parse($nonpns->birth_date)->translatedFormat('d F Y');
-        return view('home.kepegawaian.data.master_pegawai.detail',['nonpns'=> $nonpns, 'title' => 'Detail Pegawai']);
+        return view('home.kepegawaian.data.master_pegawai.detail',['nonpns'=> $nonpns, 'title' => 'Detail Pegawai', 'jabatan' => $jabatan]);
     }
 
 
@@ -210,7 +724,13 @@ class PegawaiController extends Controller
         }
         return view('home.kepegawaian.data.master_pegawai.tidakaktif', [ 'data' => $data, 'title' => 'Pegawai Tidak Aktif', 'search' => $request->search]);
     }
+    public function showtoregister()
+    {
+        $data = Pegawai::all();
+        return view('register.register', ['data' => $data]);
 
+
+    }
    
 
 }

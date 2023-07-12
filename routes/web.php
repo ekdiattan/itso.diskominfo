@@ -26,8 +26,11 @@ use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\TelegramController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MappingDashboardController;
+use App\Http\Controllers\KategoriPendidikanController;
+use App\Http\Controllers\KategoriUsiaController;
 
-/*
+/*booking
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -45,15 +48,24 @@ Route::get('/', function () {
 Route::get('/login',[UserController::class, 'login']);
 Route::post('/login',[UserController::class, 'authenticate']);
 
-Route::group(['middleware' =>['auth']], function(){
+Route::group(['middleware' => ['auth','hakAkses:Admin']], function(){
     Route::get('/index',[UserController::class, 'index']);
     Route::get('/register',[UserController::class, 'register']);
     Route::post('/register',[UserController::class, 'store_register']);
     Route::get('/register/{id}', [UserController::class, 'show']);
     Route::get('/register/edit/{id}', [UserController::class,'edit']);
-    Route::post('/register/update/{id}', [UserController::class,'updateByUser']);
     Route::get('/register/delete/{id}',[UserController::class, 'delete']);
 }); 
+
+Route::group(['middleware' =>['auth']], function(){
+    Route::post('/register/update/{id}', [UserController::class,'updateByUser']);
+    Route::get('/account/{id}', [UserController::class, 'editByUser']);
+    Route::post('/account/{id}', [UserController::class, 'updateByUser']);
+    Route::post('/change-password', [UserController::class, 'changePassword']);
+    
+});
+
+Route::post('/update-status', [UserController::class, 'updateStatus'])->name('update-status');
 
 Route::group(['middleware' =>['auth']], function(){
     Route::get('/dashboard',[DashboardController::class, 'index']);
@@ -99,7 +111,7 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Aset']], function(){
     Route::post('/kodeAset/{id}', [KodeAsetController::class,'update']);
     Route::get('/kodeAset/delete/{id}',[KodeAsetController::class, 'delete']);
 
-    // booking
+// booking
     Route::get('/booking',[BookingController::class, 'index']);
     Route::get('/booking/create',[BookingController::class, 'create']);
     Route::post('/booking-check',[BookingController::class, 'bookingCheck']); // baru sampe sini
@@ -120,7 +132,6 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Aset']], function(){
     Route::get('/aset/delete/{id}',[AsetController::class, 'delete']);
 
 });
-
 
 //bidang
 Route::group(['middleware' =>['auth','hakAkses:Admin']], function(){
@@ -188,6 +199,17 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Keamanan']], function(){
     
 });
 
+//mappingdashbord
+Route::group(['middleware' =>['auth','hakAkses:Admin']], function(){
+    Route::get('/mapDashboard', [MappingDashboardController::class, 'index']);
+    Route::get('/mappingDashboard-edit/{id}',[MappingDashboardController::class, 'edit']);
+    Route::post('/map/create',[MappingDashboardController::class, 'store']);
+    Route::post('/mappingDashboard-upd/{id}',[MappingDashboardController::class, 'upd']);
+    Route::get('/mappingDashboard-dlt/{id}',[MappingDashboardController::class, 'delete']);
+});
+
+
+
 //--KEPEGAWAIAN--
 Route::group(['middleware' =>['auth','hakAkses:Admin,Kepegawaian']], function(){
     //kehadiran
@@ -231,6 +253,11 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Kepegawaian']], function(){
     Route::post('/store-data-pegawai', [PegawaiController::class, 'store']);
     Route::get('/update-data-pegawai', [PegawaiController::class, 'update']);
     Route::get('/delete{id}', [PegawaiController::class, 'delete']);
+    Route::get('/pegawai-sync', [PegawaiController::class, 'sync']);
+    Route::get('/pegawai-conflict', [PegawaiController::class, 'conflict']);
+    Route::get('/pegawai-resolve/{id}', [PegawaiController::class, 'resolving']);
+    Route::post('/pegawai-resolve/{id}', [PegawaiController::class, 'resolved']);
+
     
     // PNS
     Route::get('/detail-pegawai/{id}', [PegawaiController::class, 'show']);
@@ -263,6 +290,20 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Kepegawaian']], function(){
     Route::post('/libur/{id}', [LiburController::class, 'update']);
     Route::get('/libur/delete/{id}',[LiburController::class, 'delete']);
 
+    // kategori pendidikan
+    Route::get('/kategori-pendidikan', [KategoriPendidikanController::class, 'index']);
+    Route::post('/katpen/create',[KategoriPendidikanController::class, 'store']);
+    Route::get('/katpen/edit/{id}', [KategoriPendidikanController::class,'edit']);
+    Route::post('/katpen/update/{id}', [KategoriPendidikanController::class, 'update']);
+    Route::get('/katpen/delete/{id}',[KategoriPendidikanController::class, 'delete']);
+
+    // kategori usia
+    Route::get('/usia', [KategoriUsiaController::class, 'index']);
+    Route::post('/usia/create',[KategoriUsiaController::class, 'store']);
+    Route::get('/usia/{id}', [KategoriUsiaController::class,'edit']);
+    Route::post('/usia/{id}', [KategoriUsiaController::class, 'update']);
+    Route::get('/usia/delete/{id}',[KategoriUsiaController::class, 'delete']);
+
 });
 
 
@@ -280,9 +321,6 @@ Route::get('/light', function () {
 })->middleware('auth');
 
 // Account Setting 
-Route::get('/account/{id}', [UserController::class, 'editByUser']);
-Route::post('/account/{id}', [UserController::class, 'updateByUser']);
-Route::post('/change-password', [UserController::class, 'changePassword']);
 Route::get('/maintenance', [UserController::class, 'maintenance']);
 Route::get('/fiturmaintenance', [UserController::class, 'fiturmaintenance']);
 
@@ -301,6 +339,8 @@ Route::post('/upload-surat/{id}',[TrackingController::class, 'unggah']);
 Route::get('/block',[BlockController::class, 'block']);
 Route::get('/booking-export/{id}', [BookingController::class, 'export']);
 
+
+Route::get('/tes',[TrackingController::class, 'tes']);
 
 //permohonan publik
 Route::get('/peminjaman',[BookingController::class, 'permohonan']);

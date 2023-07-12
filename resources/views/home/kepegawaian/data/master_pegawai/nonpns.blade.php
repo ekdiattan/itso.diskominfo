@@ -7,55 +7,92 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h2>Master Pegawai</h2>
 </div>
-
-<div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
-    <!-- Container wrapper -->
-    <div class="container justify-content-center justify-content-md-between">
-      <!-- Left links -->
-      <ul class="navbar-nav flex-row">
-        <li class="nav-item me-auto">
-          <a class="nav-link" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Tampilkan Data Berdasarkan
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/master-pegawai" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            Semua Pegawai
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/pns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            PNS
-          </a>
-        </li>
-        <li class="nav-item me-auto">
-          <a class="nav-link" href="/nonpns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-            <b>Non-PNS</b>
-          </a>
-        </li>
-        <div style="display: flex; justify-content: flex-end">
-            <li class="nav-item me-auto">
-                <a class="nav-link text-success" href="/tambah-data-pegawai" style="font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
-                    class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
-                    <b>+ Data Pegawai</b>
-                </a>
-            </li>
-        </div>
-      </ul>
-    </div>
-</div>
-<br>
 <section class="content">
-      <div class="container-fluid">
+    <div class="container-fluid">
+          @if(session('success'))
+          <div class="alert alert-success" role="alert">
+              {{ session('success') }}
+          </div>
+          @endif
+          @if(session('conflict'))
+          <div class="alert alert-warning" role="alert">
+              {{ session('conflict') }}
+          </div>
+          @endif
+          @if($conflict)
+          <div class="alert alert-primary" role="alert">
+              <p>Terdapat data yang harus ditinjau ulang</p>
+              <a href="/pegawai-conflict">Klik disini untuk meninjau ulang data</a>
+          </div>
+          @endif
         <div class="row">
           <div class="col-12">
           <div id="example1_wrapper" class="dataTables_wrapper dt_bootstrap4">
           <div class="card">
+          <div class="nav navbar navbar-expand navbar-white navbar-light border-bottom p-0">
+            <!-- Container wrapper -->
+            <div class="container justify-content-center justify-content-md-between">
+            <!-- Left links -->
+                <ul class="navbar-nav flex-row">
+                    <li class="nav-item me-auto">
+                    <a class="nav-link" href="/master-pegawai" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                        class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                        Semua Pegawai
+                    </a>
+                    </li>
+                    <li class="nav-item me-auto">
+                    <a class="nav-link" href="/pns" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                        class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                        PNS
+                    </a>
+                    </li>
+                    <li class="nav-item me-auto">
+                    <a class="nav-link" href="#" style="color:black;font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                        class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                        <b>Non-PNS</b>
+                    </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item me-auto">
+                        <a class="nav-link text-success" href="/tambah-data-pegawai" style="font-size:18px;" role="button" data-mdb-toggle="sidenav" data-mdb-target="#sidenav-1"
+                            class="btn shadow-0 p-0 me-auto" aria-controls="#sidenav-1" aria-haspopup="true">
+                            <b>+ Data Pegawai</b>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
             <div class="card-body">
+            <a href="/pegawai-sync" class="button btn btn-success mb-3">Update Data</a>
+            <!-- <h5>Filter Data Berdasarkan</h5> -->
+            <form id="filterSelect" action="/nonpns" method="get">
+                <div class="row">
+                    <div class="col-md-3">
+                        <select name="include" class="form-select" aria-label="Default select example" onChange="document.getElementById('filterSelect').submit()">
+                            <option selected value="include" @if($before != null) {{ $before['include'] == 'include' ? 'selected' : '' }} @endif>Termasuk</option>
+                            <option value="notInclude" @if($before != null) {{ $before['include'] == 'notInclude' ? 'selected' : '' }} @endif>Selain</option>
+                        </select>
+                </div>
+                <div class="col-md-3">
+                        <select name="unitkerja" class="form-select" aria-label="Default select example" onChange="document.getElementById('filterSelect').submit()">
+                            <option selected value="">Semua Unit Kerja</option>
+                            @foreach($unitkerjas as $unitkerja)
+                            <option value="{{ $unitkerja['namaUnit'] }}" @if($before != null) {{ $before['unitkerja'] == $unitkerja['namaUnit'] ? 'selected' : '' }} @endif>{{ $unitkerja['namaUnit'] }}</option>
+                            @endforeach
+                        </select>
+                </div>
+                <div class="col-md-3">
+                        <select name="divisi" class="form-select" aria-label="Default select example" onChange="document.getElementById('filterSelect').submit()">
+                            <option selected value="">Semua Divisi</option>
+                            @foreach($divisis as $divisi)
+                            <option value="{{ $divisi['idUnitKerja'] }}" @if($before != null) {{ $before['divisi'] == $divisi['idUnitKerja'] ? 'selected' : '' }} @endif>{{ $divisi['unitKerjaApi'] }}</option>
+                            @endforeach
+                        </select>
+                </div>
+                </div>
+            </form>
+
             <!-- <a href="/update-data-pegawai" class="btn btn-info bg-maroon" title="Sync Data"><i class="fa fa-file-pdf-o"></i> Sync Data</a>      -->
                 <div id="dataTable_wrapper" class="table-responsive">
                  <nav class="navbar bg-body-tertiary">
@@ -68,6 +105,7 @@
                                 <th width="25%" class="text-center">Nama</th>
                                 <th class="text-center">Tempat Lahir</th>
                                 <th class="text-center">Tanggal Lahir</th>
+                                <th class="text-center">Unit Kerja</th>
                                 <th class="text-center">Divisi</th>
                                 <th class="text-center">Jabatan</th>
                                 <th class="text-center">Pendidikan</th>
@@ -82,6 +120,7 @@
                                 <td class="text-left">{{ $item->fullname }}</td>
                                 <td class="text-left">{{ $item->birth_place }}</td>
                                 <td class="text-left">{{ $item->birth_date }}</td>
+                                <td class="text-left">{{ $item->unitKerja->aliasUnit }}</td>
                                 <td class="text-left">{{ $item->divisi }}</td>
                                 <td class="text-left">{{ $item->jabatan }}</td>
                                 <td class="text-left">@if($item->pendidikan != null){{ $item->pendidikan->educational_level }}@endif</td>

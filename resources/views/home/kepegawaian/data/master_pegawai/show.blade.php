@@ -160,6 +160,24 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-4">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" style="font-size:13px;">Tanggal Gabung</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" name="masaKerjaBulan"
+                    value="{{$pegawai->tanggalmasuk}}" readonly>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" style="font-size:13px;">Tanggal Pisah</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" name="masaKerjaBulan"
+                    value="{{$pegawai->tanggalkeluar}}" readonly>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

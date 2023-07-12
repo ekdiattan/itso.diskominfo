@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('majors')->nullable();
             $table->string('file_diploma')->nullable();
             $table->string('file_grade_transcript')->nullable();
+            $table->string('education_category')->nullable();
             $table->timestamps();
             /* 
                 +"id": "8ecd429a-e479-4e9e-86cc-0515cd34240d"

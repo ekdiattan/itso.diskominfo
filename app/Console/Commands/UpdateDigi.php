@@ -7,7 +7,9 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use GuzzleHttp\Client;
 use App\Models\DtPegawai;
+use App\Models\UnitKerja;
 use App\Models\DtPendidikan;
+use App\Models\DtJabatan;
 
 class UpdateDigi extends Command
 {
@@ -94,7 +96,7 @@ class UpdateDigi extends Command
             $result = json_decode($login->getBody()->getContents());
             $token = $result->auth_token;
     
-            // pegawai aktif
+            // pegawai Update pegawai and its pendidikans
             $page = 1;
             $maxPage = 2;
             while($page <= $maxPage){
@@ -115,8 +117,8 @@ class UpdateDigi extends Command
                                 ]
                             ]);
                         $detailBody = json_decode($detailResponse->getBody());
-                        // because account_bank variable is array, but if null it known as string variable
-                        if($detailBody->jabatan != 'PNS'){
+                        if($detailBody->divisi != 'ASN'){
+                            // because account_bank variable is array, but if null it known as string variable
                             if($detailBody->account_bank != ''){
                                 DtPegawai::upsert([
                                     "user_id" => $detailBody->id,
@@ -301,9 +303,67 @@ class UpdateDigi extends Command
                                     }
                                     
                                 }
+                                // update Unitkerja
+                                if($detailBody->divisi == 'Analisis' || $detailBody->divisi == 'Data' || $detailBody->divisi == 'Implementasi dan Pengelolaan' || $detailBody->divisi == 'IT Dev' || $detailBody->divisi == 'HRGA' || $detailBody->divisi == 'Implementasi dan Pengelolaan' || $detailBody->divisi == 'Komunikasi dan Konten' || $detailBody->divisi == 'Konten dan Komunikasi' || $detailBody->divisi == 'Petani Milenial' || $detailBody->divisi == 'SIPD'){
+                                    $namaUnit = 'UPTD PUSAT LAYANAN DIGITAL DAN GEOPASKAL';
+                                    $aliasUnit = 'UPTD PLDDG';
+                                }else if($detailBody->divisi == 'Aptika'){
+                                    $namaUnit = 'APLIKASI DAN INFORMATIKA';
+                                    $aliasUnit = 'APTIKA';
+                                }else if($detailBody->divisi == 'e-Government'){
+                                    $namaUnit = 'E-GOVERNMENT';
+                                    $aliasUnit = 'E-GOV';
+                                }else if($detailBody->divisi == 'IKP' || $detailBody->divisi == 'JQR' || $detailBody->divisi == 'JSH' || $detailBody->divisi == 'Komisi Informasi' || $detailBody->divisi == 'Komisi Informasi Jabar'){
+                                    $namaUnit = 'INFORMASI KOMUNIKASI PUBLIK';
+                                    $aliasUnit = 'IKP';
+                                }else if($detailBody->divisi == 'Sandikami'){
+                                    $namaUnit = 'PERSANDIAN DAN KEAMANAN INFORMASI';
+                                    $aliasUnit = 'SANDIKAMI';
+                                }else if($detailBody->divisi == 'Sekretariat'){
+                                    $namaUnit = 'SEKRETARIAT';
+                                    $aliasUnit = 'Sekretariat';
+                                }else if($detailBody->divisi == 'Statistik'){
+                                    $namaUnit = 'STATISTIK';
+                                    $aliasUnit = 'Statistik';
+                                } else {
+                                    $namaUnit = '';
+                                    $aliasUnit = '';
+                                }
+
+                                // update unitkerja when updating digiteam
+                                UnitKerja::updateOrCreate([
+                                    'idUnitKerja' => $detailBody->id_divisi,
+                                ], [
+                                    'namaUnit' => $namaUnit,
+                                    'aliasUnit' => $aliasUnit,
+                                    'unitKerjaApi' => $detailBody->divisi
+                                ]);
                         }
                     }
                 $page++;
+            }
+            // update all jabatan from digiteam
+            $page = 1;
+            $maxPage = 2;
+            while($page <= $maxPage){
+                $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/jabatan/?limit=10&page='.$page, [
+                    'headers' => [
+                        'Authorization' => 'Bearer '. $token,
+                    ]
+                ]);
+                $body = $response->getBody();
+                $body_array = json_decode($body);
+                $maxPage = $body_array->_meta->totalPage;
+
+                foreach($body_array->results as $result){
+                    DtJabatan::updateOrCreate([
+                        'id_jabatan' => $result->id,
+                        'id_divisi' => $result->satuan_kerja_id,
+                        'divisi' => $result->name_satuan_kerja,
+                        'jabatan' => $result->name_jabatan,
+                        'description' => $result->description,
+                    ]);
+                }
             }
 
         }

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pegawais', function (Blueprint $table){
+        Schema::create('tmp_pegawais', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
             $table->string('tempatLahir')->nullable();
@@ -60,6 +60,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pegawais');
+        Schema::dropIfExists('tmp_pegawais');
     }
 };

@@ -19,7 +19,7 @@
   <div class="card">
     <div class="card-title">
         <a class="nav-link" class="btn shadow-0 p-0 me-auto">
-            <b>{{$nonpns->fullname}}</b>
+            <b style="color:black;">{{$nonpns->fullname}}</b>
         </a>
     </div>
     <div class="nav navbar navbar-expand navbar-light bg-light border-bottom p-0">
@@ -27,16 +27,16 @@
        
         <ul class="nav nav-tabs" id="pills-tab" role="tablist">
           <li class="nav-item" role="presentation">
-            <a class="nav-link active" style="color:green;" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">DATA PEGAWAI</a>
+            <a class="nav-link active" style="color:black;" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">DATA PEGAWAI</a>
           </li>
           <li class="nav-item" role="presentation">
-            <a class="nav-link" style="color:green;" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">PERSONAL</a>
+            <a class="nav-link" style="color:black;" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">PERSONAL</a>
           </li>
           <li class="nav-item" role="presentation">
-            <a class="nav-link" style="color:green;" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">PENDIDIKAN</a>
+            <a class="nav-link" style="color:black;" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">PENDIDIKAN</a>
           </li>
           <li class="nav-item" role="presentation">
-            <a class="nav-link" style="color:green;" class="tablinks" id="pills-info-tab" data-bs-toggle="pill" data-bs-target="#pills-info" role="tab" aria-controls="pills-info" aria-selected="false">INFO LAIN</a>
+            <a class="nav-link" style="color:black;" class="tablinks" id="pills-info-tab" data-bs-toggle="pill" data-bs-target="#pills-info" role="tab" aria-controls="pills-info" aria-selected="false">INFO LAIN</a>
           </li>
           <!-- Kondisi untuk pegawai berstatus aktif maka akan memunculkan button edit -->
           @if($nonpns->is_active != false)
@@ -53,38 +53,18 @@
         <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
           <p class="card-description">DATA KEPEGAWAIAN</p>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col">
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" style="font-size:13px;">Nama</label>
+                <label class="col col-form-label" style="font-size:13px;">Nama</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="disabledTextinput" name="fullname"
                   value="{{$nonpns->fullname}}" readonly/>
                 </div>
               </div>
             </div>
-            <div class="col-md-4">
+            <div class="col">
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" style="font-size:13px;">Divisi</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="disabledTextinput" name="divisi"
-                  value="{{$nonpns->divisi}}" readonly/>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label" style="font-size:13px;">Jabatan</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" name="jabatan"
-                  value="{{$nonpns->jabatan}}" readonly>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group row">
-                <label class="col-sm-3 col-form-label" style="font-size:13px;">Tanggal Bergabung</label>
+                <label class="col col-form-label" style="font-size:13px;">Tanggal Bergabung</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" name="tanggalBergabung"
                   value="{{$nonpns->join_date}}" readonly>
@@ -92,6 +72,32 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col">
+              <div class="form-group row">
+                <label class="col col-form-label" style="font-size:13px;">Divisi</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="disabledTextinput" name="divisi"
+                  value="{{$nonpns->divisi}}" readonly/>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="form-group row">
+                <label class="col col-form-label" style="font-size:13px;">Jabatan</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" name="jabatan"
+                  value="{{$nonpns->jabatan}}" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+          @if($jabatan != null)
+          <label>DESKRIPSI JABATAN</label>
+          <div class="row card m-2 p-3">
+            <p>{!! $jabatan->description !!}</p>
+          </div>
+          @endif
         </div>
     <!-- personal -->
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
@@ -159,17 +165,17 @@
          <!-- pendidikan -->
          <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
           <p class="card-description">DATA PENDIDIKAN</p>
-          <!-- <div class="row">
+           <div class="row"> 
             <div class="col-md-6">
               <div class="form-group row">
-                <label class="col-sm-3 col-form-label" style="font-size:13px;">Pendidikan Awal</label>
+                <label class="col-sm-3 col-form-label" style="font-size:13px;">Kategori Pendidikan</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" name="pendidikanAwal"
                     value="{{$nonpns->pendidikanAwal}}" readonly>
                 </div>
               </div>
-            </div>
-            <div class="col-md-6">
+            </div> 
+            <!-- <div class="col-md-6">
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Jurusan Pendidikan Awal</label>
                 <div class="col-sm-9">
@@ -177,8 +183,8 @@
                     value="{{$nonpns->jurusanPendidikanAwal}}" readonly>
                 </div>
               </div>
-            </div>
-          </div> -->
+            </div> -->
+          </div> 
           <div class="row">
             <div class="col-md-6">
               <div class="form-group row">

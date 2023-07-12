@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('dt_pegawais', function (Blueprint $table) {
+        Schema::create('tmp_dt_pegawais', function (Blueprint $table) {
             $table->id();
             $table->string("nip")->unique()->nullable();
             $table->string("user_id")->unique();
@@ -53,6 +53,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dt_pegawais');
+        Schema::dropIfExists('tmp_dt_pegawais');
     }
 };

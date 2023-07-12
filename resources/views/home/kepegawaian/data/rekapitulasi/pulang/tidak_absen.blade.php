@@ -1,15 +1,5 @@
 @extends('home.partials.main')
 <link rel="icon" href="{{ asset('assets/images/jabar.png') }}">
-@push('css')
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.12.1/datatables.min.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css"
-        rel="stylesheet">
-@endpush
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
-
-
 @section('container')
 <div class="col-lg-12 grid-margin stretch-card">
     @if(session('error'))
@@ -32,13 +22,12 @@
                             <div class="box-header with-border form-inline">
                                 <div class="row">
                                     <div class="col-sm-2">
-                                        <select class="form-control input-sm select2 select2-hidden-accessible" id="status"
-                                            name="status" data-select2-id="status" tabindex="-1" aria-hidden="true">
-                                            <option value="1" href="/rekap/terlambat-masuk">Rekapitulasi Terlambat Masuk PNS
+                                        <select class="form-control input-sm select2" id="status" name="status" onChange="location = this.value">
+                                            <option value="/rekap/terlambat-masuk">Rekapitulasi Terlambat Masuk PNS
                                             </option>
-                                            <option value="1" href="/rekap/terlambat-masuk-unit">Rekapitulasi Terlambat Masuk Unit
+                                            <option value="/rekap/terlambat-masuk-unit">Rekapitulasi Terlambat Masuk Unit
                                             </option>
-                                            <option value="1" selected href="/rekap/tidak-absen-pulang">Rekapitulasi Tidak Absen Pulang PNS
+                                            <option selected value="/rekap/tidak-absen-pulang">Rekapitulasi Tidak Absen Pulang PNS
                                             </option>
                                         </select>
                                     </div>
@@ -110,10 +99,6 @@
 </div>    
 
     <script>
-        document.getElementById('status').onchange = function() {
-        window.location.href = this.children[this.selectedIndex].getAttribute('href');
-        }
-        
         function dateFilter(){
             document.getElementById('filterDate').submit();
         }

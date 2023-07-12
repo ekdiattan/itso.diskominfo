@@ -12,8 +12,9 @@ class UnitKerja extends Model
     protected $fillable = [
         'namaUnit',
         'aliasUnit',
-        'divisi',
-        'divisiLengkap',
+        'idUnitKerja',
+        'unitKerjaApi',
+        'unitKerjaApiLengkap',
         'alamat',
         'nipPimpinan'
     ];

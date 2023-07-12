@@ -17,8 +17,8 @@
             <div class="form-group">
               <label for="namaUnit">Nama Unit Kerja</label>
               <input type="text" class="form-control" id="namaUnit" name="namaUnit" maxlength="255" required>
-              <label for="alias">Alias Unit Kerja</label>
-              <input type="text" class="form-control" id="alias" name="alias" maxlength="255" required>
+              <label for="unitKerjaApiLengkap">Alias Unit Kerja</label>
+              <input type="text" class="form-control" id="unitKerjaApiLengkap" name="unitKerjaApiLengkap" maxlength="255" required>
             </div>
             <button type="submit" class="btn btn-primary mr-2">Submit</button>
           </form>
@@ -40,8 +40,8 @@
                       <thead  class="bg-gray disabled color-palette">
                         <tr>
                           <th>No</th>
-                          <th>Nama Bidang</th>
-                          <th>Alias Bidang</th>
+                          <th>Divisi</th>
+                          <th>Unit Kerja</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -49,8 +49,8 @@
                         @foreach ($unitkerjas as $key => $post )  
                         <tr>
                           <td>{{ $loop->iteration }}</td>
+                          <td>{{ $post->unitKerjaApi }}</td>
                           <td>{{ $post->namaUnit }}</td>
-                          <td>{{ $post->aliasUnit }}</td>
                           <td>
                             <a href="/unitkerja/{{ $post->id }}" class="badge bg-warning"><span class="menu-icon"><i class="far fa-edit"></i></span></a>
                             <form action="/unitkerja/delete/{{ $post->id }}" method="get" class="d-inline">

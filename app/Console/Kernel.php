@@ -49,21 +49,29 @@ class Kernel extends ConsoleKernel
         $schedule->command('UpdateCuti:cron')
             ->hourly()
             ->weekdays()
-            ->runInBackground();
+            ->runInBackground()
+            ->withoutOverlapping();
+
+        $schedule->command('BirthdayNotification:cron')
+            ->daily()
+            ->runInBackground()
+            ->withoutOverlapping();
 
         $schedule->command('UpdateDigi:cron')
             ->hourly()
-            ->runInBackground();
+            ->runInBackground()
+            ->withoutOverlapping();
             
         $schedule->command('UpdateRekap:cron')
             ->hourly()
             ->weekdays()
-            ->runInBackground();
+            ->runInBackground()
+            ->withoutOverlapping();
 
-        
-        $schedule->command('TelegramAbsenMasuk:cron')->weekdays()->dailyAt('7:00')->runInBackground();
-        $schedule->command('TelegramAbsenMasuk:cron')->weekdays()->dailyAt('7:15')->runInBackground();
-        $schedule->command('TelegramAbsenMasuk:cron')->weekdays()->dailyAt('7:25')->runInBackground();
+        // DI DISABLE KARENA DATA IZIN TERLAMBAT BELUM ADA DARI DALAM API KMOB //
+        // $schedule->command('TelegramAbsenMasuk:cron')->weekdays()->dailyAt('7:00')->runInBackground();
+        // $schedule->command('TelegramAbsenMasuk:cron')->weekdays()->dailyAt('7:15')->runInBackground();
+        // $schedule->command('TelegramAbsenMasuk:cron')->weekdays()->dailyAt('7:25')->runInBackground();
         $schedule->command('TelegramAbsenPulang:cron')->weekdays()->dailyAt('16:15')->runInBackground();
         $schedule->command('TelegramAbsenPulang:cron')->weekdays()->dailyAt('17:00')->runInBackground();
         $schedule->command('TelegramAbsenPulang:cron')->weekdays()->dailyAt('18:00')->runInBackground();

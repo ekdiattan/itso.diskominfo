@@ -5,15 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Bidang extends Model
+class KategoriPendidikan extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'namabidang'
+        'kategori',
+        'jurusan',
+        'keterangan'
     ];
-    public function user()
-    {
-
-        return $this->hasMany(User::class);
-    }
 }

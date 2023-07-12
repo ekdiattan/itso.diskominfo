@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pegawai;
+use App\Models\Pegawai;;
 use App\Models\PengecualianPegawai;
 use Carbon\Carbon;
 

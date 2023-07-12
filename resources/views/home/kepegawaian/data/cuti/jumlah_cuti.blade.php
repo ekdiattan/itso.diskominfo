@@ -7,18 +7,12 @@
 @section('container')
 <div id="dataTable_wrapper" class="dt_bootstrap4">
          <div class="card">
+            <div class="card-header">
+                <h2>Jumlah Cuti Pegawai</h2>
+            </div>
               <div class="card-body">
-                  <a class="btn btn-success" role="button" href="/inventaris/create">+ Create New</a>
-                  <a class="btn btn-primary" role="button" href="/export-excel">Export Excel</a>
-
-                  <div id="example1_filter" class="dataTables_filter">
-                    <form action="/jumlah-cuti" method="GET">
-                        <form class="d-flex" role="search">
-                            <a href="/jumlah-cuti"  class="btn btn-danger" role="button">Reset</a>
-                        </form>
-                        <br>
-                    </form>
-                  </div>
+                <a class="btn btn-success mb-3" role="button" href="/inventaris/create">+ Create New</a>
+                <a class="btn btn-primary mb-3" role="button" href="/export-excel">Export Excel</a>
                 <table id="dataTable" class="table table-bordered table-striped table-responsive">
                         <thead>
                             <tr>

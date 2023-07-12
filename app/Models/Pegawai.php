@@ -31,7 +31,8 @@ class Pegawai extends Model
         'pendidikanAwal',   
         'jurusanPendidikanAwal',   
         'pendidikanAkhir',   
-        'jurusanPendidikanAkhir',   
+        'jurusanPendidikanAkhir',
+        'kategoriPendidikan',
         'noAkses',   
         'noNpwp',   
         'nik',   
@@ -39,7 +40,12 @@ class Pegawai extends Model
         'telp',   
         'hp',   
         'email',   
-        'kedudukanPegawai',  
+        'kedudukanPegawai',
+        'tglGabung',
+        'tglPisah',
+        'reasonPisah',
+        'tanggalmasuk',
+        'tanggalkeluar',
     ];
 
     public function unitkerja(){
