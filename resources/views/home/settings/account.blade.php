@@ -4,9 +4,17 @@
       <div class="profile-desc mt-2">
         <div class="profile-pic">
           <div class="count-indicator">
-            <img class="rounded-circle mx-auto d-block " src="@if(auth()->user()->image != null){{ asset(auth()->user()->image) }} @elseif(auth()->user()->image == null) {{ asset('assets/images/faces/face15.jpg') }} @endif" alt="image" style="height : 80px; width : 80px;">
+            <img class="rounded-circle mx-auto d-block " src="@if(auth()->user()->image != null){{ asset(auth()->user()->image) }} @elseif(auth()->user()->image == null) {{ asset('assets/images/faces/face15.jpg') }} @endif" alt="image" style="height : 80px; width : 80px;" onclick="showInputFile()">
             <span class="count bg-success"></span>
           </div>
+        <form action="/register/update/{{ $user->id }}" method="post" enctype="multipart/form-data">
+        @csrf
+          <input  type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/bmp"style="display : none;" onchange="showButton()">
+            <button type="submit" class="btn btn-success rounded mx-auto mt-2 d-block d-none" id="myButton">Simpan!</button>
+            <br>
+            <h1 style="font-size: 18px; text-align:center;">Ganti Foto Profil</h1>
+      </form> 
+      <br>
          <div class="profile-name text-center">
             <h5 class="mt-4 font-weight-normal">{{ auth()->user()->nama }}</h5>
             <span>{{ auth()->user()->hak_akses }}</span>
@@ -60,13 +68,13 @@
 
       <form action="/register/update/{{ $user->id }}" method="post" enctype="multipart/form-data">
         @csrf
-            <div class="form-group">
+            <!-- <div class="form-group">
             <label for="password"> Ganti Foto Profile</label>
               <input  type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/jpg, image/bmp, .pdf">
             </div>
             <div class="input-group-append">
               <button type="submit" class="btn btn-primary mr-2 btn-flat float-right" id="submit">Change</button>
-            </div>
+            </div> -->
               <label for="password"> Ganti Password</label>
               <input  type="password" class="form-control" id="password" name="password" placeholder ="Masukan kata sandi baru">
             </div>
@@ -82,6 +90,15 @@
 <!-- End Profile -->
 
 <!-- Info -->
+<script>
+  function showInputFile() {
+  document.getElementById('image').click();
+}
+  function showButton() {
+    var button = document.getElementById('myButton');
+          button.classList.remove('d-none');
+}
+</script>
   <script src="../../assets/js/mata.js"></script>
   <script src="../../assets/js/password.js"></script>
 

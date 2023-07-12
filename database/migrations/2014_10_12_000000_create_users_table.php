@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('image')->nullable();
             $table->string('email')->nullable();
+            $table->json('IdCard')->nullable();
             $table->timestamps();
         });
     }

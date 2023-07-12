@@ -9,9 +9,17 @@
                   @csrf
                   <div class="form-group row">
                     <div class="col-sm-6">
-                      <label>NIP</label>
-                      <input type="text" class="form-control p_input" id="nip" name="nip">
-                    </div>
+                      <label>Nama</label>
+                      <input type="text" class="form-control" id="nama" name="nama" list="pegawai" autocomplete="off" onchange="getUserDetails();" onfocus="setBidang(); showOtherForm();" required autofocus/>
+                        <datalist id="pegawai">
+                          @foreach($pegawai as $pns)
+                          <option value="{{ $pns->nama }}">
+                          @endforeach
+                          @foreach($DtPegawai as $nonpns)
+                          <option value="{{ $nonpns->fullname }}">
+                          @endforeach
+                        </datalist>                        
+                      </div>
                     <div class="col-sm-6">
                       <label>Username</label>
                       <input  type="text" class="form-control p_input" id="username" name="username" >
@@ -20,8 +28,8 @@
                   </div>
                   <div class="form-group row">
                     <div class="col-sm-6">
-                      <label>Nama</label>
-                      <input type="text" class="form-control p_input" id="nama" name="nama">
+                      <label>NIP</label>
+                      <input type="text" class="form-control p_input" id="nip" name="nip">    
                     </div>
                     <div class="col-sm-6">
                       <label>Jabatan</label>
@@ -31,7 +39,7 @@
                   <div class="form-group row">
                     <div class="col-sm-6">
                       <label for="exampleFormControlSelect2">Unit Kerja</label>
-                        <select class="form-control" id="unitkerja" name="unitkerja">
+                        <select class="form-control" id="nama_bidang" name="nama_bidang"">
                           @foreach ($unitkerja as $unitkerja)
                           <option value="{{ $unitkerja->namaUnit }}">{{ $unitkerja->namaUnit }}</option>
                           @endforeach  
@@ -79,6 +87,12 @@
                     <button type="submit" class="btn btn-primary btn-block enter-btn" id="submit-btn">Buat</button>
                   </div>
                 </form>
+                <br>
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
               </div>
             </div>
           <!-- content-wrapper ends -->

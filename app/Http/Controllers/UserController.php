@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\UnitKerja;
+use App\Models\Pegawai;
+use App\Models\DtPegawai;
 use App\Models\Role;
+use App\Models\MappingDashboard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,22 +34,38 @@ class UserController extends Controller
 
     public function register()
     {   
+        $pegawai= Pegawai::all();
+        $DtPegawai = DtPegawai::all();
+        
         $unitkerja = UnitKerja::all();
         $role = Role::all();
-        
-        return view('register.register', ['title' => 'Pengguna'], compact('unitkerja', 'role'));
+
+        return view('register.register', ['title' => 'Pengguna', 'pegawai'=> $pegawai, 'DtPegawai'=> $DtPegawai], compact('unitkerja', 'role'));
     }
 
     public function store_register(Request $request){
 
-        // return $request->file('image')->store('post-images');
         
+        $username = $request->input('username');
+        $nip = $request->input('nip');
+        
+        $user = User::where('username', $username)->first();
+        $nip = User::where('nip', $nip)->first();
+
+        if ($user) {
+            $request->session()->flash('error', 'Username sudah ada!');
+            return redirect()->back();
+        }elseif ($nip) {
+            $request->session()->flash('error', 'NIP sudah terdaftar!');
+            return redirect()->back();
+        }
+
         $validatedDate = $request->validate([
             'nip' => 'required|max:18',
             'username' => 'required',
             'nama' => 'required|max:255',
             'jabatan' => 'required',
-            'unitkerja' => 'required',
+            'nama_bidang' => 'required',
             'hak_akses' => 'required',
             'no_hp' => 'required',
             'email' => '',
@@ -68,29 +87,28 @@ class UserController extends Controller
                 'username' => $validatedDate['username'],
                 'nama' => $validatedDate['nama'],
                 'jabatan' => $validatedDate['jabatan'],
-                'nama_bidang' => $validatedDate['unitkerja'],
-                'hak_akses' => $validatedDate['hak_akses'],
+                'nama_bidang' => $validatedDate['nama_bidang'],
                 'no_hp' => $validatedDate['no_hp'],
-                'email' => $validatedDate['email'],
-                'image' => $filePath,
+                'hak_akses' => $validatedDate['hak_akses'],
                 'password' => $validatedDate['password'],
-    
+                'image' => $filePath,
+                'email' => $validatedDate['email'],
             ]);
-        } else {
+        } 
+        else {
             User::create([
                 'nip' => $validatedDate['nip'],
                 'username' => $validatedDate['username'],
                 'nama' => $validatedDate['nama'],
                 'jabatan' => $validatedDate['jabatan'],
-                'nama_bidang' => $validatedDate['unitkerja'],
-                'hak_akses' => $validatedDate['hak_akses'],
+                'nama_bidang' => $validatedDate['nama_bidang'],
                 'no_hp' => $validatedDate['no_hp'],
-                'email' => $validatedDate['email'],
+                'hak_akses' => $validatedDate['hak_akses'],
                 'password' => $validatedDate['password'],
-    
+                'email' => $validatedDate['email'],
+                
             ]);
         }
-        
         $request->accepts('session');
         session()->flash('success', 'Berhasil menambahkan user!');
 
@@ -107,7 +125,10 @@ class UserController extends Controller
     public function edit($id)
     {
         $edit = User::find($id);
-        return view('register.edit', ['user'=> $edit, 'title' => 'Pengguna']);
+        $role = Role::all();
+        $map = MappingDashboard::all();
+         
+        return view('register.edit', ['mapping_dashboards'=> $map, 'user'=> $edit, 'role'=> $role, 'title' => 'Pengguna']);
     }
 
     public function update(Request $request, $id)
@@ -117,28 +138,29 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             Storage::delete('public/images/profile/' . $user->image);
         }
-
-        $user->update([
-            $user-> nip = $request->nip,
-            $user-> nama = $request->nama,
-            $user-> username = $request->username,
-            $user-> jabatan = $request->jabatan,
-            $user-> nama_bidang = $request->nama_bidang,
-            $user-> hak_akses = $request->hak_akses,
-            $user-> no_hp = $request->no_hp,
-            $user-> email = $request->email,
-            $image-> image = $request->image,
-        ]);
-        if($request->password != null){
-            $password = bcrypt($request->password);
+        if(auth()->user->id == $user->id){ // validasi data user yang login sama dengan data user yang di update
             $user->update([
-                $user->password = $password
+                $user-> nip = $request->nip,
+                $user-> nama = $request->nama,
+                $user-> username = $request->username,
+                $user-> jabatan = $request->jabatan,
+                $user-> nama_bidang = $request->nama_bidang,
+                $user-> hak_akses = $request->hak_akses,
+                $user-> no_hp = $request->no_hp,
+                $user-> email = $request->email,
+                $image-> image = $request->image,
             ]);
+            if($request->password != null){
+                $password = bcrypt($request->password);
+                $user->update([
+                    $user->password = $password
+                ]);
+            }
+            $request->accepts('session');
+            session()->flash('success', 'Berhasil mengupdate Data!');
+    
+            return redirect('/index')->with('succes', 'Data berhasil dirubah');
         }
-        $request->accepts('session');
-        session()->flash('success', 'Berhasil mengupdate Data!');
-
-        return redirect('/index')->with('succes', 'New Post has been Added');
     }
 
     // login
@@ -200,7 +222,9 @@ class UserController extends Controller
     public function updateByUser(Request $request, $id){
         
         $user = User::find($id);
+        $userId =$request->user()->id;
         $email = $request->email;
+
         if ($request->filled('password')) {
             $password = bcrypt($request->password);
         }else {
@@ -221,31 +245,73 @@ class UserController extends Controller
                 $filePath = 'images/profile/' . $fileName;
                 $file->move(public_path('images/profile'), $fileName);
             }
-            // Simpan nama file foto profil baru ke dalam database
+            
             $user->image = $fileName;
         }
-        if($request->email != ''){
-            $user->update([
-                'email' => $email,
-            ]);
-        } else if($request->password != ''){
-            $user->update([
-                'password' => $password,
-            ]);
+        if ($request->has('email')) {
+            if (!empty($request->email)) {
+                $user->email = $request->email;
+            }
+        }
+        if ($request->has('tanggalselesai')) {
+            if (!empty($request->tanggalselesai)) {
+                $user->tanggalselesai = $request->tanggalselesai;
+            }
+        }
+        if ($request->has('jabatan')) {
+            if (!empty($request->jabatan)) {
+                $user->jabatan = $request->jabatan;
+            }
+        }
+        if ($request->has('tanggalmulai')) {
+            if (!empty($request->tanggalmulai)) {
+                $user->tanggalmulai = $request->tanggalmulai;
+            }
+        }
+        if ($request->has('status')) {
+            if (!empty($request->status)) {
+                $user->status = $request->status;
+            }
+        }
+        if ($request->has('password')) {
+            if (!empty($request->password)) {
+                $password = bcrypt($request->password);
+                $user->password = $password;
+            }
         } else if($request->image != ''){
             $user->update([
                 'image' => $filePath
             ]);
+        }else if($request->email != ''){
+            $user->update([
+                'email' => $email
+            ]);
+        }else if($request->jabatan != ''){
+            $jabatan->update([
+                'jabatan' => $jabatan
+            ]);
+        }else if($request->tanggalmulai != ''){
+            $user->update([
+                'tanggalmulai' => $tanggalmulai
+            ]);
+        }else if($request->tanggalselesai != ''){
+            $user->update([
+                'tanggalselesai' => $tanggalselesai
+            ]);
+        }else if($request->status != ''){
+            $user->update([
+                'status' => $status
+            ]);
         } else {
             $user->update([
-                'password' => $password,
-                'email' => $email,
-                'image' => $filePath
+                'password' => $password
             ]);
         }
+        $user->save();
+
         $request->accepts('session');
         $request->session()->flash('success', 'Berhasil mengupdate Data!');
-        return redirect('/account/'.$user->id)->with('success', 'Berhasil Mengupdate Data');
+        return redirect('/register/edit/'.$user->id)->with('success', 'Berhasil Mengupdate Data');
     }
 
     public function editPw($id){
@@ -274,5 +340,10 @@ class UserController extends Controller
 
     // Kode untuk menyimpan data ke database
 }
+
+
+
+
+
 
 }

@@ -59,6 +59,30 @@
                 </div>
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Tanggal Masuk</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="tanggalmulai" name="tanggalmulai" value="{{ $user->tanggalmulai }}" readonly/>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Tanggal Keluar</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="tanggalselesai" name="tanggalselesai" value="{{ $user->tanggalselesai }}" readonly/>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Status</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="status" name="status" value="{{ $user->status }}" readonly/>
+                </div>
+              </div>
+            </div>
             <div class="col-md-6" id="emaill" style="display:none">
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label">Email</label>
