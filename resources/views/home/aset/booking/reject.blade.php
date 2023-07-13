@@ -81,7 +81,7 @@
                                     <td>{{ $post->tiket }}</td>
                                     <td>{{ $post->namaPemohon }}</td>
                                     <td>{{ $post->noTelp }}</td>
-                                    <td>{{ $post->bidang }}</td>
+                                    <td>{{ $post->getBidang->namaUnit }}</td>
                                     <td>{{ $post->perihal }}</td>
                                     <td>{{ $post->tanggalPermohonan }}</td>
                                     <td>{{ $post->status }}</td>
@@ -140,7 +140,7 @@
                                     <td>{{ $post->tiket }}</td>
                                     <td>{{ $post->namaPemohon }}</td>
                                     <td>{{ $post->noTelp }}</td>
-                                    <td>{{ $post->bidang }}</td>
+                                    <td>{{ $post->getBidang->namaUnit }}</td>
                                     <td>{{ $post->perihal }}</td>
                                     <td>{{ $post->tanggalPermohonan }}</td>
                                     <td>{{ $post->status }}</td>

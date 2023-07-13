@@ -25,7 +25,7 @@ use PDF;
 class BookingController extends Controller
 {
     public function index (Request $request){
-        $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
+        $dalamPengajuan = Booking::where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
         // change date format
         foreach($dalamPengajuan as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
@@ -36,8 +36,8 @@ class BookingController extends Controller
     }
 
     public function reject (Request $request){
-        $ditolak = DB::table('bookings')->where('status', 'Ditolak')->orderBy('tiket', 'desc')->get();
-        $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
+        $ditolak = Booking::where('status', 'Ditolak')->orderBy('tiket', 'desc')->get();
+        $dalamPengajuan = Booking::where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
         // change date format
         foreach($ditolak as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
@@ -53,8 +53,8 @@ class BookingController extends Controller
     }
 
     public function acc (Request $request){
-        $disetujui = DB::table('bookings')->where('status', 'Disetujui')->orderBy('tiket', 'desc')->get();
-        $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
+        $disetujui = Booking::where('status', 'Disetujui')->orderBy('tiket', 'desc')->get();
+        $dalamPengajuan = Booking::where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
         foreach($disetujui as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
             $result->mulai = Carbon::parse($result->mulai)->translatedFormat('H:i:s, d F Y');
@@ -69,8 +69,8 @@ class BookingController extends Controller
     }
 
     public function selesai (Request $request){
-        $dalamPengajuan = DB::table('bookings')->where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
-        $selesai = DB::table('bookings')->where('status', 'Selesai')->orderBy('tiket', 'desc')->get();
+        $dalamPengajuan = Booking::where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
+        $selesai = Booking::where('status', 'Selesai')->orderBy('tiket', 'desc')->get();
         foreach($dalamPengajuan as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
             $result->mulai = Carbon::parse($result->mulai)->translatedFormat('H:i:s, d F Y');
@@ -156,11 +156,11 @@ class BookingController extends Controller
         if(date('d') == 01 && $checking->toArray() == null){ // when date is 01 and when none data on this month
             $newTicket = 0;
         } else if (date('d') == 01 && $checking->toArray() != null){ // when date is 01 and there are some datas in this month
-            $ticket = DB::table('bookings')->select('tiket')->orderBy('id', 'desc')->first(); // get last ticket used before
+            $ticket = Booking::select('tiket')->orderBy('id', 'desc')->first(); // get last ticket used before
             // check report in this month
             $newTicket = substr($ticket->tiket, -3); // get last 3 character from string ticket
         } else if (date('d') != 01 && $checking->toArray() != null){ // when date is 01 and there are some datas in this month
-            $ticket = DB::table('bookings')->select('tiket')->orderBy('id', 'desc')->first(); // get last ticket used before
+            $ticket = Booking::select('tiket')->orderBy('id', 'desc')->first(); // get last ticket used before
             // check report in this month
             $newTicket = substr($ticket->tiket, -3); // get last 3 character from string ticket
         } else if (date('d') != 01 && $checking->toArray() == null){ // when date is not 01 and there no data in this month
@@ -294,11 +294,11 @@ class BookingController extends Controller
         if(date('d') == 01 && $checking->toArray() == null){ // when date is 01 and when none data on this month
             $newTicket = 0;
         } else if (date('d') == 01 && $checking->toArray() != null){ // when date is 01 and there are some datas in this month
-            $ticket = DB::table('bookings')->select('tiket')->orderBy('id', 'desc')->first(); // get last ticket used before
+            $ticket = Booking::select('tiket')->orderBy('id', 'desc')->first(); // get last ticket used before
             // check report in this month
             $newTicket = substr($ticket->tiket, -3); // get last 3 character from string ticket
         } else if (date('d') != 01 && $checking->toArray() != null){ // when date is 01 and there are some datas in this month
-            $ticket = DB::table('bookings')->select('tiket')->orderBy('id', 'desc')->first(); // get last ticket used before
+            $ticket = Booking::select('tiket')->orderBy('id', 'desc')->first(); // get last ticket used before
             // check report in this month
             $newTicket = substr($ticket->tiket, -3); // get last 3 character from string ticket
         } else if (date('d') != 01 && $checking->toArray() == null){ // when date is not 01 and there no data in this month
@@ -551,8 +551,8 @@ class BookingController extends Controller
             $disetujui = Booking::where('status', 'Disetujui')->orderBy('tiket', 'desc')->get();
             $dipinjam = Booking::where('status', 'Dipinjam')->orderBy('tiket', 'desc')->get();
         } else {
-            $disetujui = DB::table('bookings')->where('status', 'Disetujui')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%');
-            $dipinjam = DB::table('bookings')->where('status', 'Dipinjam')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
+            $disetujui = Booking::where('status', 'Disetujui')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%');
+            $dipinjam = Booking::where('status', 'Dipinjam')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
         }
         // convert time format
         foreach($dipinjam as $result){
@@ -566,9 +566,9 @@ class BookingController extends Controller
 
     public function riwayat(Request $request){
         if($request->search == null){
-            $selesai = DB::table('bookings')->where('status', 'Selesai')->orderBy('tiket', 'desc')->get();
+            $selesai = Booking::where('status', 'Selesai')->orderBy('tiket', 'desc')->get();
         } else {
-            $selesai = DB::table('bookings')->where('status', 'Selesai')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
+            $selesai = Booking::where('status', 'Selesai')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
         }
         return view('home.keamanan.riwayat',['title' => 'Kendaraan','selesai' => $selesai,]);
     }
