@@ -27,7 +27,7 @@
             </div>
             <div class="form-group">
                 <label for="exampleInputUsername1">Bidang</label>
-                <input type="text" class="form-control" id="bidang" name="bidang"  maxlength="255" value="{{$edit->bidang}}" readonly>
+                <input type="text" class="form-control" id="bidang" name="bidang"  maxlength="255" value="{{$edit->getBidang->namaUnit}}" readonly>
             </div>
         </div>
     </div>

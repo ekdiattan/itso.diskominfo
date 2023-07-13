@@ -305,7 +305,7 @@ class UpdateDigi extends Command
                                 }
                                 // update Unitkerja
                                 if($detailBody->divisi == 'Analisis' || $detailBody->divisi == 'Data' || $detailBody->divisi == 'Implementasi dan Pengelolaan' || $detailBody->divisi == 'IT Dev' || $detailBody->divisi == 'HRGA' || $detailBody->divisi == 'Implementasi dan Pengelolaan' || $detailBody->divisi == 'Komunikasi dan Konten' || $detailBody->divisi == 'Konten dan Komunikasi' || $detailBody->divisi == 'Petani Milenial' || $detailBody->divisi == 'SIPD'){
-                                    $namaUnit = 'UPTD PUSAT LAYANAN DIGITAL DAN GEOPASKAL';
+                                    $namaUnit = 'UPTD PUSAT LAYANAN DIGITAL, DATA, DAN INFORMASI GEOSPASIAL';
                                     $aliasUnit = 'UPTD PLDDG';
                                 }else if($detailBody->divisi == 'Aptika'){
                                     $namaUnit = 'APLIKASI DAN INFORMATIKA';
