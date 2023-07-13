@@ -26,6 +26,7 @@
                     <a href="/pulang-export" class="btn btn-danger">Export to PDF</a>
                 </div>
                 <br>
+                @if(!empty($absen_pulang))
                 <div id="link" onclick="copy()">
                     <div class="box-body">
                         <section class=" table-responsive ">
@@ -68,6 +69,7 @@
                         </section>
                     </div>
                 </div>
+                @endif
             </div>
         </div>
     @endsection

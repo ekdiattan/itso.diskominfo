@@ -120,6 +120,25 @@
                     value="{{$nonpns->birth_date}}" readonly>
                 </div>
               </div>
+            </div> <div class="col-md-4">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" style="font-size:13px;">Usia</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" name="age"
+                    value="{{$nonpns->age}}" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+           <div class="col-md-4">
+              <div class="form-group row">
+                <label class="col-sm-3 col-form-label" style="font-size:13px;">Kategori Pekerja</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="disabledTextinput" name=""
+                  value="{{$hasil}}" readonly/>
+                </div>
+              </div>
             </div>
             <div class="col-md-4">
               <div class="form-group row">
@@ -130,8 +149,6 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
             <div class="col-md-4">
               <div class="form-group row">
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Agama</label>
@@ -171,7 +188,7 @@
                 <label class="col-sm-3 col-form-label" style="font-size:13px;">Kategori Pendidikan</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" name="pendidikanAwal"
-                    value="{{$nonpns->pendidikanAwal}}" readonly>
+                    value="{{$result}}" readonly>
                 </div>
               </div>
             </div> 

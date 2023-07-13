@@ -138,7 +138,7 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             Storage::delete('public/images/profile/' . $user->image);
         }
-        if(auth()->user->id == $user->id){ // validasi data user yang login sama dengan data user yang di update
+        if(auth()->user->id == $user->id){ 
             $user->update([
                 $user-> nip = $request->nip,
                 $user-> nama = $request->nama,

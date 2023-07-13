@@ -150,31 +150,7 @@ class UpdateDigi extends Command
                                 ], [
                                     "user_id",
                                 ], [
-                                    "email",
-                                    "fullname",
-                                    "birth_place",
-                                    "birth_date",
-                                    "marital_status",
-                                    "religion",
-                                    "blood_type",
-                                    "gender",
-                                    "age",
-                                    "telephone",
-                                    "id_divisi",
-                                    "divisi",
-                                    "id_jabatan",
-                                    "jabatan",
-                                    "is_staff",
-                                    "join_date",
-                                    'is_active',
-                                    "resign_date",
-                                    "reason_resignation",
-                                    "id_card_address",
-                                    "current_address",
-                                    "bank_account_number",
-                                    "bank_account_name",
-                                    "bank_branch",
-                                    "npwp",
+                                    "age"
                                 ]);
                             } else {
                                 DtPegawai::upsert([
@@ -204,31 +180,7 @@ class UpdateDigi extends Command
                                 ], [
                                     "user_id",
                                 ], [
-                                    "email",
-                                    "fullname",
-                                    "birth_place",
-                                    "birth_date",
-                                    "marital_status",
-                                    "religion",
-                                    "blood_type",
-                                    "gender",
-                                    "age",
-                                    "telephone",
-                                    "id_divisi",
-                                    "divisi",
-                                    "id_jabatan",
-                                    "jabatan",
-                                    "is_staff",
-                                    "join_date",
-                                    'is_active',
-                                    "resign_date",
-                                    "reason_resignation",
-                                    "id_card_address",
-                                    "current_address",
-                                    "bank_account_number",
-                                    "bank_account_name",
-                                    "bank_branch",
-                                    "npwp",
+                                    "age"
                                 ]);
                             }
                             
@@ -365,7 +317,47 @@ class UpdateDigi extends Command
                     ]);
                 }
             }
-
+            // update absensi kehadiran from digiteam
+            $today = Carbon::now()->format('Y-m-d');
+                $response = $client->request ('GET', 'https://groupware-api.digitalservice.id/attendance/?limit=200&pageSize=200&date='.$today, [
+                    'headers' => [
+                        'Authorization' => 'Bearer '. $token,
+                        ]
+                    ]);
+                $body = json_decode($response->getBody());
+                foreach($body->results as $result){
+                    DtKehadiran::upsert([
+                        "_id" => $result->_id,
+                        "startDate" => isset($result->startDate) ? $result->startDate : '',
+                        "endDate" => isset($result->endDate) ? $result->endDate : '',
+                        "officeHours" => isset($result->officeHours) ? $result->officeHours : '',
+                        "location" => isset($result->location) ? $result->location : '',
+                        "message" => isset($result->message) ? $result->message : '',
+                        "note" => isset($result->note) ? $result->note : '',
+                        "mood" => isset($result->mood) ? $result->mood : '',
+                        "fullname" => isset($result->fullname) ? $result->fullname : '',
+                        "email" => isset($result->email) ? $result->email : '',
+                        "username" => isset($result->username) ? $result->username : '',
+                        "divisi" => isset($result->divisi) ? $result->divisi : '',
+                        "jabatan" => isset($result->jabatan) ? $result->jabatan : '',
+                        "date" => $today,
+                    ], [
+                        "_id",
+                    ], [
+                        "startDate",
+                        "endDate",
+                        "officeHours",
+                        "location",
+                        "message",
+                        "note",
+                        "mood",
+                        "fullname",
+                        "email",
+                        "username",
+                        "divisi",
+                        "jabatan",
+                    ]);
+                }
         }
     }
 }

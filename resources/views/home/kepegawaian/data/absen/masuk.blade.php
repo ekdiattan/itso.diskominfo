@@ -26,13 +26,10 @@
                 <a href="/masuk-export" class="btn btn-danger">Export to PDF</a>
             </div>
             <br>
+            @if(!empty($absen_masuk))
             <div id="link" onclick="copy()">
-                <div class="box-body">
-                    <section class=" table-responsive ">
-                <p>Assalamualaikum Warohmatullahi Wabarokatuh Bapak/Ibu.. <br>
-                    Semangat pagi 😁<br> 
-                    Disampaikan daftar pegawai yang belum melakukan presensi untuk skema masuk kerja sampai pukul <strong> 
-			@foreach($last_update as $time){{\Carbon\Carbon::parse($time->update)->format('H:i:s') }} @endforeach  WIB </strong> berikut :</p>
+                <div class="box-body"> 
+                    <p>Assalamualaikum Warohmatullahi Wabarokatuh Bapak/Ibu.. <br> Semangat pagi 😁 <br> Disampaikan daftar pegawai yang belum melakukan presensi untuk skema masuk kerja sampai pukul <strong> @foreach($last_update as $time){{\Carbon\Carbon::parse($time->update)->format('H:i:s') }} @endforeach  WIB </strong> berikut :</p>
 
                     <p> @foreach($absen_masuk as $item)
                         {{$item->nama}} <br>
@@ -59,6 +56,7 @@
                 </script>
                 </section>
             </div>
+            @endif
         </div>
     </div>
 </div>

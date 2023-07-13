@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Pegawai;
 use App\Models\TmpPegawai;
 use App\Models\DtPegawai;
+use App\Models\KategoriPendidikan;
+use App\Models\DtPendidikan;
+use App\Models\KategoriUsia;
 use App\Models\TmpDtPegawai;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
@@ -682,8 +685,13 @@ class PegawaiController extends Controller
     }
 
 //  Detail NON-PNS
-    public function detail($id){
+    public function detail(Request $request, $id){
         $nonpns= DtPegawai::find($id);
+        $perbandingan= KategoriUsia::all();
+        $pendidikan = KategoriPendidikan::all();
+        $hasil ='';
+        $result='';
+
         $jabatan = $nonpns->deskripsiJabatan;
         if($jabatan != null){
             $jabatan->description = str_replace(';', '.', $jabatan->description);
@@ -691,12 +699,30 @@ class PegawaiController extends Controller
         } else {
             $jabatan = null;
         }
+
+        //untuk mengetahui kategori usia pekerja
+        foreach ($perbandingan as $table) {
+            if ($nonpns->age <= $table->hingga) {
+                $hasil = $table->kategori;
+                break; // Hentikan perulangan setelah menemukan kategori yang cocok
+            }
+        }
+        
+        //untuk mengetahui kategori pendidikan IT NON IT
+        foreach ($pendidikan as $cek) {
+            if ($cek->jurusan == $nonpns->pendidikan->majors) {
+                $result = $cek->kategori;
+                break; // Hentikan perulangan setelah menemukan kategori yang cocok
+            }
+        }
+
+
         $nonpns->join_date = Carbon::parse($nonpns->join_date)->translatedFormat('d F Y');
         $nonpns->birth_date = Carbon::parse($nonpns->birth_date)->translatedFormat('d F Y');
-        return view('home.kepegawaian.data.master_pegawai.detail',['nonpns'=> $nonpns, 'title' => 'Detail Pegawai', 'jabatan' => $jabatan]);
+        return view('home.kepegawaian.data.master_pegawai.detail',['result'=>$result ,'nonpns'=> $nonpns, 'perbandingan'=> $perbandingan, 'hasil'=> $hasil, 'title' => 'Detail Pegawai', 'jabatan' => $jabatan]);
     }
 
-
+    
     public function editnon($id)
     {
         $edit = DtPegawai::find($id);
