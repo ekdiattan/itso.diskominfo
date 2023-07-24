@@ -29,6 +29,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MappingDashboardController;
 use App\Http\Controllers\KategoriPendidikanController;
 use App\Http\Controllers\KategoriUsiaController;
+use App\Http\Controllers\ArteriController;
 
 /*booking
 |--------------------------------------------------------------------------
@@ -118,6 +119,7 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Aset']], function(){
     Route::post('/booking-store',[BookingController::class, 'buat']);
     Route::get('/booking/{id}',[BookingController::class, 'show']);
     Route::get('/booking-edit/{id}',[BookingController::class, 'edit']);
+    Route::get('/bookingEdit/{id}',[BookingController::class, 'ubah']);
     Route::post('/booking-update/{id}',[BookingController::class, 'update']);
     Route::get('/booking/delete/{id}',[BookingController::class, 'delete']);
     Route::get('/booking-reject',[BookingController::class, 'reject']);
@@ -254,11 +256,12 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Kepegawaian']], function(){
     Route::get('/update-data-pegawai', [PegawaiController::class, 'update']);
     Route::get('/delete{id}', [PegawaiController::class, 'delete']);
     Route::get('/pegawai-sync', [PegawaiController::class, 'sync']);
+    Route::get('/pns-sync', [PegawaiController::class, 'pnsSync']);
+    Route::get('/nonpns-sync', [PegawaiController::class, 'nonPnsSync']);
     Route::get('/pegawai-conflict', [PegawaiController::class, 'conflict']);
     Route::get('/pegawai-resolve/{id}', [PegawaiController::class, 'resolving']);
     Route::post('/pegawai-resolve/{id}', [PegawaiController::class, 'resolved']);
 
-    
     // PNS
     Route::get('/detail-pegawai/{id}', [PegawaiController::class, 'show']);
     Route::get('/pns', [PegawaiController::class, 'pnsindex']);

@@ -71,6 +71,8 @@
                 <label for="exampleInputUsername1">Ip</label>
                 <input type="text" class="form-control" id="ip" name="ip" value="{{$edit->ip}}" readonly>
             </div> -->
+
+
             <div class="form-group">
                 <label for="exampleInputUsername1">Status</label>
                 <select class="form-control" id="status" name="status" onchange="ShowHideReason()" required>

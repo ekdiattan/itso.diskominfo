@@ -42,8 +42,8 @@ class Booking extends Model
     public function aset(){
         return $this->hasOne(Aset::class, 'id', 'aset_id');
     }
-    
+
     public function getBidang(){
-        return $this->hasOne(UnitKerja::class, 'id', 'bidang');
+        return $this->hasOne(UnitKerja::class, 'idUnitKerja', 'bidang');
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class BookingNotificationn extends Mailable
+class BookingNotificationTimAsset extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -37,8 +37,8 @@ class BookingNotificationn extends Mailable
      */
     public function build()
     {
-        return $this->subject('Permohonan Booking Tim Asset')
-            ->view('emails.booking-notificationn')
+        return $this->subject('Permohonan Booking Tim Aset')
+            ->view('emails.booking-notification-timasset')
             ->with([
                 'booking' => $this->booking,
                 'mulai' => $this->mulai,

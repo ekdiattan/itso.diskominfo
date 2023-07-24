@@ -70,7 +70,7 @@
                                     <td>{{ $post->tiket }}</td>
                                     <td>{{ $post->namaPemohon }}</td>
                                     <td>{{ $post->noTelp }}</td>
-                                    <td>{{ $post->getBidang->namaUnit }}</td>
+                                    <td>{{ $post->getBidang->aliasUnit }}</td>
                                     <td>{{ $post->perihal }}</td>
                                     <td>{{ $post->tanggalPermohonan }}</td>
                                     <td>{{ $post->status }}</td>

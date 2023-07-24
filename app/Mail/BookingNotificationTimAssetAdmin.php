@@ -5,9 +5,11 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class BookingNotification extends Mailable
+class BookingNotificationTimAssetAdmin extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -37,8 +39,8 @@ class BookingNotification extends Mailable
      */
     public function build()
     {
-        return $this->subject('Permohonan Booking')
-            ->view('emails.booking-notification')
+        return $this->subject('Permohonan Booking Tim Aset')
+            ->view('emails.booking-notification-timassetadmin')
             ->with([
                 'booking' => $this->booking,
                 'mulai' => $this->mulai,

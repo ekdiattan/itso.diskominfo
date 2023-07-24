@@ -89,7 +89,6 @@
                                     <td>
                                         <a href="/booking/{{ $post->id }}" class="badge bg-info"><span class="menu-icon"><i class="far fa-eye"></i></span></a>
                                         <a href="/booking-edit/{{ $post->id }}" class="badge bg-primary"><span class="menu-icon"><i class="fas fa-tools"></i></span></a>
-                                        <!-- <a href="#" class="badge bg-warning"><span class="menu-icon"><i class="far fa-edit"></i></span></a> -->
                                         <form action="/booking/delete/{{ $post->id }}" method="get" class="d-inline">
                                             <button class="badge bg-danger border-0"
                                                 onclick="return confirm('Are you sure?')"><span class="menu-icon"><i
@@ -146,7 +145,10 @@
                                     <td>{{ $post->tanggalPermohonan }}</td>
                                     <td>{{ $post->status }}</td>
                                     <td>
-                                    <a href="/booking/{{ $post->id }}" class="badge bg-info"><span class="menu-icon"><i class="far fa-eye"></i></span></a>
+                                        <a href="/booking/{{ $post->id }}" class="badge bg-info"><span class="menu-icon"><i class="far fa-eye"></i></span></a>
+                                    @if($post->aset->jenis == "Barang")
+                                        <a href="/bookingEdit/{{ $post->id }}" class="badge bg-primary"><span class="menu-icon"><i class="fas fa-tools"></i></span></a>
+                                    @endif
                                     </td>
                                 </tr>
                             @endforeach

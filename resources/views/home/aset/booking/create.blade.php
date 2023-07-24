@@ -22,14 +22,14 @@
         <label class="col-sm-3 col-form-label">Nip</label>
         <input type="text" class="form-control" name="nip" id="nip" maxlength="255" autocomplete="off" value="@if($before != null){{ $before['nip'] }}@endif" size="30" readonly>
         <label class="col-sm-3 col-form-label">Email</label>
-        <input type="email" class="form-control" name="email" id="email" maxlength="255" autocomplete="off" value="@if($before != null){{ $before['email'] }}@endif" size="30" required>
+        <input type="email" class="form-control" name="nama_email" id="nama_email" maxlength="255" autocomplete="off" value="@if($before != null){{ $before['nama_email'] }}@endif" size="30" required>
         <label class="col-sm-3 col-form-label">Nomor Wa</label>
         <input type="text" class="form-control" name="noTelp" id="noTelp" maxlength="255" autocomplete="off" value="@if($before != null){{ $before['noTelp'] }}@endif" size="30" required>
         <label class="col-sm-3 col-form-label">Nama Bidang</label>
         <select class="form-control" id="unitkerja" name="unitkerja">
-          <option value="">--PILIH--</option>
+          <option value="" selected>--PILIH--</option>
           @foreach ($unitkerja as $unitkerja)
-          <option value="{{ $unitkerja->id }}" value="@if($before != null) {{ $before['unitkerja'] == $unitkerja->namaUnit ? 'selected' : '' }}  selected @endif">{{ $unitkerja->namaUnit }}</option>
+          <option value="{{ $unitkerja->idUnitKerja }}">{{ $unitkerja->aliasUnit }}</option>
           @endforeach
         </select> 
       </div>
@@ -73,7 +73,10 @@
         <label class="col-sm-3 col-form-label">Perihal</label>
           <textarea id="textbox" class="form-control" maxlength="255" name="perihal" rows="5"></textarea>
         <span id="char_count"></span>
-        <input type="hidden" class="form-control" name="status" id="status"  autocomplete="off" value="Disetujui" size="30" readonly>
+        
+        <!-- <input type="hidden" class="form-control" name="status" id="status"  autocomplete="off" value="Disetujui" size="30" readonly> -->
+        <!-- <input type="hidden" class="form-control" name="status" id="statusR"  autocomplete="off" value="Selesai" size="30" readonly> -->
+       
         <div class="card-body">
           <a class="btn btn-danger" href="/booking" role="button">Kembali</a>
           <button type="submit" class="btn btn-primary mr-2" style="margin-left:10px;" id="submitkejs">Submit</button>
@@ -121,9 +124,20 @@ textArea.addEventListener("input", countCharacters);
     let pegawais = @json($pegawais);
     for(let i = 0; i < pegawais.length; i++){
       if(pegawais[i].nama == name){
-        $("#unitkerja").val(pegawais[i].unitKerja_id); // masih harus disesuaikan
-        $("#nip").val(pegawais[i].noPegawai); // masih harus disesuaikan
-        // $("#noTelp").val(pegawais[i].noTelp); // masih harus disesuaikan
+        $("#unitkerja").val(pegawais[i].unitKerja_id);
+        $("#nip").val(pegawais[i].noPegawai);
+        if(document.getElementById('noTelp').value == ""){
+          if(pegawais[i].hp != null){
+            $("#noTelp").val(pegawais[i].hp);
+          } else {
+            $("#noTelp").val('');
+          }
+        }
+        if(document.getElementById('nama_email').value == ""){
+          if(pegawais[i].email != null){
+            $("#nama_email").val(pegawais[i].email);
+          }
+        }
       }
     }
   }
