@@ -39,7 +39,7 @@
           </tr>
           <tr>
             <td>Bidang</td>
-            <td>{{ $data->getBidang->namaUnit }}</td>
+            <td>{{ $data->getBidang->aliasUnit }}</td>
           </tr>
           <tr>
             <td>Mulai</td>

@@ -52,7 +52,7 @@
                 <div class="col-sm-9">
                   <select class="form-control" id="unitkerja" name="unitkerja" onfocus="setBidang()">
                     @foreach ($unitkerja as $unitkerja)
-                      <option value="{{ $unitkerja->id }}">{{ $unitkerja->namaUnit }}</option>
+                      <option value="{{ $unitkerja->idUnitKerja }}">{{ $unitkerja->aliasUnit }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -219,10 +219,20 @@ window.onload = function() {
     let pegawais = @json($pegawais);
     for(let i = 0; i < pegawais.length; i++){
       if(pegawais[i].nama == name){
-        console.log(pegawais[i].unitKerja_id);
         $("#unitkerja").val(pegawais[i].unitKerja_id); // masih harus disesuaikan
         $("#nip").val(pegawais[i].noPegawai); // masih harus disesuaikan
-        // $("#noTelp").val(pegawais[i].noTelp); // masih harus disesuaikan 
+        if(document.getElementById('noTelp').value == ""){
+          if(pegawais[i].hp != null){
+            $("#noTelp").val(pegawais[i].hp);
+          } else {
+            $("#noTelp").val('');
+          }
+        }
+        if(document.getElementById('nama_email').value == ""){
+          if(pegawais[i].email != null){
+            $("#nama_email").val(pegawais[i].email);
+          }
+        }
       }
     }
   }

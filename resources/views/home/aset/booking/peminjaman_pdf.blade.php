@@ -34,7 +34,7 @@
                 <td style="font-size:12px;border: 1px solid black;">{{ $datas->tiket }}</td>
                 <td style="font-size:12px;border: 1px solid black;">{{ $datas->namaPemohon }}</td>
                 <td style="font-size:12px;border: 1px solid black;">{{ $datas->noTelp }}</td>
-                <td style="font-size:12px;border: 1px solid black;">{{ $datas->bidang }}</td>
+                <td style="font-size:12px;border: 1px solid black;">{{ $datas->getBidang->aliasUnit }}</td>
                 <td style="font-size:12px;border: 1px solid black;">{{ $aset->merk }} {{ $aset->nama }}</td>
                 <td style="font-size:12px;border: 1px solid black;"><p>{{ $mjam }}<br>{{ $mdate }}</p></td>
                 <td style="font-size:12px;border: 1px solid black;"><p>{{ $sjam }}<br>{{ $sdate }}</p></td>

@@ -6,17 +6,19 @@ use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use App\Models\Aset;
 use App\Models\Booking;
+// use App\Models\CekLevel;
 use App\Models\Pegawai;
 use App\Models\DtPegawai;
 use App\Models\UnitKerja;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\BookingNotification;
+use App\Mail\BookingNotificationPemohon;
 use App\Mail\BookingNotificationSelesai;
 use App\Mail\BookingNotificationTolak;
 use App\Mail\BookingNotificationSetuju;
-use App\Mail\BookingNotificationn;
+use App\Mail\BookingNotificationTimAsset;
+use App\Mail\BookingNotificationTimAssetAdmin;
 use App\Models\User; 
 
 use Telegram;
@@ -53,12 +55,17 @@ class BookingController extends Controller
     }
 
     public function acc (Request $request){
-        $disetujui = Booking::where('status', 'Disetujui')->orderBy('tiket', 'desc')->get();
+
+
+        $disetujui = Booking::where('status', 'Disetujui')->orderBy('tiket', 'desc')->get();     
+
         $dalamPengajuan = Booking::where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
+        
         foreach($disetujui as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
             $result->mulai = Carbon::parse($result->mulai)->translatedFormat('H:i:s, d F Y');
             $result->selesai = Carbon::parse($result->selesai)->translatedFormat('H:i:s, d F Y');
+           
         }
         foreach($dalamPengajuan as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
@@ -105,25 +112,25 @@ class BookingController extends Controller
         $unitkerja = UnitKerja::all();
         $pegawai = Pegawai::all();
         $asets =  Aset::select('*')->where('status', 'tersedia')->whereNot('isHide', 'true')->where('jenis', $request->jenisAset)->get();
-        $asetFiltered = array();
+        // $asetFiltered = array();
         
+        $i = 0;
         foreach($asets as $result){ // looping aset
-            array_push($asetFiltered, $result);
             foreach($result->booked as $book){ // looping booked per aset
                 if($book->status == 'Disetujui'){
                     $periodOld = CarbonPeriod::create($book->mulai, $book->selesai);
                     if($periodOld->overlaps($periodNew)){ // terdapat konflik waktu
-                        unset($asetFiltered[$result->id-1]); // ini hanya berlaku ketika id dari aset berurutan
+                        $asets->pull($i);
                         break;
                     }
                 }
             }
+            $i++;
         }
-
         $booked = Booking::select('aset_id', 'mulai', 'selesai')->where('status', '=', 'Disetujui')->get();
         return view('home.aset.booking.permohonan', [
             'title' => 'Permohonan Peminjaman',
-            'aset' => $asetFiltered,
+            'aset' => $asets,
             'unitkerja' => $unitkerja,
             'pegawais' => $pegawai,
             'booked' => $booked,
@@ -186,7 +193,6 @@ class BookingController extends Controller
             'hostname' =>gethostname(),
             'ip' =>$_SERVER['REMOTE_ADDR']
         ]);
-        
         $request->accepts('session');
         
         session()->flash('success', 'Permohonan Berhasil Dibuat!');
@@ -230,7 +236,7 @@ class BookingController extends Controller
             // 'Hostname: ' . gethostname().PHP_EOL.
             // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
         
-        Mail::to($booking->nama_email)->send(new BookingNotification($booking, $mulai, $selesai));
+        Mail::to($booking->nama_email)->send(new BookingNotificationPemohon($booking, $mulai, $selesai));
         
         // Mengirim email ke semua alamat email di UserController
         $users = User::all(); // Mengambil semua data user dari UserController
@@ -239,12 +245,11 @@ class BookingController extends Controller
             $email = $user->email;
         
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                Mail::to($email)->send(new BookingNotificationn($booking, $mulai, $selesai));
+                Mail::to($email)->send(new BookingNotificationTimAssetAdmin($booking, $mulai, $selesai));
             } else {
                 // Lakukan tindakan lain jika alamat email tidak valid
             }
         }
-        
         return redirect("/permohonan-result/$booking->id");
     }
     
@@ -261,16 +266,38 @@ class BookingController extends Controller
         $pegawai = Pegawai::all();
         $unitkerja = UnitKerja::all();
         $aset =  Aset::all();
-        return view('home.aset.booking.create', ['title' => 'Peminjaman','aset' => $aset,'unitkerja' => $unitkerja, 'pegawais' => $pegawai, 'before' => null]);
-    }
-    
-    public function bookingCheck(Request $request){
-        $pegawai = Pegawai::all();
-        $unitkerja = UnitKerja::all();
-        $aset =  Aset::select('*')->where('status', 'tersedia')->where('jenis', $request->jenisAset)->get();
         return view('home.aset.booking.create', [
             'title' => 'Peminjaman',
             'aset' => $aset,
+            'unitkerja' => $unitkerja,
+            'pegawais' => $pegawai,
+            'before' => null
+        ]);
+    }
+    
+    public function bookingCheck(Request $request){
+        $periodNew = CarbonPeriod::create($request->mulai, $request->selesai);
+        $unitkerja = UnitKerja::all();
+        $pegawai = Pegawai::all();
+        $asets =  Aset::select('*')->where('status', 'tersedia')->whereNot('isHide', 'true')->where('jenis', $request->jenisAset)->get();
+        // $asetFiltered = array();
+        
+        $i = 0;
+        foreach($asets as $result){ // looping aset
+            foreach($result->booked as $book){ // looping booked per aset
+                if($book->status == 'Disetujui'){
+                    $periodOld = CarbonPeriod::create($book->mulai, $book->selesai);
+                    if($periodOld->overlaps($periodNew)){ // terdapat konflik waktu
+                        $asets->pull($i);
+                        break;
+                    }
+                }
+            }
+            $i++;
+        }
+        return view('home.aset.booking.create', [
+            'title' => 'Peminjaman',
+            'aset' => $asets,
             'unitkerja' => $unitkerja, 
             'pegawais' => $pegawai,
             'before' => $request->all()
@@ -278,6 +305,8 @@ class BookingController extends Controller
     }
     
     public function buat (Request $request){
+        // dd($request->all());
+        $users = User::all();
         $startMonth = Carbon::now()->startOfMonth();
         $endMonth = Carbon::now()->endOfMonth();
         $period = CarbonPeriod::create($startMonth, $endMonth);
@@ -289,7 +318,7 @@ class BookingController extends Controller
         $today = date('Y-m-d');
         $checking = Booking::select('tiket')->whereIn('tanggalPermohonan', $periods)->get(); // check data on this month
         // dd($checking);
-        
+
         // check for new month
         if(date('d') == 01 && $checking->toArray() == null){ // when date is 01 and when none data on this month
             $newTicket = 0;
@@ -306,22 +335,44 @@ class BookingController extends Controller
         }
         $tiket = 'B'.date('y').date('m').sprintf('%03u', $newTicket+1); // generate ticket with L{year}{month}{3digits of ticket number}
 
-        $booking = Booking::create([
-            'aset_id' => $request->aset,
-            'tiket' => $tiket,
-            'namaPemohon' => $request->namaPemohon,
-            'nip' => $request->nip,
-            'noTelp' => $request->noTelp,
-            'bidang' => $request->unitkerja,
-            'mulai' => $request->mulai,
-            'selesai' => $request->selesai,
-            'keperluan' => $request->keperluan,
-            'perihal' => $request->perihal,
-            'nama_email' => $request->nama_email,
-            'tanggalPermohonan' => date("Y-m-d"),
-            'hostname' =>gethostname(),
-            'ip' =>$_SERVER['REMOTE_ADDR']
-        ]);
+        if($request->jenisAset == "Kendaraan" || $request->jenisAset == "Barang"){
+            $booking = Booking::create([
+                'aset_id' => $request->aset,
+                'tiket' => $tiket,
+                'namaPemohon' => $request->namaPemohon,
+                'nip' => $request->nip,
+                'noTelp' => $request->noTelp,
+                'bidang' => $request->unitkerja,
+                'mulai' => $request->mulai,
+                'selesai' => $request->selesai,
+                'keperluan' => $request->keperluan,
+                'perihal' => $request->perihal,
+                'nama_email' => $request->nama_email,
+                'tanggalPermohonan' => date("Y-m-d"),
+                'status' => 'Disetujui',
+                'hostname' =>gethostname(),
+                'ip' =>$_SERVER['REMOTE_ADDR']
+            ]);
+        }else if($request->jenisAset == "Ruangan"){
+            $booking = Booking::create([
+                'aset_id' => $request->aset,
+                'tiket' => $tiket,
+                'namaPemohon' => $request->namaPemohon,
+                'nip' => $request->nip,
+                'noTelp' => $request->noTelp,
+                'bidang' => $request->unitkerja,
+                'mulai' => $request->mulai,
+                'selesai' => $request->selesai,
+                'keperluan' => $request->keperluan,
+                'perihal' => $request->perihal,
+                'nama_email' => $request->nama_email,
+                'tanggalPermohonan' => date("Y-m-d"),
+                'status' => 'Selesai',
+                'hostname' =>gethostname(),
+                'ip' =>$_SERVER['REMOTE_ADDR']
+            ]);  
+        }
+
         $request->accepts('session');
 
         $phoneNumber = $booking->noTelp;
@@ -354,7 +405,18 @@ class BookingController extends Controller
             'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
         ]);
 
-        Mail::to('recipient@example.com')->send(new BookingNotification($booking, $mulai, $selesai));
+        Mail::to($booking->nama_email)->send(new BookingNotificationPemohon($booking, $mulai, $selesai));
+
+        foreach ($users as $user) {
+            $email = $user->email;
+        
+            if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                Mail::to($email)->send(new BookingNotificationTimAsset($booking, $mulai, $selesai));
+            } else {
+                // Lakukan tindakan lain jika alamat email tidak valid
+            }
+        }   
+
         session()->flash('success', 'Permohonan Berhasil Dibuat!');
         return redirect('/booking');
     }
@@ -381,8 +443,8 @@ class BookingController extends Controller
 
     public function update(Request $request, $id)
     {   
-       $booking = Booking::find($id); 
-       $aset = Aset::find($id); 
+       $booking = Booking::find($id);
+       $aset = $booking->aset;
         // validate file uploaded by user
         if($request->suratPermohonan != null){
             $request->validate([
@@ -509,7 +571,7 @@ class BookingController extends Controller
                 // 'Perangkat: ' . request()->server('HTTP_USER_AGENT').PHP_EOL.
                 'Detail: http://itso.diskominfo.jabarprov.go.id/tracking/'.$booking->tiket
             ]);
-        Mail::to($booking->nama_email)->send(new BookingNotification($booking, $booking->mulai, $booking->selesai));
+        Mail::to($booking->nama_email)->send(new BookingNotificationPemohon($booking, $booking->mulai, $booking->selesai));
        
         // Agar status kendaraan di aset otomatis terubah menjadi tersedia ketika peminjaman telah selesai
         $aset->update([
@@ -553,7 +615,7 @@ class BookingController extends Controller
         } else {
             $disetujui = Booking::where('status', 'Disetujui')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%');
             $dipinjam = Booking::where('status', 'Dipinjam')->where('namaPemohon', 'ilike', '%'.$request->search.'%')->orwhere('bidang', 'ilike', '%'.$request->search.'%')->orwhere('tanggalPermohonan', 'ilike', '%'.$request->search.'%')->orderBy('tiket', 'desc')->get();
-        }
+        } 
         // convert time format
         foreach($dipinjam as $result){
             $result->mulai = Carbon::parse($result->mulai)->translatedFormat('d F Y');
@@ -689,4 +751,5 @@ class BookingController extends Controller
         return redirect('/booking');
         }
     }
+   
 }
