@@ -93,7 +93,8 @@ class BookingController extends Controller
     
     //public
     public function permohonan(){
-        $unitkerja = UnitKerja::all();
+        $unitkerja = UnitKerja::select('id','namaUnit','aliasUnit','idUnitKerja')->distinct('aliasUnit')->get();
+        // $unitkerja = UnitKerja::all();
         $pegawai = Pegawai::all();
         $aset =  Aset::all();
         $booked = Booking::select('aset_id', 'mulai', 'selesai')->where('status', '=', 'Disetujui')->get();

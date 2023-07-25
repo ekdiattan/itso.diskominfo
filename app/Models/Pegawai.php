@@ -49,6 +49,6 @@ class Pegawai extends Model
     ];
 
     public function unitkerja(){
-        return $this->hasOne(UnitKerja::Class, 'id', 'unitKerja_id');
+        return $this->hasOne(UnitKerja::Class, 'id', 'unitKerja');
     }
 }
