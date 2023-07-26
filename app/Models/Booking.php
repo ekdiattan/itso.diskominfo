@@ -44,6 +44,6 @@ class Booking extends Model
     }
 
     public function getBidang(){
-        return $this->hasOne(UnitKerja::class, 'aliasUnit', 'bidang');
+        return $this->hasOne(UnitKerja::class, 'idUnitKerja', 'bidang');
     }
 }

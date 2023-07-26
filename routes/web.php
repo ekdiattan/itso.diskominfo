@@ -261,6 +261,7 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Kepegawaian']], function(){
     Route::get('/pegawai-conflict', [PegawaiController::class, 'conflict']);
     Route::get('/pegawai-resolve/{id}', [PegawaiController::class, 'resolving']);
     Route::post('/pegawai-resolve/{id}', [PegawaiController::class, 'resolved']);
+    Route::get('/get-join-unit-data', [PegawaiController::class, 'joinUnit']);
 
     // PNS
     Route::get('/detail-pegawai/{id}', [PegawaiController::class, 'show']);
