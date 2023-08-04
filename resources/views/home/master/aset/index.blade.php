@@ -38,11 +38,7 @@
                 <label for="exampleInputUsername1">Kapasitas</label>
                 <input type="text" class="form-control" id="kapasitas" name="kapasitas" maxlength="255">
               </div>
-            <div id="period" style="display:none;">
-              <div class="form-group"  style="display:none;">
-                <label for="exampleInputUsername1">Kode Unit</label>
-                <input type="text" class="form-control" id="kodeUnit" name="kodeUnit" maxlength="255">
-              </div>
+              <div id="period" style="display:none;">
               <div class="form-group">
                 <label for="exampleInputUsername1">Tahun</label>
                 <input type="text" class="form-control" id="tahun" name="tahun" maxlength="255">
@@ -54,6 +50,10 @@
               <div class="form-group">
                 <label for="exampleInputUsername1">Nomer Mesin</label>
                 <input type="text" class="form-control" id="mesin" name="mesin" maxlength="255">
+              </div>
+              <div class="form-group"> 
+                <label for="exampleInputUsername1">Kode Unit</label>
+                <input type="text" class="form-control" id="kodeUnit" name="kodeUnit" maxlength="255">
               </div>
               <div class="form-group">
                 <label for="exampleInputUsername1">Kebersihan</label>

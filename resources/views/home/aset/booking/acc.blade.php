@@ -82,7 +82,7 @@
                                     <td>{{ $post->tiket }}</td>
                                     <td>{{ $post->namaPemohon }}</td>
                                     <td>{{ $post->noTelp }}</td>
-                                    <td>{{ $post->getBidang->namaUnit }}</td>
+                                    <td>{{ $post->namaUnit }}</td>
                                     <td>{{ $post->perihal }}</td>
                                     <td>{{ $post->tanggalPermohonan }}</td>
                                     <td>{{ $post->status }}</td>
@@ -140,7 +140,7 @@
                                     <td>{{ $post->tiket }}</td>
                                     <td>{{ $post->namaPemohon }}</td>
                                     <td>{{ $post->noTelp }}</td>
-                                    <td>{{ $post->getBidang->namaUnit }}</td>
+                                    <td>{{ $post->namaUnit }}</td>
                                     <td>{{ $post->perihal }}</td>
                                     <td>{{ $post->tanggalPermohonan }}</td>
                                     <td>{{ $post->status }}</td>
@@ -149,6 +149,10 @@
                                     @if($post->aset->jenis == "Barang")
                                         <a href="/bookingEdit/{{ $post->id }}" class="badge bg-primary"><span class="menu-icon"><i class="fas fa-tools"></i></span></a>
                                     @endif
+                                    @if($post->aset->jenis == "Ruangan")
+                                        <a href="/bookingEdit/{{ $post->id }}" class="badge bg-primary"><span class="menu-icon"><i class="fas fa-tools"></i></span></a>
+                                    @endif
+
                                     </td>
                                 </tr>
                             @endforeach

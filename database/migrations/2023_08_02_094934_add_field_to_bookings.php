@@ -13,14 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('dt_jabatans', function (Blueprint $table) {
-            $table->id();
-            $table->string('id_jabatan')->unique();
-            $table->string('id_divisi');
-            $table->string('divisi');
-            $table->string('jabatan');
-            $table->text('description');
-            $table->timestamps();
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->datetime('mulaibook')->nullable();
+            $table->datetime('selesaibook')->nullable();
+
         });
     }
 
@@ -31,6 +27,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dt_jabatans');
+        Schema::table('bookings', function (Blueprint $table) {
+            //
+        });
     }
 };

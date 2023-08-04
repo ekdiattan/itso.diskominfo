@@ -10,6 +10,7 @@ use App\Models\Booking;
 use App\Models\Pegawai;
 use App\Models\DtPegawai;
 use App\Models\UnitKerja;
+use App\Models\ViewPegawaiUnitKerja;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -27,14 +28,61 @@ use PDF;
 class BookingController extends Controller
 {
     public function index (Request $request){
+        
         $dalamPengajuan = Booking::where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
+        $duplicatePengajuan = Booking::select('aset_id')->where('status', 'Dalam Pengajuan')->groupBy('aset_id')->havingRaw('COUNT(aset_id) > 1')->get();
+
+        $tiketsWithDuplicate=[];
+
+        if ($duplicatePengajuan->count() > 0) {
+            foreach ($duplicatePengajuan as $dup) {
+                $asetId = $dup->aset_id;
+                    $dupBooking = Booking::where('aset_id', $asetId)
+                    ->where('status', 'Dalam Pengajuan')
+                    ->get();
+                
+                    if ($dupBooking->count() > 1) {
+                    // Loop untuk membandingkan setiap pasangan data booking
+                    for ($i = 0; $i < $dupBooking->count(); $i++) {
+                        for ($j = 0 ; $j < $dupBooking->count(); $j++) {
+                            if($j==$i){
+                                break;
+                            }
+                            $startTime1 = Carbon::parse($dupBooking[$i]->mulai)->toDateString();
+                            $endTime1 = Carbon::parse($dupBooking[$i]->selesai)->toDateString();
+                            $startTime2 = Carbon::parse($dupBooking[$j]->mulai)->toDateString();
+                            $endTime2 = Carbon::parse($dupBooking[$j]->selesai)->toDateString();
+                            
+                            // Pengecekan tumpang tindih waktu menggunakan overlaps()
+                            if (($startTime2<=$startTime1 && $startTime1 <= $endTime2) || ($startTime2 <= $endTime1 && $endTime1 <= $startTime2)) {
+                                // Ada tumpang tindih waktu
+                                $tiketsWithDuplicate[] = $dupBooking[$i]->tiket;
+                                $tiketsWithDuplicate[] = $dupBooking[$j]->tiket;
+                                // break ; // Keluar dari kedua loop secara bersamaan
+                            }
+                        }
+                    }
+                    }
+                }
+                
+            }
+            // dd($dupBooking);
+
+            // dd($tiketsWithDuplicate);
+
         // change date format
         foreach($dalamPengajuan as $result){
             $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
             $result->mulai = Carbon::parse($result->mulai)->translatedFormat('H:i:s, d F Y');
             $result->selesai = Carbon::parse($result->selesai)->translatedFormat('H:i:s, d F Y');
         }
-        return view('home.aset.booking.index', ['dalamPengajuan' => $dalamPengajuan, 'title' => 'Booking', 'search' => $request->search]);
+        $cekpengajuan = Booking::where('status', 'Dalam Pengajuan')->orderBy('tiket', 'desc')->get();
+        foreach($cekpengajuan as $result){
+            $result->tanggalPermohonan = Carbon::parse($result->tanggalPermohonan)->translatedFormat('d F Y');
+            $result->mulai = Carbon::parse($result->mulai)->translatedFormat('H:i:s, d F Y');
+            $result->selesai = Carbon::parse($result->selesai)->translatedFormat('H:i:s, d F Y');
+        }
+        return view('home.aset.booking.index', ['dalamPengajuan' => $dalamPengajuan,'dupAset'=>$tiketsWithDuplicate, 'title' => 'Booking', 'search' => $request->search]);
     }
 
     public function reject (Request $request){
@@ -93,8 +141,8 @@ class BookingController extends Controller
     
     //public
     public function permohonan(){
-        $unitkerja = UnitKerja::all();
-        $pegawai = Pegawai::all();
+        $unitkerja = UnitKerja::select('id','namaUnit','aliasUnit','idUnitKerja')->distinct('aliasUnit')->get();
+        $pegawai = ViewPegawaiUnitKerja::all();
         $aset =  Aset::all();
         $booked = Booking::select('aset_id', 'mulai', 'selesai')->where('status', '=', 'Disetujui')->get();
         return view('home.aset.booking.permohonan', [
@@ -109,10 +157,9 @@ class BookingController extends Controller
     
     public function permohonanCheck (Request $request){
         $periodNew = CarbonPeriod::create($request->mulai, $request->selesai);
-        $unitkerja = UnitKerja::all();
-        $pegawai = Pegawai::all();
+        $unitkerja = UnitKerja::select('id','namaUnit','aliasUnit','idUnitKerja')->distinct('aliasUnit')->get();
+        $pegawai = ViewPegawaiUnitKerja::all();
         $asets =  Aset::select('*')->where('status', 'tersedia')->whereNot('isHide', 'true')->where('jenis', $request->jenisAset)->get();
-        // $asetFiltered = array();
         
         $i = 0;
         foreach($asets as $result){ // looping aset
@@ -150,6 +197,51 @@ class BookingController extends Controller
     }
 
     public function store (Request $request){
+        $idasst = $request->input('aset');
+        $cekid = Booking::where('aset_id',$idasst);
+        if ($cekid){
+            $startasst = $request->input('mulai');
+            $endtasst = $request->input('selesai');
+            $mulaiasst = Carbon::parse($startasst)->toDateString();
+            $selesaiasst = Carbon::parse($endtasst)->toDateString();
+
+            $bookd =  Booking::where('aset_id',$idasst)
+                             ->where('mulai','<=',$selesaiasst)
+                             ->where('selesai', '>=', $mulaiasst)
+                             ->first();
+            
+            if ($bookd) {
+                    $periodNew = CarbonPeriod::create($request->mulai, $request->selesai);
+                    $unitkerja = UnitKerja::select('id','namaUnit','aliasUnit','idUnitKerja')->distinct('aliasUnit')->get();
+                    $pegawai = ViewPegawaiUnitKerja::all();
+                    $asets =  Aset::select('*')->where('status', 'tersedia')->whereNot('isHide', 'true')->where('jenis', $request->jenisAset)->get();
+            
+                    $i = 0;
+                    foreach($asets as $result){ // looping aset
+                    foreach($result->booked as $book){ // looping booked per aset
+                        if($book->status == 'Disetujui'){
+                            $periodOld = CarbonPeriod::create($book->mulai, $book->selesai);
+                                if($periodOld->overlaps($periodNew)){ // terdapat konflik waktu
+                                $asets->pull($i);
+                                break;
+                            }
+                        }
+                        $request->session()->flash('error', 'Aset tidak tersedia pada periode tersebut!');
+                    }
+                    $i++;
+                    }
+                $booked = Booking::select('aset_id', 'mulai', 'selesai')->where('status', '=', 'Disetujui')->get();
+                return view('home.aset.booking.permohonan', [
+                'title' => 'Permohonan Peminjaman',
+                'aset' => $asets,
+                'unitkerja' => $unitkerja,
+                'pegawais' => $pegawai,
+                'booked' => $booked,
+                'before' => $request->all()
+            ]);
+            }
+        }
+        
         $startMonth = Carbon::now()->startOfMonth();
         $endMonth = Carbon::now()->endOfMonth();
         $period = CarbonPeriod::create($startMonth, $endMonth);
@@ -158,7 +250,6 @@ class BookingController extends Controller
             array_push($periods, $result->format('Y-m-d'));
         }
         $checking = Booking::select('tiket')->whereIn('tanggalPermohonan', $periods)->get(); // check data on this month
-        
         // check for new month
         if(date('d') == 01 && $checking->toArray() == null){ // when date is 01 and when none data on this month
             $newTicket = 0;
@@ -174,7 +265,6 @@ class BookingController extends Controller
             $newTicket = 0;
         }
         
-
         $tiket = 'B'.date('y').date('m').sprintf('%03u', $newTicket+1); // generate ticket with L{year}{month}{3digits of ticket number}
         
         $booking = Booking::create([
@@ -250,6 +340,10 @@ class BookingController extends Controller
                 // Lakukan tindakan lain jika alamat email tidak valid
             }
         }
+        $aset = $booking->aset;
+        $aset->update([
+            'status' => 'tidak tersedia'
+        ]);
         return redirect("/permohonan-result/$booking->id");
     }
     
@@ -263,8 +357,11 @@ class BookingController extends Controller
         
     //admin
     public function create (){
-        $pegawai = Pegawai::all();
-        $unitkerja = UnitKerja::all();
+        //$pegawai = ViewPegawaiUnitKerja::all();
+        //$pegawai = Pegawai::all();
+        //$unitkerja = UnitKerja::all();
+        $unitkerja = UnitKerja::select('id','namaUnit','aliasUnit','idUnitKerja')->distinct('aliasUnit')->get();
+        $pegawai = ViewPegawaiUnitKerja::all();
         $aset =  Aset::all();
         return view('home.aset.booking.create', [
             'title' => 'Peminjaman',
@@ -277,8 +374,10 @@ class BookingController extends Controller
     
     public function bookingCheck(Request $request){
         $periodNew = CarbonPeriod::create($request->mulai, $request->selesai);
-        $unitkerja = UnitKerja::all();
-        $pegawai = Pegawai::all();
+        //$unitkerja = UnitKerja::all();
+        //$pegawai = Pegawai::all();
+        $unitkerja = UnitKerja::select('id','namaUnit','aliasUnit','idUnitKerja')->distinct('aliasUnit')->get();
+        $pegawai = ViewPegawaiUnitKerja::all();
         $asets =  Aset::select('*')->where('status', 'tersedia')->whereNot('isHide', 'true')->where('jenis', $request->jenisAset)->get();
         // $asetFiltered = array();
         
@@ -605,7 +704,34 @@ class BookingController extends Controller
         $pdf = PDF::loadView('home.aset.booking.peminjaman_pdf',['datas'=>$data,'aset'=>$aset, 'mjam' => $mjam, 'mdate' => $mdate, 'sjam' => $sjam, 'sdate' => $sdate])->setPaper([0, 0, 595.27559055, 935.43307087], 'landscape');
         return $pdf->download('Permohonan-'.$todayTime.'.pdf');
     }
-
+    public function edtasst($id){
+        $edit= Booking::find($id);
+        $aset = $edit->aset;
+        return view('home.aset.booking.editselesai',['edit'=> $edit, 'title' => 'Peminjaman', 'aset' => $aset]);
+    }
+    public function updbarang(Request $request, $id){ 
+        $booking= Booking::find($id);
+        $booking->update([
+            //'status' => $request->status,
+            'keterangan' => $request->keterangan
+        ]);
+         $aset = $booking->aset;
+        $aset->update([
+            'status' => 'tersedia'
+        ]); 
+        return redirect('/booking')->with('success', 'Peminjaman selesai');
+    }
+   //public function detailasset($id){
+   //    $booking= Booking::find($id);
+   //    $aset = $booking->aset;
+   //    return view('home.aset.showselesai',['booking'=> $booking, 'title' => 'Aset', 'aset' => $aset]);
+   //}
+   //public function updasst(Request $request, $id){ 
+   //    $booking= Booking::find($id);
+   //    $booking->update([
+   //        'keterangan' => $request->keterangan
+   //    ]);
+   //}
     // Keamanan
     public function beranda(Request $request){ // mesti di filter
         // dd(Booking::all());
@@ -751,5 +877,8 @@ class BookingController extends Controller
         return redirect('/booking');
         }
     }
-   
+
+    
+ 
+  
 }

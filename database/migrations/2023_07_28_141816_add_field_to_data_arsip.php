@@ -13,14 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('dt_jabatans', function (Blueprint $table) {
-            $table->id();
-            $table->string('id_jabatan')->unique();
-            $table->string('id_divisi');
-            $table->string('divisi');
-            $table->string('jabatan');
-            $table->text('description');
-            $table->timestamps();
+        Schema::table('data_arsip', function (Blueprint $table) {
+           $table->string('updated_at')->nullable();
+           $table->string('created_at')->nullable();
         });
     }
 
@@ -31,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dt_jabatans');
+        Schema::table('data_arsip', function (Blueprint $table) {
+            //
+        });
     }
 };

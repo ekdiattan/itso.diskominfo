@@ -29,7 +29,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MappingDashboardController;
 use App\Http\Controllers\KategoriPendidikanController;
 use App\Http\Controllers\KategoriUsiaController;
-use App\Http\Controllers\ArteriController;
+use App\Http\Controllers\KearsipanController;
 
 /*booking
 |--------------------------------------------------------------------------
@@ -119,13 +119,16 @@ Route::group(['middleware' =>['auth','hakAkses:Admin,Aset']], function(){
     Route::post('/booking-store',[BookingController::class, 'buat']);
     Route::get('/booking/{id}',[BookingController::class, 'show']);
     Route::get('/booking-edit/{id}',[BookingController::class, 'edit']);
-    Route::get('/bookingEdit/{id}',[BookingController::class, 'ubah']);
+    Route::get('/bookingEdit/{id}',[BookingController::class, 'edtasst']);
     Route::post('/booking-update/{id}',[BookingController::class, 'update']);
     Route::get('/booking/delete/{id}',[BookingController::class, 'delete']);
     Route::get('/booking-reject',[BookingController::class, 'reject']);
     Route::get('/booking-acc',[BookingController::class, 'acc']);
     Route::get('/booking-selesai',[BookingController::class, 'selesai']);
-
+    Route::post('/booking-prsbarang/{id}',[BookingController::class, 'updbarang']);
+   //Route::post('/booking-updasst/{id}',[BookingController::class, 'updasst']);
+    //Route::get('/keamanan/{id}',[BookingController::class, 'detailasst']);
+    
     // aset
     Route::get('/aset',[AsetController::class, 'index']);
     Route::post('/aset/create',[AsetController::class, 'store']);
@@ -210,6 +213,15 @@ Route::group(['middleware' =>['auth','hakAkses:Admin']], function(){
     Route::get('/mappingDashboard-dlt/{id}',[MappingDashboardController::class, 'delete']);
 });
 
+
+// KEARSIPAN
+Route::group(['middleware' =>['auth','hakAkses:Admin,IT']], function(){
+    Route::get('/kearsipan', [KearsipanController::class, 'index']);
+    Route::get('/kearsipan/create', [KearsipanController::class, 'create']);
+    Route::get('/kearsipan/edit/{id}', [KearsipanController::class, 'edit']);
+    Route::get('/kearsipan/master/media', [KearsipanController::class, 'media']);
+    Route::get('/kearsipan/master/editmedia', [KearsipanController::class, 'editmedia']);
+});
 
 
 //--KEPEGAWAIAN--
@@ -350,10 +362,10 @@ Route::get('/peminjaman',[BookingController::class, 'permohonan']);
 Route::get('/permohonan-result/{id}',[BookingController::class, 'result']);
 Route::post('/permohonan-check',[BookingController::class, 'permohonanCheck']);
 Route::post('/permohonan-store',[BookingController::class, 'store']);
+Route::get('/permohonan-store',[BookingController::class, 'permohonanCheck']);
 Route::get('/booked/{id}',[BookingController::class, 'booked']);
 
 // Route upload image
-
 
 // Route Google Calendar
 Route::get('/google-calendar/connect', [GoogleCalendarController::class, 'connect']);
