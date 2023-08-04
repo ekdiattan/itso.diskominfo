@@ -46,7 +46,7 @@
             <div class="form-group row">
               <label class="col-sm-3 col-form-label">Nama Bidang</label>
               <div class="col-sm-9">
-                <input type="text" class="form-control" id="bidang" name="bidang" value="{{ $booking->getBidang->aliasUnit }}" readonly/>
+                <input type="text" class="form-control" id="bidang" name="bidang" value="{{ $booking->bidang }}" readonly/>
               </div>
             </div>
           </div>

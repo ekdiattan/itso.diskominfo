@@ -56,6 +56,9 @@
                                 <th>Nama Pemohon</th>
                                 <th>No Hp</th>
                                 <th>Bidang</th>
+                                <th>Nama Aset</th>
+                                <th>Tanggal Mulai</th>
+                                <th>Tanggal Selesai</th>
                                 <th>Perihal</th>
                                 <th>Tanggal Permohonan</th>
                                 <th>Status</th>
@@ -65,16 +68,23 @@
                         <tbody>
                             @if($dalamPengajuan != null)
                             @foreach ($dalamPengajuan as $post)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                <tr
+                                  @if (in_array($post->tiket, $dupAset))
+                                       style="background-color: red;"
+                                  @endif
+                                >
+                                    <td style="background-color: white">{{ $loop->iteration }}</td>
                                     <td>{{ $post->tiket }}</td>
                                     <td>{{ $post->namaPemohon }}</td>
                                     <td>{{ $post->noTelp }}</td>
-                                    <td>{{ $post->getBidang->aliasUnit }}</td>
+                                    <td>{{ $post->bidang }}</td>
+                                    <td>{{ $post->aset->merk }} {{ $post->aset->nama }}</td>
+                                    <td>{{ $post->mulai }}</td>
+                                    <td>{{ $post->selesai }}</td>
                                     <td>{{ $post->perihal }}</td>
                                     <td>{{ $post->tanggalPermohonan }}</td>
                                     <td>{{ $post->status }}</td>
-                                    <td>
+                                    <td style="background-color: white">
                                         <a href="/booking/{{ $post->id }}" class="badge bg-info"><span class="menu-icon"><i class="far fa-eye"></i></span></a>
                                         <a href="/booking-edit/{{ $post->id }}" class="badge bg-primary"><span class="menu-icon"><i class="fas fa-tools"></i></span></a>
                                         <!-- <a href="#" class="badge bg-warning"><span class="menu-icon"><i class="far fa-edit"></i></span></a> -->

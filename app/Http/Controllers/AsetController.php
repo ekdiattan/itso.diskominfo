@@ -16,9 +16,23 @@ class AsetController extends Controller
     public function store(Request $request)
     {
 
-        Aset::create($request->all());
+        $aset = Aset::create([ 
+        'aset_id' => $request->aset,
+        'nama' => $request->nama,
+        'merk' => $request->merk,
+        'jenis' => $request->jenis,
+        'jumlah' => $request->jumlah,
+        'kapasitas' => $request->kapasitas,
+        'kodeunit' => $request-> kodeUnit,
+        'tahun' => $request->tahun,
+        'rangka' => $request->rangka,
+        'mesin' => $request->mesin,
+        'kebersihan' => $request->kebersihan,  
+        'bahanBakar' => $request->bahanBakar,
         
-        $request->accepts('session');
+
+    ]);
+
         session()->flash('success', 'Berhasil menambahkan data!');
 
         return redirect('/aset');

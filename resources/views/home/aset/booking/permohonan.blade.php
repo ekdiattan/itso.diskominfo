@@ -52,7 +52,7 @@
                 <div class="col-sm-9">
                   <select class="form-control" id="unitkerja" name="unitkerja" onfocus="setBidang()">
                     @foreach ($unitkerja as $unitkerja)
-                      <option value="{{ $unitkerja->idUnitKerja }}">{{ $unitkerja->aliasUnit }}</option>
+                      <option value="{{ $unitkerja->aliasUnit }}">{{ $unitkerja->aliasUnit }}</option>
                     @endforeach
                   </select>
                 </div>
@@ -171,6 +171,11 @@
                 </div>
               </div>
             </div>
+            @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+            @endif
             <a class="btn btn-danger" href="/pinjam/" role="button">Kembali</a>
             <button type="submit" class="btn btn-primary mr-2" id="btnSubmit" onclick="hideButton()">Submit</button> 
             <button class="btn btn-primary" type="button" id="btn2" style="display:none;">
@@ -219,7 +224,7 @@ window.onload = function() {
     let pegawais = @json($pegawais);
     for(let i = 0; i < pegawais.length; i++){
       if(pegawais[i].nama == name){
-        $("#unitkerja").val(pegawais[i].unitKerja_id); // masih harus disesuaikan
+        $("#unitkerja").val(pegawais[i].aliasUnit); // masih harus disesuaikan
         $("#nip").val(pegawais[i].noPegawai); // masih harus disesuaikan
         if(document.getElementById('noTelp').value == ""){
           if(pegawais[i].hp != null){
@@ -307,11 +312,38 @@ window.onload = function() {
     let noTelp = document.getElementById('noTelp').value;
     if(document.getElementById('ruangan').checked || document.getElementById('kendaraan').checked || document.getElementById('barang').checked){
       document.getElementById('otherForm').removeAttribute('hidden');
+      timeOut();
     } else if(!(document.getElementById('ruangan').checked || document.getElementById('kendaraan').checked || document.getElementById('barang').checked)){
       document.getElementById('otherForm').setAttribute('hidden', '');
     }
   }
 
+  function timeOut(){
+    const timeoutInMilliseconds = 30000;
+
+    let timeoutId;
+
+    function startTimeout() {
+        // Hapus timeout yang ada (jika ada) dan mulai timeout baru
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(onIdleTimeout, timeoutInMilliseconds);
+    }
+
+    function resetTimeout() {
+        // Pengguna berinteraksi, ulangi timeout
+        startTimeout();
+    }
+
+    function onIdleTimeout() {
+      alert("Anda telah tidak aktif untuk beberapa saat. Kami akan merefresh halaman sekarang.");
+      window.location.reload();
+    }
+
+    startTimeout();
+    document.body.addEventListener('mousemove', resetTimeout);
+    document.body.addEventListener('keydown', resetTimeout);
+    document.body.addEventListener('scroll', resetTimeout);
+  } 
 </script>
 <script>
   function hideButton() {

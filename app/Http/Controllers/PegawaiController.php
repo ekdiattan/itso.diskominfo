@@ -1568,24 +1568,4 @@ class PegawaiController extends Controller
 
 
     }
-    //Join Table Pegawai dan Unit Kerja
-    public function joinUnit(Request $request)
-    {
-        $name = $request->input('name');
-        $pegawai = DB::table('pegawais')
-                    ->join('unit_kerjas','pegawais.unitKerja_id','=','unit_kerjas.id')
-                    ->where('pegawais.nama',$name)
-                    ->select('pegawais.*','unit_kerjas.aliasUnit as aliasUnit')
-                    ->first();
-        if ($pegawai) {
-            return response()->json([
-                'unitKerja' => $pegawai->aliasUnit,
-                'noPegawai' => $pegawai->no_pegawai,
-                'hp' => $pegawai->hp,
-                'email' => $pegawai->email,
-            ]);
-        } else {
-            return response()->json([]);
-        }
-    }
 }
