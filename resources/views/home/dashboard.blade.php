@@ -62,7 +62,7 @@
     <!-- <canvas id="myChart" style="width:100%;max-width:600px"></canvas> -->
 
 <!-- Card -->
-  <h1>Berita</h1>
+  {{-- <h1>Berita</h1>
   <div class="row">
     <div class="col-sm-4">
       <div class="card" style="width: 18rem;">
@@ -94,7 +94,7 @@
     </div>
   </div>
 </div>
-</div>
+</div> --}}
 <br>
 
 
